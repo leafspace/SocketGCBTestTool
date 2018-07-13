@@ -1,0 +1,19 @@
+{
+    "files.associations": {
+        "xstring": "cpp",
+        "iostream": "cpp",
+        "xutility": "cpp",
+        "iosfwd": "cpp",
+        "system_error": "cpp",
+        "type_traits": "cpp",
+        "xlocmon": "cpp",
+        "xstddef": "cpp",
+        "xtr1common": "cpp",
+        "xhash": "cpp",
+        "hash_map": "cpp",
+        "list": "cpp",
+        "vector": "cpp",
+        "xlocale": "cpp",
+        "initializer_list": "cpp"
+    }
+}
