@@ -92,58 +92,79 @@ void GCBMainDlg::OnButtonClick(UINT nID)
 
 CListCtrl* GCBMainDlg::JudgeMessageCMDCtrl(MessageBean beanMessage)
 {
-	switch(beanMessage.GetCMDType())
+	switch (beanMessage.GetCMDType())
 	{
 	case NOZZLE_CARTRIDGE_LEVEL:
-	return &this->m_List[0];
+		return &this->m_List[0];
 	case MODE_LOCKED_SOLENOID_VALVE_WORKING:
-	return &this->m_List[1];
-	case POSITIVE_NEGATIVE_PRESSURE_SOLENOID_VALVE_WORKING: 
-	return &this->m_List[2];
-	case INK_SUPPLY_PUMP_WORKING_CONDITION: 
-	return &this->m_List[3];
-	case NOZZLE_CABINET_TEMPERATURE: 
-	return &this->m_List[4];
-	case AIR_NEGATIVE_PRESSURE_VALUE: 
-	return &this->m_List[5];
+		return &this->m_List[1];
+	case POSITIVE_NEGATIVE_PRESSURE_SOLENOID_VALVE_WORKING:
+		return &this->m_List[2];
+	case INK_SUPPLY_PUMP_WORKING_CONDITION:
+		return &this->m_List[3];
+	case NOZZLE_CABINET_TEMPERATURE:
+		return &this->m_List[4];
+	case AIR_NEGATIVE_PRESSURE_VALUE:
+		return &this->m_List[5];
 	case AIR_POSITIVE_PRESSURE_VALUE:
-	return &this->m_List[6];
-	case NEGATIVE_PRESSURE_OUTPUT_VALUE_NOZZLE: 
-	return &this->m_List[7];
-	case INK_MOTOR_DELAY_TIME: 
-	return &this->m_List[8];
-	case MODE_PRESSURE_NOZZLE_INK: 
-	return &this->m_List[9];
-	case START_WORKING_STATE_CIRCULATING_MOTOR: 
-	return &this->m_List[10];
-	case MANUALLY_OPEN_MODE_LOCKED_SOLENOID_VALVE_STATUS: 
-	return &this->m_List[11];
+		return &this->m_List[6];
+	case NEGATIVE_PRESSURE_OUTPUT_VALUE_NOZZLE:
+		return &this->m_List[7];
+	case INK_MOTOR_DELAY_TIME:
+		return &this->m_List[8];
+	case MODE_PRESSURE_NOZZLE_INK:
+		return &this->m_List[9];
+	case START_WORKING_STATE_CIRCULATING_MOTOR:
+		return &this->m_List[10];
+	case MANUALLY_OPEN_MODE_LOCKED_SOLENOID_VALVE_STATUS:
+		return &this->m_List[11];
 	default:
 		return &this->m_List[0];
 	}
 }
 
+float GCBMainDlg::Make4ByteFloat(BYTE *list)
+{
+	float retValue;
+	memcpy(&retValue, list, sizeof(retValue));
+	return retValue;
+}
+
 bool GCBMainDlg::WriteLog(MessageBean beanMessage)
 {
 	ofstream outfile("gcb.log");
-	if(!outfile) {
-        return false;
+	if (!outfile) {
+		return false;
 	}
 
-	struct tm *tm_ptr;  
-    time_t the_time;  
-    (void) time(&the_time);  
-    tm_ptr = gmtime(&the_time);  
+	struct tm *tm_ptr;
+	time_t the_time;
+	(void)time(&the_time);
+	tm_ptr = gmtime(&the_time);
 
 	outfile << tm_ptr->tm_year << "-" << tm_ptr->tm_mon + 1 << "-" << tm_ptr->tm_mday << " ";
 	outfile << tm_ptr->tm_hour << ":" << tm_ptr->tm_min << ":" << tm_ptr->tm_sec << "\t";
 
 	outfile << "0x" << hex << beanMessage.GetCMDType() << "\t:\t";
 
+	if (beanMessage.GetParameterSize() % 4 == 0) {
+		list<BYTE>::iterator iter = beanMessage.GetParameterList().begin();
+		for (int nIndex = 0; nIndex < beanMessage.GetParameterSize();) {
+			BYTE list[4] = { 0 };
+			for (int nJIndex = 0; nJIndex < 4; ++nJIndex, ++iter) {
+				list[nJIndex] = *iter;
+			}
+			outfile << setiosflags(ios::fixed) << setprecision(2) << this->Make4ByteFloat(list) << "\t";
+		}
+	}
+
+
+	outfile << "[";
 	list<BYTE>::iterator iter = beanMessage.GetParameterList().begin();
 	for (int nIndex = 0; nIndex < beanMessage.GetParameterSize(); ++nIndex, ++iter) {
-		outfile << "0x"<< hex << *iter << "\t";
+		outfile << "0x" << hex << *iter << "\t";
 	}
+	outfile << "]";
 	outfile << endl;
 
 	outfile.close();
@@ -154,7 +175,7 @@ void GCBMainDlg::RefreshPage()
 {
 	// 刷新页面数据
 	MessageBean beanMessage;
-	while(GCBMainDlg::recvMessageQueue.IsEmpty() == false) {
+	while (GCBMainDlg::recvMessageQueue.IsEmpty() == false) {
 		GCBMainDlg::recvMessageQueue.Pop_front(&beanMessage);
 
 		// 判断这个Message属于哪个组的命令
@@ -165,7 +186,7 @@ void GCBMainDlg::RefreshPage()
 		list<BYTE>::iterator iter = beanMessage.GetParameterList().begin();
 		beanList->DeleteAllItems();
 		for (int nIndex = 0; nIndex < beanMessage.GetParameterSize(); ++nIndex, ++iter) {
-			formatStr.Format(_T("0x%d"), (int) *iter);
+			formatStr.Format(_T("0x%d"), (int)*iter);
 			beanList->InsertItem(nIndex, formatStr);
 		}
 	}

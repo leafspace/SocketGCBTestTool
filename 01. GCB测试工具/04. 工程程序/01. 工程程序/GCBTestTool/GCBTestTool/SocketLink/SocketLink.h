@@ -27,7 +27,7 @@ public:
 	}
 
 	bool initSocket(void);
-	bool initSocket(string ip, int port);                                             // 初始化socket
+	bool initSocket(string ip, int port);                                   // 初始化socket
 	bool linkServer(void);                                                  // 进行连接测试
 	bool sendOrders(const BYTE *orders, const unsigned int size);           // 发送消息
 	bool sendOrders(SOCKET socketID, const BYTE *orders, const unsigned int size);              // 发送消息

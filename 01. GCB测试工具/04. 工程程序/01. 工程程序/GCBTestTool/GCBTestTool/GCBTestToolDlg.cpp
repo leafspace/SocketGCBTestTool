@@ -185,7 +185,6 @@ void CGCBTestToolDlg::OnTimer(UINT_PTR nIDEvent)
 	switch (nIDEvent)
 	{
 	case TIMER_SOCKET_LINK_CONN:
-		KillTimer(nIDEvent);
 		this->OnTimerSocketLinkTest();
 		break;
 	case TIMER_SOCKET_LINK_RECV:
@@ -201,13 +200,13 @@ void CGCBTestToolDlg::OnTimer(UINT_PTR nIDEvent)
 
 BOOL CGCBTestToolDlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 {
-	if(zDelta < 0)
+	if (zDelta < 0)
 	{
-		OnVScroll(SB_LINEDOWN, GetScrollPos(SB_VERT),  GetScrollBarCtrl(SB_VERT));
+		OnVScroll(SB_LINEDOWN, GetScrollPos(SB_VERT), GetScrollBarCtrl(SB_VERT));
 	}
-	else if (zDelta > 0) 
+	else if (zDelta > 0)
 	{
-		OnVScroll(SB_LINEUP, GetScrollPos(SB_VERT),  GetScrollBarCtrl(SB_VERT));
+		OnVScroll(SB_LINEUP, GetScrollPos(SB_VERT), GetScrollBarCtrl(SB_VERT));
 	}
 	return CDialog::OnMouseWheel(nFlags, zDelta, pt);
 }
@@ -329,6 +328,7 @@ void CGCBTestToolDlg::OnTimerSocketLinkTest()
 	case TIMER_STATE_ERROR:
 		return;
 	case TIMER_STATE_FINISH:
+		KillTimer(TIMER_SOCKET_LINK_CONN);
 		bIsSuccess = CGCBTestToolDlg::threadStateTable.GetThreadRetValueFlag(TIMER_SOCKET_LINK_CONN) > 0;
 		CGCBTestToolDlg::threadStateTable.RemoveThreadFinishedFlag(TIMER_SOCKET_LINK_CONN);
 		CGCBTestToolDlg::threadStateTable.RemoveThreadRetValueFlag(TIMER_SOCKET_LINK_CONN);
@@ -352,7 +352,8 @@ void CGCBTestToolDlg::OnTimerSocketLinkTest()
 
 	if (bIsSuccess && this->socketISLinking) {
 		this->OnTimerSocketLink();
-	} else {
+	}
+	else {
 		this->socketLink.freeSocket();
 	}
 }
@@ -420,13 +421,13 @@ void CGCBTestToolDlg::SendRequestMessage()
 
 	// 获取组
 	list<BYTE> sendMsgLst[LIST_NUM];
-	sendMsgLst[0] = this->CreateMessage(NOZZLE_CARTRIDGE_LEVEL, 0, 2);
-	sendMsgLst[1] = this->CreateMessage(MODE_LOCKED_SOLENOID_VALVE_WORKING, 0, 2);
-	sendMsgLst[2] = this->CreateMessage(POSITIVE_NEGATIVE_PRESSURE_SOLENOID_VALVE_WORKING, 0, 2);
-	sendMsgLst[3] = this->CreateMessage(INK_SUPPLY_PUMP_WORKING_CONDITION, 0, 2);
-	sendMsgLst[4] = this->CreateMessage(NOZZLE_CABINET_TEMPERATURE, 0, 2);
-	sendMsgLst[5] = this->CreateMessage(AIR_NEGATIVE_PRESSURE_VALUE, 0, 2);
-	sendMsgLst[6] = this->CreateMessage(AIR_POSITIVE_PRESSURE_VALUE, 0, 2);
+	sendMsgLst[0] = this->CreateMessage(NOZZLE_CARTRIDGE_LEVEL, 0x0001, 2);
+	sendMsgLst[1] = this->CreateMessage(MODE_LOCKED_SOLENOID_VALVE_WORKING, 0x0001, 2);
+	sendMsgLst[2] = this->CreateMessage(POSITIVE_NEGATIVE_PRESSURE_SOLENOID_VALVE_WORKING, 0x0001, 2);
+	sendMsgLst[3] = this->CreateMessage(INK_SUPPLY_PUMP_WORKING_CONDITION, 0x0001, 2);
+	sendMsgLst[4] = this->CreateMessage(NOZZLE_CABINET_TEMPERATURE, 0x0001, 2);
+	sendMsgLst[5] = this->CreateMessage(AIR_NEGATIVE_PRESSURE_VALUE, 0x0001, 2);
+	sendMsgLst[6] = this->CreateMessage(AIR_POSITIVE_PRESSURE_VALUE, 0x0001, 2);
 
 	// TODO 设置组与开启组在界面上差异很大，后期修改
 	// 设置组
