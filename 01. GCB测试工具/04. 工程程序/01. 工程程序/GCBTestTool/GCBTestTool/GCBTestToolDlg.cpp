@@ -296,8 +296,6 @@ void CGCBTestToolDlg::OnBnClickedButtonLinktest()
 
 	} while (false);
 
-	this->socketLink.freeSocket();
-
 	if (bIsSuccess) {
 		// 创建线程用于网络连接测试
 		this->hThreadSocketLinkTest = CreateThread(NULL, 0, ThreadSocketLinkConn, &this->socketLink, 0, NULL);
@@ -340,7 +338,7 @@ void CGCBTestToolDlg::OnTimerSocketLinkTest()
 	}
 
 	if (bIsSuccess) {
-		this->ShowMessage(PROGRAM_CANT_LINK_SERVER, PROGRAM_STATE_TIP);
+		this->ShowMessage(PROGRAM_LINK_SERVER, PROGRAM_STATE_TIP);
 	}
 	else {
 		this->ShowMessage(PROGRAM_CANT_LINK_SERVER, PROGRAM_STATE_ERROR);
@@ -354,6 +352,8 @@ void CGCBTestToolDlg::OnTimerSocketLinkTest()
 
 	if (bIsSuccess && this->socketISLinking) {
 		this->OnTimerSocketLink();
+	} else {
+		this->socketLink.freeSocket();
 	}
 }
 

@@ -1,4 +1,6 @@
 ﻿#pragma once
+#include <time.h>
+#include <fstream>
 #include "afxcmn.h"
 #include "../SocketLink/MessageQueue/MessageQueue.h"
 
@@ -24,6 +26,7 @@ protected:
 
 private:
 	CListCtrl* JudgeMessageCMDCtrl(MessageBean beanMessage);
+	bool WriteLog(MessageBean beanMessage);
 
 public:
 	static MessageQueue recvMessageQueue;

@@ -123,6 +123,33 @@ CListCtrl* GCBMainDlg::JudgeMessageCMDCtrl(MessageBean beanMessage)
 	}
 }
 
+bool GCBMainDlg::WriteLog(MessageBean beanMessage)
+{
+	ofstream outfile("gcb.log");
+	if(!outfile) {
+        return false;
+	}
+
+	struct tm *tm_ptr;  
+    time_t the_time;  
+    (void) time(&the_time);  
+    tm_ptr = gmtime(&the_time);  
+
+	outfile << tm_ptr->tm_year << "-" << tm_ptr->tm_mon + 1 << "-" << tm_ptr->tm_mday << " ";
+	outfile << tm_ptr->tm_hour << ":" << tm_ptr->tm_min << ":" << tm_ptr->tm_sec << "\t";
+
+	outfile << "0x" << hex << beanMessage.GetCMDType() << "\t:\t";
+
+	list<BYTE>::iterator iter = beanMessage.GetParameterList().begin();
+	for (int nIndex = 0; nIndex < beanMessage.GetParameterSize(); ++nIndex, ++iter) {
+		outfile << "0x"<< hex << *iter << "\t";
+	}
+	outfile << endl;
+
+	outfile.close();
+	return true;
+}
+
 void GCBMainDlg::RefreshPage()
 {
 	// 刷新页面数据
