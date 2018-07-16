@@ -9,7 +9,7 @@
 #define SCROLLBAR_MIN		0                                               // Scroll Bar最小值
 #define SCROLLBAR_MAX		1000                                            // Scroll Bar最大值
 #define TIMER_OUT			3000                                            // 超时
-#define TIMER_GAP			1000                                            // 时间间隔
+#define TIMER_GAP			500                                             // 时间间隔
 #define ORDER_BUFFER_SIZE   100                                             // 命令字节缓存大小
 
 #include "afxwin.h"
