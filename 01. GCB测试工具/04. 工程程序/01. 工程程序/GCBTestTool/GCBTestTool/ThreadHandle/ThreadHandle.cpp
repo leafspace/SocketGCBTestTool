@@ -38,14 +38,15 @@ DWORD WINAPI ThreadSocketLinkRecv(LPVOID lpParamter)
 		bool bIsSuccess = socketLink->recvOrders(rOrders, &nLen, ORDER_BUFFER_SIZE);
 		if (bIsSuccess) {
 			do {
-				do {} while(GCBMainDlg::recvMessageQueue.IsEmpty());
-				do {
-					MessageBean recvedMessageBean;
-					recvedMessageBean.SetOrginDataList(rOrders, nLen);
-					recvedMessageBean.AnalysisOrginDataLst();
-					GCBMainDlg::recvMessageQueue.Push_back(recvedMessageBean);
-				} while(!GCBMainDlg::recvMessageQueue.IsEmpty());
+				do {} while(GCBMainDlg::recvMessageQueue.IsFull());
 
+				MessageBean recvedMessageBean;
+				recvedMessageBean.SetOrginDataList(rOrders, nLen);
+				PROGRAM_STATE_CODE retStateCode = recvedMessageBean.AnalysisOrginDataLst();
+				if (retStateCode == PROGRAM_ANALYSIS_ORGIN_DATA) {
+					GCBMainDlg::recvMessageQueue.Push_back(recvedMessageBean);
+				}
+				
 				Sleep(TIMER_GAP);
 			} while(true);
 		} else {

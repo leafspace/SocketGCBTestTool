@@ -16,7 +16,9 @@ list<BYTE> CGCBTestToolDlg::CreateMessage(const BYTE cmdID, const uint16_t uRegi
     retLst.push_back(cmdID);
 
     // Size
-    retLst.push_back((BYTE) (sizeof(uRegisterAddress) + sizeof(uReadNum)));
+	uint16_t uSize = sizeof(uRegisterAddress) + sizeof(uReadNum);
+    retLst.push_back(BYTE0(uSize));
+	retLst.push_back(BYTE1(uSize));
 
     // Parameter
     retLst.push_back(BYTE0(uRegisterAddress));

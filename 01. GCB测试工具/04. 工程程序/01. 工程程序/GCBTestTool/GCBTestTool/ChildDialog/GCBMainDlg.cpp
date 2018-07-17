@@ -132,7 +132,7 @@ float GCBMainDlg::Make4ByteFloat(BYTE *list)
 
 bool GCBMainDlg::WriteLog(MessageBean beanMessage)
 {
-	ofstream outfile("gcb.log");
+	ofstream outfile("gcb.log", ios::app);
 	if (!outfile) {
 		return false;
 	}
@@ -143,15 +143,16 @@ bool GCBMainDlg::WriteLog(MessageBean beanMessage)
 	tm_ptr = gmtime(&the_time);
 
 	outfile << tm_ptr->tm_year << "-" << tm_ptr->tm_mon + 1 << "-" << tm_ptr->tm_mday << " ";
-	outfile << tm_ptr->tm_hour << ":" << tm_ptr->tm_min << ":" << tm_ptr->tm_sec << "\t";
+	outfile << tm_ptr->tm_hour << ":" << tm_ptr->tm_min << ":" << tm_ptr->tm_sec << " ";
 
-	outfile << "0x" << hex << beanMessage.GetCMDType() << "\t:\t";
+	outfile << "0x" << hex << beanMessage.GetCMDType() << " :  ";
 
 	if (beanMessage.GetParameterSize() % 4 == 0) {
-		list<BYTE>::iterator iter = beanMessage.GetParameterList().begin();
+		list<BYTE> beanLst = beanMessage.GetParameterList();
+		list<BYTE>::iterator iter = beanLst.begin();
 		for (int nIndex = 0; nIndex < beanMessage.GetParameterSize();) {
 			BYTE list[4] = { 0 };
-			for (int nJIndex = 0; nJIndex < 4; ++nJIndex, ++iter) {
+			for (int nJIndex = 0; nJIndex < 4; ++nJIndex, ++nIndex, ++iter) {
 				list[nJIndex] = *iter;
 			}
 			outfile << setiosflags(ios::fixed) << setprecision(2) << this->Make4ByteFloat(list) << "\t";
@@ -160,9 +161,14 @@ bool GCBMainDlg::WriteLog(MessageBean beanMessage)
 
 
 	outfile << "[";
-	list<BYTE>::iterator iter = beanMessage.GetParameterList().begin();
+	list<BYTE> beanLst = beanMessage.GetParameterList();
+	list<BYTE>::iterator iter = beanLst.begin();
 	for (int nIndex = 0; nIndex < beanMessage.GetParameterSize(); ++nIndex, ++iter) {
-		outfile << "0x" << hex << *iter << "\t";
+		if ((nIndex + 1) == beanMessage.GetParameterSize()) {
+			outfile << "0x" << hex << (int)*iter;
+		} else {
+			outfile << "0x" << hex << (int)*iter << "\t";
+		}
 	}
 	outfile << "]";
 	outfile << endl;
@@ -177,13 +183,15 @@ void GCBMainDlg::RefreshPage()
 	MessageBean beanMessage;
 	while (GCBMainDlg::recvMessageQueue.IsEmpty() == false) {
 		GCBMainDlg::recvMessageQueue.Pop_front(&beanMessage);
-
+		
 		// 判断这个Message属于哪个组的命令
 		CListCtrl *beanList = this->JudgeMessageCMDCtrl(beanMessage);
 
+		this->WriteLog(beanMessage);
 		// 将数据放入显示控件中
 		CString formatStr;
-		list<BYTE>::iterator iter = beanMessage.GetParameterList().begin();
+		list<BYTE> beanLst = beanMessage.GetParameterList();
+		list<BYTE>::iterator iter = beanLst.begin();
 		beanList->DeleteAllItems();
 		for (int nIndex = 0; nIndex < beanMessage.GetParameterSize(); ++nIndex, ++iter) {
 			formatStr.Format(_T("0x%d"), (int)*iter);

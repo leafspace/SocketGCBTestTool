@@ -183,11 +183,11 @@ PROGRAM_STATE_CODE MessageBean::AnalysisOrginDataLst()
 
     uint16_t uRealSize = 0;
     list<BYTE> parameterLst;
-    for (nIndex += 6; nIndex < nEnIndex; ++nIndex, ++uRealSize, ++iter) {
+    for (nIndex += 5; nIndex < nEnIndex; ++nIndex, ++uRealSize, ++iter) {
         parameterLst.push_back(*iter);
     }
 
-    if (parameterLst.size() != uRealSize || uRealSize != uSize) {
+    if (parameterLst.size() != uRealSize) {
         return PROGRAM_CANT_ANALYSIS;
     }
 

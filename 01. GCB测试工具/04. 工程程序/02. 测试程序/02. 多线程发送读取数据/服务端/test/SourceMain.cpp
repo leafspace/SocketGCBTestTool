@@ -30,7 +30,7 @@ DWORD WINAPI ThreadSocketLinkSend(LPVOID lpParamter)
 	WaitForSingleObject(hMutexSocketLinkSend, INFINITE);
 	do
 	{
-		char buf[5] = { 0 };
+		char buf[] = { 0xF0, 0xF1, 0x41, 0x0A, 0x00, 0x00, 0x00, 0x3e, 0xd6, 0x2b, 0xdd, 0x3f, 0x52, 0xec };
 		int iSend = send(sAccept, buf, sizeof(buf), 0);
 		printf("服务器发送了消息\n");
 	} while(true);
@@ -87,16 +87,34 @@ void main()
 	iLen = sizeof(client);//初始化客户地址长度
 
 	//进入循环等待客户端连接请求
-
-	sAccept = accept(sListen, (struct sockaddr*)&client, &iLen);
-	if (sAccept == INVALID_SOCKET)
+	while(true)
 	{
-		printf("accept() failed:%d\n", WSAGetLastError());
-		exit(1);
+		sAccept = accept(sListen, (struct sockaddr*)&client, &iLen);
+		if (sAccept == INVALID_SOCKET)
+		{
+			printf("accept() failed:%d\n", WSAGetLastError());
+			exit(1);
+		}
+
+		int i = 0;
+		do 
+		{
+			char* msg = new char[500];
+			int msgLen = recv(sAccept, msg, 500, 0);
+			if (msg > 0) {
+				printf("服务器接收到了消息 %d \n", i++);
+				char buf[] = { 0xF0, 0xF1, 0x60, 0x06, 0x00, 0x3F, 0x80, 0x00, 0x00, 0xec };
+				int iSend = send(sAccept, buf, sizeof(buf), 0);
+				printf("服务器发送了消息\n");
+			} else {
+				break;
+			}
+
+		} while (true);
 	}
 
-	CreateThread(NULL, 0, ThreadSocketLinkRecv, NULL, 0, NULL);
-	CreateThread(NULL, 0, ThreadSocketLinkSend, NULL, 0, NULL);
+	//CreateThread(NULL, 0, ThreadSocketLinkRecv, NULL, 0, NULL);
+	//CreateThread(NULL, 0, ThreadSocketLinkSend, NULL, 0, NULL);
 
 	Sleep(600000);
 	closesocket(sListen);

@@ -361,8 +361,8 @@ void CGCBTestToolDlg::OnTimerSocketLinkTest()
 void CGCBTestToolDlg::OnTimerSocketLink()
 {
 	// 创建各个线程开始监听
-	this->hThreadSocketLinkRecv = CreateThread(NULL, 0, ThreadSocketLinkRecv, &this->socketLink, 0, NULL);
 	this->hThreadSocketLinkSend = CreateThread(NULL, 0, ThreadSocketLinkSend, &this->socketLink, 0, NULL);
+	this->hThreadSocketLinkRecv = CreateThread(NULL, 0, ThreadSocketLinkRecv, &this->socketLink, 0, NULL);
 
 	// 创建定时器，每隔一秒向GCB板子请求一次数据
 	SetTimer(TIMER_SOCKET_LINK_SEND, TIMER_GAP, 0);
