@@ -7,11 +7,9 @@
 #define IDS_ABOUTBOX                    101
 #define IDD_GCBTESTTOOL_DIALOG          102
 #define IDP_SOCKETS_INIT_FAILED         103
-#define IDR_HTML_GCBSETTINGDLG          104
 #define IDR_MAINFRAME                   128
 #define IDD_MAIN_DIALOG                 129
 #define IDD_DETAIL_DIALOG               130
-#define IDD_DIALOG_SETTING              131
 #define IDD_SETTING_DIALOG              131
 #define IDC_FRAMETAB                    1000
 #define IDC_GCB_IPADDRESS               1001

@@ -1,21 +1,25 @@
-#pragma once
+ï»¿#pragma once
+#include "../CommonType.h"
+#include "../SocketLink/MessageBean/MessageBean.h"
 
-
-// GCBSettingDlg ¶Ô»°¿ò
+// GCBSettingDlg å¯¹è¯æ¡†
 
 class GCBSettingDlg : public CDialog
 {
 	DECLARE_DYNAMIC(GCBSettingDlg)
 
 public:
-	GCBSettingDlg(CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
+	GCBSettingDlg(CWnd* pParent = NULL);   // æ ‡å‡†æ„é€ å‡½æ•°
 	virtual ~GCBSettingDlg();
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_SETTING_DIALOG };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
-
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
+	afx_msg void OnBnClickedOk();
 	DECLARE_MESSAGE_MAP()
+
+private:
+	list<BYTE> CreateMessage(const BYTE cmdID, const uint16_t uRegisterAddress, const float uReadNum);
 };

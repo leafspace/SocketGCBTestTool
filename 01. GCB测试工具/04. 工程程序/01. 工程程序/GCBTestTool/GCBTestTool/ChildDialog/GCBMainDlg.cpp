@@ -208,7 +208,7 @@ void GCBMainDlg::StartDraw(int ControlID)
 	int oldMinX = 0, oldMinY = pitureHeight / 2;
 
 	list<float>::iterator iter = this->showValueLst.begin();
-	for (int i = 1; i < min(PICTRUE_SHOW_SIZE, this->showValueLst.size()); ++i, iter++) {
+	for (int i = 1; i < (int) min(PICTRUE_SHOW_SIZE, this->showValueLst.size()); ++i, iter++) {
 		double showMax = 0, showMin = 0;
 
 		showMax = *iter;

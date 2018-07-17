@@ -12,12 +12,18 @@
 #define TIMER_GAP			500                                             // 时间间隔
 #define ORDER_BUFFER_SIZE   100                                             // 命令字节缓存大小
 
+#define BYTE0(dwTemp)       (*(char *)(&dwTemp))
+#define BYTE1(dwTemp)       (*((char *)(&dwTemp) + 1))
+#define BYTE2(dwTemp)       (*((char *)(&dwTemp) + 2))
+#define BYTE3(dwTemp)       (*((char *)(&dwTemp) + 3))
+
 #include "afxwin.h"
 #include "GCBTestTool.h"
 #include "StateTable/StateTable.h"
 #include "SocketLink/SocketLink.h"
 #include "ChildDialog/GCBMainDlg.h"
 #include "ThreadHandle/ThreadHandle.h"
+#include "ChildDialog/GCBSettingDlg.h"
 #include "ChildDialog/GCBDetailFrameDlg.h"
 
 
@@ -51,6 +57,7 @@ protected:
 	afx_msg void OnTcnSelchangeFrametab(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnBnClickedButtonLinktest();
 	afx_msg void OnBnClickedButtonLink();
+	afx_msg void OnBnClickedButtonSetting();
 	DECLARE_MESSAGE_MAP()
 
 
@@ -64,6 +71,7 @@ private:
 
 	GCBMainDlg mainPage;                                                    // 概览页面
 	GCBDetailFrameDlg framePage[LIST_NUM];                                  // 详情页面
+	GCBSettingDlg settingPage;                                              // 设置页面
 
 	CString strServerIP;                                                    // 服务器的IP
 	CString strServerPort;                                                  // 通讯的端口号

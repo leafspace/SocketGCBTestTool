@@ -1,12 +1,9 @@
-// E:\º¼Öİ¿ªÔ´µçÄÔ¼¼ÊõÓĞÏŞ¹«Ë¾\01. GCB²âÊÔ¹¤¾ß\04. ¹¤³Ì³ÌĞò\01. ¹¤³Ì³ÌĞò\GCBTestTool\GCBTestTool\ChildDialog\GCBSettingDlg.cpp : ÊµÏÖÎÄ¼ş
-//
-
-#include "stdafx.h"
-#include "../GCBTestTool.h"
+ï»¿#include "stdafx.h"
+#include "../GCBTestToolDlg.h"
 #include "GCBSettingDlg.h"
 
 
-// GCBSettingDlg ¶Ô»°¿ò
+// GCBSettingDlg å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(GCBSettingDlg, CDialog)
 
@@ -27,7 +24,55 @@ void GCBSettingDlg::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(GCBSettingDlg, CDialog)
+	ON_BN_CLICKED(IDOK, &GCBSettingDlg::OnBnClickedOk)
 END_MESSAGE_MAP()
 
 
-// GCBSettingDlg ÏûÏ¢´¦Àí³ÌĞò
+// GCBSettingDlg æ¶ˆæ¯å¤„ç†ç¨‹åº
+
+void GCBSettingDlg::OnBnClickedOk()
+{
+	CString inputStr;
+	GetDlgItemText(IDC_EDIT1, inputStr);
+
+	list<BYTE> retLsg = this->CreateMessage(NEGATIVE_PRESSURE_OUTPUT_VALUE_NOZZLE, 0x0001, _tstof(inputStr));
+
+	MessageBean tempMessageBean;
+	tempMessageBean.SetOrginDataList(retLsg);
+	tempMessageBean.AnalysisOrginDataLst();
+	GCBMainDlg::sendMessageQueue.Push_back(tempMessageBean);
+
+	MessageBox(_T("æˆåŠŸå†™å…¥æ¶ˆæ¯é˜Ÿåˆ—"), _T("æ¶ˆæ¯"), MB_ICONINFORMATION | MB_OK);
+	OnOK();
+}
+
+
+list<BYTE> GCBSettingDlg::CreateMessage(const BYTE cmdID, const uint16_t uRegisterAddress, const float uReadNum)
+{
+	list<BYTE> retLst;
+
+    // Head
+    retLst.push_back(0xF0);
+    retLst.push_back(0xF1);
+
+    // CMD
+    retLst.push_back(cmdID);
+
+    // Size
+	uint16_t uSize = sizeof(uRegisterAddress) + sizeof(uReadNum);
+    retLst.push_back(BYTE0(uSize));
+	retLst.push_back(BYTE1(uSize));
+
+    // Parameter
+    retLst.push_back(BYTE0(uRegisterAddress));
+    retLst.push_back(BYTE1(uRegisterAddress));
+
+    retLst.push_back(BYTE0(uReadNum));
+    retLst.push_back(BYTE1(uReadNum));
+	retLst.push_back(BYTE2(uReadNum));
+	retLst.push_back(BYTE3(uReadNum));
+
+    // Tail
+    retLst.push_back(0xEC);
+    return retLst;
+}

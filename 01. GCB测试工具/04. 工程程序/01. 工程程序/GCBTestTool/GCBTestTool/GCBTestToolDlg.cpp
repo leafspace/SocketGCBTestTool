@@ -76,6 +76,7 @@ BEGIN_MESSAGE_MAP(CGCBTestToolDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_LINKTEST, &CGCBTestToolDlg::OnBnClickedButtonLinktest)
 	ON_WM_TIMER()
 	ON_BN_CLICKED(IDC_BUTTON_LINK, &CGCBTestToolDlg::OnBnClickedButtonLink)
+	ON_BN_CLICKED(IDC_BUTTON_SETTING, &CGCBTestToolDlg::OnBnClickedButtonSetting)
 END_MESSAGE_MAP()
 
 // CGCBTestToolDlg 消息处理程序
@@ -440,25 +441,15 @@ void CGCBTestToolDlg::SendRequestMessage()
 	sendMsgLst[5] = this->CreateMessage(AIR_NEGATIVE_PRESSURE_VALUE, 0x0001, 2);
 	sendMsgLst[6] = this->CreateMessage(AIR_POSITIVE_PRESSURE_VALUE, 0x0001, 2);
 
-	// TODO 设置组与开启组在界面上差异很大，后期修改
-	// 设置组
-	/*
-	NEGATIVE_PRESSURE_OUTPUT_VALUE_NOZZLE
-	INK_MOTOR_DELAY_TIME
-	*/
-
-	// 操作组
-	/*
-	MODE_PRESSURE_NOZZLE_INK
-	START_WORKING_STATE_CIRCULATING_MOTOR
-	MANUALLY_OPEN_MODE_LOCKED_SOLENOID_VALVE_STATUS
-	*/
-
-	// TODO 临时设置为7个数
+	// 临时设置为7个数
 	for (int nIndex = 0; nIndex < LIST_NUM; ++nIndex) {
 		MessageBean tempMessageBean;
 		tempMessageBean.SetOrginDataList(sendMsgLst[nIndex]);
 		tempMessageBean.AnalysisOrginDataLst();
 		GCBMainDlg::sendMessageQueue.Push_back(tempMessageBean);
 	}
+}
+void CGCBTestToolDlg::OnBnClickedButtonSetting()
+{
+	this->settingPage.DoModal();
 }

@@ -190,10 +190,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ChildDialog\GCBSettingDlg.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\GCBTestTool.cpp"
 				>
 			</File>
@@ -234,6 +230,10 @@
 				</File>
 				<File
 					RelativePath=".\ChildDialog\GCBMainDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ChildDialog\GCBSettingDlg.cpp"
 					>
 				</File>
 			</Filter>
@@ -288,10 +288,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ChildDialog\GCBSettingDlg.h"
-				>
-			</File>
-			<File
 				RelativePath=".\GCBTestTool.h"
 				>
 			</File>
@@ -320,6 +316,10 @@
 				</File>
 				<File
 					RelativePath=".\ChildDialog\GCBMainDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ChildDialog\GCBSettingDlg.h"
 					>
 				</File>
 			</Filter>
@@ -382,11 +382,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\GCBSettingDlg.htm"
-			DeploymentContent="true"
-			>
-		</File>
 		<File
 			RelativePath=".\ReadMe.txt"
 			>

@@ -128,8 +128,8 @@ BEGIN
     CONTROL         "",IDC_LIST6,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,400,367,58
     CONTROL         "",IDC_PICTURE1,"Static",SS_BLACKFRAME,7,466,368,65
     LTEXT           "",IDC_STATIC_LABEL7,15,539,173,8
-    PUSHBUTTON      "详情",IDC_DETAIL_BUTTON7,330,534,35,15
-    CONTROL         "",IDC_LIST7,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,549,367,58
+    PUSHBUTTON      "详情",IDC_DETAIL_BUTTON7,330,535,35,15
+    CONTROL         "",IDC_LIST7,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,550,367,58
 END
 
 IDD_DETAIL_DIALOG DIALOGEX 0, 0, 390, 375
@@ -142,7 +142,7 @@ END
 
 IDD_SETTING_DIALOG DIALOGEX 0, 0, 254, 106
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Dialog"
+CAPTION "设置页面"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "确定",IDOK,105,69,50,14
@@ -233,13 +233,6 @@ BEGIN
 END
 #endif    // APSTUDIO_INVOKED
 
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// HTML
-//
-
-IDR_HTML_GCBSETTINGDLG  HTML                    "GCBSettingDlg.htm"
 
 /////////////////////////////////////////////////////////////////////////////
 //
