@@ -310,9 +310,20 @@ void CGCBTestToolDlg::OnBnClickedButtonLinktest()
 
 void CGCBTestToolDlg::OnBnClickedButtonLink()
 {
-	this->socketISLinking = true;
-	GetDlgItem(IDC_BUTTON_LINK)->EnableWindow(false);
-	this->OnBnClickedButtonLinktest();
+	if (this->socketISLinking) {
+		this->socketISLinking = false;
+		SetDlgItemText(IDC_BUTTON_LINK, _T("连接"));
+		CloseHandle(this->hThreadSocketLinkTest);
+		CloseHandle(this->hThreadSocketLinkRecv);
+		CloseHandle(this->hThreadSocketLinkSend);
+		KillTimer(TIMER_SOCKET_LINK_CONN);
+		KillTimer(TIMER_SOCKET_LINK_RECV);
+		KillTimer(TIMER_SOCKET_LINK_SEND);
+	} else {
+		this->socketISLinking = true;
+		SetDlgItemText(IDC_BUTTON_LINK, _T("停止连接"));
+		this->OnBnClickedButtonLinktest();
+	}
 }
 
 void CGCBTestToolDlg::OnTimerSocketLinkTest()
@@ -444,7 +455,7 @@ void CGCBTestToolDlg::SendRequestMessage()
 	*/
 
 	// TODO 临时设置为7个数
-	for (int nIndex = 0; nIndex < 7; ++nIndex) {
+	for (int nIndex = 0; nIndex < LIST_NUM; ++nIndex) {
 		MessageBean tempMessageBean;
 		tempMessageBean.SetOrginDataList(sendMsgLst[nIndex]);
 		tempMessageBean.AnalysisOrginDataLst();

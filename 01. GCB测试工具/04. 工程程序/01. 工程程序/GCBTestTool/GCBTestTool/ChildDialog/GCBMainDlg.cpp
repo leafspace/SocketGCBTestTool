@@ -49,25 +49,15 @@ BOOL GCBMainDlg::OnInitDialog()
 		this->m_List[nIndex].SetExtendedStyle(this->m_List[nIndex].GetExtendedStyle() |
 			LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 
-		// 插入表头标题		
-		for (int nJIndex = 0; nJIndex < nTableHeadNum; ++nJIndex) {
-			if ((nJIndex + 1) == nTableHeadNum) {
-				this->m_List[nIndex].InsertColumn(nJIndex, _T("数据标题"), LVCFMT_CENTER,
-					rect.Width() / nTableHeadNum - 20, nJIndex);
-			}
-			else {
-				this->m_List[nIndex].InsertColumn(nJIndex, _T("数据标题"), LVCFMT_CENTER,
-					rect.Width() / nTableHeadNum, nJIndex);
-			}
-		}
+		this->m_List[nIndex].InsertColumn(0, _T("时间"), LVCFMT_CENTER,
+					rect.Width() / nTableHeadNum, 0);
 
-		CString strDataValue;
-		for (int nJIndex = 0; nJIndex < nTableDataNum; ++nJIndex) {
-			this->m_List[nIndex].InsertItem(nJIndex, _T("数据"));
-			for (int nKIndex = 0; nKIndex < nTableHeadNum; ++nKIndex) {
-				strDataValue.Format(_T("数据%d"), nKIndex + 1);
-				this->m_List[nIndex].SetItemText(nJIndex, nKIndex, strDataValue);
-			}
+		// 插入表头标题		
+		for (int nJIndex = 1; nJIndex < nTableHeadNum; ++nJIndex) {
+			CString labelStr;
+			labelStr.Format(_T("数据%d"), nJIndex);
+			this->m_List[nIndex].InsertColumn(nJIndex, labelStr, LVCFMT_CENTER,
+					(rect.Width() - 20) / nTableHeadNum, nJIndex);
 		}
 	}
 
@@ -108,16 +98,6 @@ CListCtrl* GCBMainDlg::JudgeMessageCMDCtrl(MessageBean beanMessage)
 		return &this->m_List[5];
 	case AIR_POSITIVE_PRESSURE_VALUE:
 		return &this->m_List[6];
-	case NEGATIVE_PRESSURE_OUTPUT_VALUE_NOZZLE:
-		return &this->m_List[7];
-	case INK_MOTOR_DELAY_TIME:
-		return &this->m_List[8];
-	case MODE_PRESSURE_NOZZLE_INK:
-		return &this->m_List[9];
-	case START_WORKING_STATE_CIRCULATING_MOTOR:
-		return &this->m_List[10];
-	case MANUALLY_OPEN_MODE_LOCKED_SOLENOID_VALVE_STATUS:
-		return &this->m_List[11];
 	default:
 		return &this->m_List[0];
 	}
@@ -130,7 +110,18 @@ float GCBMainDlg::Make4ByteFloat(BYTE *list)
 	return retValue;
 }
 
-bool GCBMainDlg::WriteLog(MessageBean beanMessage)
+float GCBMainDlg::MakeTurn4ByteFloat(BYTE *list)
+{
+	BYTE newList[4] = { 0 };
+	for (int nIndex = 0; nIndex < 4; ++nIndex) {
+		newList[nIndex] = list[3 - nIndex];
+	}
+
+	float retValue = this->Make4ByteFloat(newList);
+	return retValue;
+}
+
+bool GCBMainDlg::WriteLog(MessageBean beanMessage, CString *timeStr, list<float> &retValueLst)
 {
 	ofstream outfile("gcb.log", ios::app);
 	if (!outfile) {
@@ -142,20 +133,30 @@ bool GCBMainDlg::WriteLog(MessageBean beanMessage)
 	(void)time(&the_time);
 	tm_ptr = gmtime(&the_time);
 
-	outfile << tm_ptr->tm_year << "-" << tm_ptr->tm_mon + 1 << "-" << tm_ptr->tm_mday << " ";
-	outfile << tm_ptr->tm_hour << ":" << tm_ptr->tm_min << ":" << tm_ptr->tm_sec << " ";
+	timeStr->Format(_T("%d-%d-%d %d:%d:%d "), tm_ptr->tm_year + 1900, tm_ptr->tm_mon + 1,
+	tm_ptr->tm_mday, tm_ptr->tm_hour, tm_ptr->tm_min, tm_ptr->tm_sec);
+
+	outfile << setw(4) << setfill('0') << tm_ptr->tm_year + 1900 << "-";
+	outfile << setw(2) << setfill('0') << tm_ptr->tm_mon + 1 << "-";
+	outfile << setw(2) << setfill('0') << tm_ptr->tm_mday << " ";
+	outfile << setw(2) << setfill('0') << tm_ptr->tm_hour << ":";
+	outfile << setw(2) << setfill('0') << tm_ptr->tm_min << ":";
+	outfile << setw(2) << setfill('0') << tm_ptr->tm_sec << " ";
 
 	outfile << "0x" << hex << beanMessage.GetCMDType() << " :  ";
 
-	if (beanMessage.GetParameterSize() % 4 == 0) {
+	if (beanMessage.GetCMDType() == AIR_NEGATIVE_PRESSURE_VALUE && 
+	(beanMessage.GetParameterSize() - 2) % 4 == 0) {
 		list<BYTE> beanLst = beanMessage.GetParameterList();
 		list<BYTE>::iterator iter = beanLst.begin();
-		for (int nIndex = 0; nIndex < beanMessage.GetParameterSize();) {
+		for (int nIndex = 0; nIndex < beanMessage.GetParameterSize() / 4; ++nIndex) {
 			BYTE list[4] = { 0 };
-			for (int nJIndex = 0; nJIndex < 4; ++nJIndex, ++nIndex, ++iter) {
+			for (int nJIndex = 0; nJIndex < 4; ++nJIndex, ++iter) {
 				list[nJIndex] = *iter;
 			}
-			outfile << setiosflags(ios::fixed) << setprecision(2) << this->Make4ByteFloat(list) << "\t";
+			float retValue = this->MakeTurn4ByteFloat(list);
+			outfile << setiosflags(ios::fixed) << setprecision(2) << retValue << "\t";
+			retValueLst.push_back(retValue);
 		}
 	}
 
@@ -165,9 +166,9 @@ bool GCBMainDlg::WriteLog(MessageBean beanMessage)
 	list<BYTE>::iterator iter = beanLst.begin();
 	for (int nIndex = 0; nIndex < beanMessage.GetParameterSize(); ++nIndex, ++iter) {
 		if ((nIndex + 1) == beanMessage.GetParameterSize()) {
-			outfile << "0x" << hex << (int)*iter;
+			outfile << "0x" << hex << setw(2) << setfill('0') << (int)*iter;
 		} else {
-			outfile << "0x" << hex << (int)*iter << "\t";
+			outfile << "0x" << hex << setw(2) << setfill('0') << (int)*iter << "\t";
 		}
 	}
 	outfile << "]";
@@ -177,25 +178,106 @@ bool GCBMainDlg::WriteLog(MessageBean beanMessage)
 	return true;
 }
 
+void GCBMainDlg::StartDraw(int ControlID)
+{
+	CRect rc;
+	CPaintDC dc(this);
+	CWnd *pWnd = GetDlgItem(ControlID);
+	pWnd->GetWindowRect(rc);
+	CDC *pdc = pWnd->GetDC();
+
+	CPen newPen;                                                            // 用于创建新画笔
+	CPen *pOldPen;                                                          // 用于存放旧画笔
+	CDC MemDC;                                                              // 首先定义一个显示设备对象
+	CBitmap MemBitmap;                                                      // 定义一个位图对象
+
+	int width = rc.Width();
+	int height = rc.Height();
+
+	MemDC.CreateCompatibleDC(NULL);                                         // 随后建立与屏幕显示兼容的内存显示设备
+	MemBitmap.CreateCompatibleBitmap(pdc, width, height);                   // 下面建立一个与屏幕显示兼容的位图
+	CBitmap *pOldBit = MemDC.SelectObject(&MemBitmap);                      // 将位图选入到内存显示设备中//只有选入了位图的内存显示设备才有地方绘图，画到指定的位图上
+	MemDC.FillSolidRect(1, 1, width - 2, height - 2, RGB(255, 255, 255));   // 先用背景色将位图清除干净
+
+	newPen.CreatePen(PS_SOLID, 1, RGB(0, 0, 255));                          // 创建实心画笔，粗度为1，颜色为绿色
+	pOldPen = MemDC.SelectObject(&newPen);                                  // 选择新画笔，并将旧画笔的指针保存到pOldPen
+
+	unsigned int pitureWidth = (unsigned int)(width - 1);
+	unsigned int pitureHeight = (unsigned int)(height - 1);
+	int oldMaxX = 0, oldMaxY = pitureHeight / 2;
+	int oldMinX = 0, oldMinY = pitureHeight / 2;
+
+	list<float>::iterator iter = this->showValueLst.begin();
+	for (int i = 1; i < min(PICTRUE_SHOW_SIZE, this->showValueLst.size()); ++i, iter++) {
+		double showMax = 0, showMin = 0;
+
+		showMax = *iter;
+		showMin = *iter;
+
+		// 显示数值
+		showMax /= pow((double)2, (double)sizeof(BYTE));
+		showMax = (pitureHeight / 2) * showMax;
+		showMin /= pow((double)2, (double)sizeof(BYTE));
+		showMin = (pitureHeight / 2) * showMin;
+		MemDC.MoveTo(oldMaxX, oldMaxY);
+		MemDC.LineTo(i, (int)((pitureHeight / 2) - showMax));
+		MemDC.MoveTo(oldMinX, oldMinY);
+		MemDC.LineTo(i, (int)((pitureHeight / 2) - showMin));
+		oldMaxX = i;
+		oldMaxY = (int)((pitureHeight / 2) - showMax);
+		oldMinX = i;
+		oldMinY = (int)((pitureHeight / 2) - showMin);
+	}
+
+	MemDC.SelectObject(pOldPen);                                            // 恢复旧画笔
+	newPen.DeleteObject();                                                  // 删除新画笔
+
+	newPen.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));                            // 创建实心画笔，粗度为1，颜色为绿色
+	pOldPen = MemDC.SelectObject(&newPen);                                  // 选择新画笔，并将旧画笔的指针保存到pOldPen
+	MemDC.MoveTo(0, pitureHeight / 2);
+	MemDC.LineTo(pitureWidth, pitureHeight / 2);
+	for (unsigned int i = 0; i < pitureWidth; i += (pitureWidth / 10)) {
+		MemDC.MoveTo(i, pitureHeight / 2 + 5);
+		MemDC.LineTo(i, pitureHeight / 2 - 5);
+	}
+
+	pdc->BitBlt(0, 0, width - 2, height - 2, &MemDC, 0, 0, SRCCOPY);        // 将内存中的图拷贝到屏幕上进行显示
+
+	MemBitmap.DeleteObject();                                               // 绘图完成后的清理
+	MemDC.DeleteDC();
+}
+
 void GCBMainDlg::RefreshPage()
 {
 	// 刷新页面数据
+	CString timeStr;
+	list<float> retValueLst;
 	MessageBean beanMessage;
 	while (GCBMainDlg::recvMessageQueue.IsEmpty() == false) {
 		GCBMainDlg::recvMessageQueue.Pop_front(&beanMessage);
+		this->WriteLog(beanMessage, &timeStr, retValueLst);
 		
 		// 判断这个Message属于哪个组的命令
 		CListCtrl *beanList = this->JudgeMessageCMDCtrl(beanMessage);
-
-		this->WriteLog(beanMessage);
 		// 将数据放入显示控件中
 		CString formatStr;
-		list<BYTE> beanLst = beanMessage.GetParameterList();
-		list<BYTE>::iterator iter = beanLst.begin();
-		beanList->DeleteAllItems();
-		for (int nIndex = 0; nIndex < beanMessage.GetParameterSize(); ++nIndex, ++iter) {
-			formatStr.Format(_T("0x%d"), (int)*iter);
-			beanList->InsertItem(nIndex, formatStr);
+		list<float>::iterator iter = retValueLst.begin();
+		beanList->InsertItem(0, timeStr);
+		beanList->SetItemText(0, 0, timeStr);
+
+		double sumValue = 0;
+		for (int nIndex = 1; nIndex < (int) retValueLst.size(); ++nIndex) {
+			sumValue += (*iter);
+			formatStr.Format(_T("%.2f"), *iter);
+			beanList->SetItemText(0, nIndex, formatStr);
 		}
+		sumValue = sumValue / retValueLst.size();
+		this->showValueLst.push_back((float)sumValue);
+		if (this->showValueLst.size() > PICTRUE_SHOW_SIZE) {
+			this->showValueLst.pop_front();
+		}
+
+		this->StartDraw(IDC_PICTURE1);
+		CDialog::OnPaint();
 	}
 }

@@ -1,9 +1,12 @@
 ﻿#pragma once
+#include <math.h>
 #include <time.h>
 #include <iomanip>
 #include <fstream>
 #include "afxcmn.h"
 #include "../SocketLink/MessageQueue/MessageQueue.h"
+
+#define PICTRUE_SHOW_SIZE	450
 
 // GCBMainDlg 对话框
 
@@ -28,12 +31,14 @@ protected:
 private:
 	CListCtrl* JudgeMessageCMDCtrl(MessageBean beanMessage);
 	float Make4ByteFloat(BYTE *list);
-	bool WriteLog(MessageBean beanMessage);
+	float MakeTurn4ByteFloat(BYTE *list);
+	bool WriteLog(MessageBean beanMessage, CString *timeStr, list<float> &retValueLst);
 
+	list<float> showValueLst;
+	void StartDraw(int ControlID);
 public:
 	static MessageQueue recvMessageQueue;
 	static MessageQueue sendMessageQueue;
-
 
 	CListCtrl m_List[LIST_NUM];
 	void RefreshPage();

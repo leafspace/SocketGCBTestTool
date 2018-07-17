@@ -15,6 +15,7 @@
         "vector": "cpp",
         "xlocale": "cpp",
         "initializer_list": "cpp",
-        "exception": "cpp"
+        "exception": "cpp",
+        "iomanip": "cpp"
     }
 }

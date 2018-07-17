@@ -4,10 +4,10 @@
 
 #pragma once
 
-#define LIST_NUM			12
+#define LIST_NUM			7
 #define TOPBAR_SIZE			20                                              // 顶端标签到边缘的大小
 #define SCROLLBAR_MIN		0                                               // Scroll Bar最小值
-#define SCROLLBAR_MAX		1000                                            // Scroll Bar最大值
+#define SCROLLBAR_MAX		530                                            // Scroll Bar最大值
 #define TIMER_OUT			3000                                            // 超时
 #define TIMER_GAP			500                                             // 时间间隔
 #define ORDER_BUFFER_SIZE   100                                             // 命令字节缓存大小
