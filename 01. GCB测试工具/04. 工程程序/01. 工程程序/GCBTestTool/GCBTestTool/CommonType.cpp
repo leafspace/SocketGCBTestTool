@@ -23,6 +23,7 @@ const CString strStateCodeMessage[] = {
 	_T("未定义的CMD指令"),
 	_T("无法解析原始指令包"),
 	_T("指令包解析成功"),
+	_T("未连接服务器"),
 };
 
 

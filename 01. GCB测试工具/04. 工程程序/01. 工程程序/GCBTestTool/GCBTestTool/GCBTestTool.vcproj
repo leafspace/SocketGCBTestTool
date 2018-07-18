@@ -198,10 +198,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GCBTestToolDlgCore.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration

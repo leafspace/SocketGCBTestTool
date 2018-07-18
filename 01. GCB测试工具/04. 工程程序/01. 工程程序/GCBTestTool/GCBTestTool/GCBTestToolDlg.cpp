@@ -320,6 +320,7 @@ void CGCBTestToolDlg::OnBnClickedButtonLink()
 		KillTimer(TIMER_SOCKET_LINK_CONN);
 		KillTimer(TIMER_SOCKET_LINK_RECV);
 		KillTimer(TIMER_SOCKET_LINK_SEND);
+		this->socketLink.freeSocket();
 		this->mainPage.DeleteTimer(TIMER_DIALOG_DRAW);
 	}
 	else {
@@ -327,6 +328,15 @@ void CGCBTestToolDlg::OnBnClickedButtonLink()
 		SetDlgItemText(IDC_BUTTON_LINK, _T("停止连接"));
 		this->mainPage.CreateTimer(TIMER_DIALOG_DRAW);
 		this->OnBnClickedButtonLinktest();
+	}
+}
+
+void CGCBTestToolDlg::OnBnClickedButtonSetting()
+{
+	if (this->socketISLinking) {
+		this->settingPage.DoModal();
+	} else {
+		this->ShowMessage(PROGRAM_UNLIKING, PROGRAM_STATE_ERROR);
 	}
 }
 
@@ -386,6 +396,58 @@ void CGCBTestToolDlg::OnTimerSocketLink()
 	SetTimer(TIMER_SOCKET_LINK_RECV, TIMER_GAP, 0);
 }
 
+list<BYTE> CGCBTestToolDlg::CreateMessage(const BYTE cmdID, const uint16_t uRegisterAddress, const uint16_t uReadNum)
+{
+	list<BYTE> retLst;
+
+	// Head
+	retLst.push_back(0xF0);
+	retLst.push_back(0xF1);
+
+	// CMD
+	retLst.push_back(cmdID);
+
+	// Size
+	uint16_t uSize = sizeof(uRegisterAddress) + sizeof(uReadNum);
+	retLst.push_back(BYTE0(uSize));
+	retLst.push_back(BYTE1(uSize));
+
+	// Parameter
+	retLst.push_back(BYTE0(uRegisterAddress));
+	retLst.push_back(BYTE1(uRegisterAddress));
+
+	retLst.push_back(BYTE0(uReadNum));
+	retLst.push_back(BYTE1(uReadNum));
+
+	// Tail
+	retLst.push_back(0xEC);
+	return retLst;
+}
+
+int CGCBTestToolDlg::GetFrameTabIndex(const int nIndex)
+{
+	FRAME_CMD_TYPE cmdType = NOZZLE_CARTRIDGE_LEVEL;
+	switch(nIndex)
+	{
+		case 0 : cmdType = NOZZLE_CARTRIDGE_LEVEL; break;
+		case 1 : cmdType = MODE_LOCKED_SOLENOID_VALVE_WORKING; break;
+		case 2 : cmdType = POSITIVE_NEGATIVE_PRESSURE_SOLENOID_VALVE_WORKING; break;
+		case 3 : cmdType = INK_SUPPLY_PUMP_WORKING_CONDITION; break;
+		case 4 : cmdType = NOZZLE_CABINET_TEMPERATURE; break;
+		case 5 : cmdType = AIR_NEGATIVE_PRESSURE_VALUE; break;
+		case 6 : cmdType = AIR_POSITIVE_PRESSURE_VALUE; break;
+		default: cmdType = NOZZLE_CARTRIDGE_LEVEL; break;
+	}
+
+	for (int nIndex = 0; nIndex < this->nDialogLen; ++nIndex) {
+		if (this->framePage[nIndex].GetFrameType() == cmdType) {
+			return nIndex + 1;
+		}
+	}
+
+	return -1;
+}
+
 void CGCBTestToolDlg::ShowMessage(PROGRAM_STATE_CODE stateCode, PROGRAM_STATE_TYPE stateType)
 {
 	CString strStateMessage = GetStateCodeMessage(stateCode);
@@ -405,25 +467,28 @@ void CGCBTestToolDlg::ShowMessage(PROGRAM_STATE_CODE stateCode, PROGRAM_STATE_TY
 
 bool CGCBTestToolDlg::AddNewFrameTab(const int nIndex)
 {
-	this->m_FrameTabCtrl.InsertItem(this->nDialogLen + 1, GetLabel(nIndex));
-	this->framePage[this->nDialogLen].SetFrameType(nIndex);
-	this->framePage[this->nDialogLen].Create(IDD_DETAIL_DIALOG, &this->m_FrameTabCtrl);
+	int newTabIndex = 0;
+	if ((newTabIndex = this->GetFrameTabIndex(nIndex)) < 0) {
+		this->m_FrameTabCtrl.InsertItem(this->nDialogLen + 1, GetLabel(nIndex));
+		this->framePage[this->nDialogLen].SetFrameType(nIndex);
+		this->framePage[this->nDialogLen].Create(IDD_DETAIL_DIALOG, &this->m_FrameTabCtrl);
 
-	// 设定在Tab内显示的范围
-	CRect rc;
-	this->m_FrameTabCtrl.GetClientRect(rc);
-	rc.bottom = rc.bottom - TOPBAR_SIZE;
-	this->framePage[this->nDialogLen].MoveWindow(&rc);
+		// 设定在Tab内显示的范围
+		CRect rc;
+		this->m_FrameTabCtrl.GetClientRect(rc);
+		rc.bottom = rc.bottom - TOPBAR_SIZE;
+		this->framePage[this->nDialogLen].MoveWindow(&rc);
 
-	this->pDialog[this->nDialogLen + 1] = &this->framePage[this->nDialogLen];
+		this->pDialog[this->nDialogLen + 1] = &this->framePage[this->nDialogLen];
+		newTabIndex = this->nDialogLen + 1;
+		this->nDialogLen++;
+	}
 
 	// Tab Control设置当前显示为新页面
-	this->m_FrameTabCtrl.SetCurSel(this->nDialogLen + 1);
+	this->m_FrameTabCtrl.SetCurSel(newTabIndex);
 	this->pDialog[this->nCurSelTab]->ShowWindow(SW_HIDE);
-	this->nCurSelTab = this->nDialogLen + 1;
+	this->nCurSelTab = newTabIndex;
 	this->pDialog[this->nCurSelTab]->ShowWindow(SW_SHOW);
-
-	this->nDialogLen++;
 
 	// 设置滚动条位置
 	this->m_DlgScrollBar.SetScrollPos(0);
@@ -453,7 +518,12 @@ void CGCBTestToolDlg::SendRequestMessage()
 	}
 }
 
-void CGCBTestToolDlg::OnBnClickedButtonSetting()
+GCBDetailFrameDlg *CGCBTestToolDlg::GetFramePage(FRAME_CMD_TYPE cmdType)
 {
-	this->settingPage.DoModal();
+	for (int nIndex = 0; nIndex < this->nDialogLen; ++nIndex) {
+		if (this->framePage[nIndex].GetFrameType() == cmdType) {
+			return &this->framePage[nIndex];
+		}
+	}
+	return NULL;
 }

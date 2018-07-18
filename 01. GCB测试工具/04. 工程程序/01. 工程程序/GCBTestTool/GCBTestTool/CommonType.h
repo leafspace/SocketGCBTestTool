@@ -34,6 +34,7 @@ enum PROGRAM_STATE_CODE
 	PROGRAM_UNDEFINE_CMD,										// 未定义的CMD类型
 	PROGRAM_CANT_ANALYSIS,										// 无法解析原始命令码
 	PROGRAM_ANALYSIS_ORGIN_DATA,								// 解析原始命令码成功
+	PROGRAM_UNLIKING,                                           // 当前未连接服务器
 };
 
 enum PROGRAM_STATE_TYPE                                 // MessageBox的三种状态

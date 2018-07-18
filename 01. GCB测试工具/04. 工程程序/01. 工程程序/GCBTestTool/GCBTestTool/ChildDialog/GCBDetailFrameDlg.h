@@ -20,13 +20,17 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 	virtual BOOL OnInitDialog();
 	DECLARE_MESSAGE_MAP()
-public:
-	CListCtrl m_List;
 
 private:
-	int nFrameTypeIndex;
+	FRAME_CMD_TYPE nFrameType;
 
 public:
+	CListCtrl m_List;
+	list<MessageBean> histroyLst;
+
 	void SetFrameType(int nFrameTypeNum);
+	FRAME_CMD_TYPE GetFrameType(void);
+
+	void AddMessageBean(MessageBean beanMessage);
 
 };

@@ -40,13 +40,7 @@ DWORD WINAPI ThreadSocketLinkRecv(LPVOID lpParamter)
 			do {} while (GCBMainDlg::recvMessageQueue.IsFull());
 
 			// 将接收到的原始数据写入log
-			SYSTEMTIME sys;
-			GetLocalTime(&sys);
-			CString timeStr;
-			timeStr.Format(_T("%4d-%02d-%02d %02d:%02d:%02d "), sys.wYear, sys.wMonth, sys.wDay, sys.wHour, sys.wMinute, sys.wSecond);
-
 			ofstream outfile("orgin.log", ios::app);
-			outfile << timeStr << "\t";
 			for (int nIndex = 0; nIndex < nLen; ++nIndex) {
 				outfile << hex << "0x" << (int)rOrders[nIndex] << " ";	
 			}

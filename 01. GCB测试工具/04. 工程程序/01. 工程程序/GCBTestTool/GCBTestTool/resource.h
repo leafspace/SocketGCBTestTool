@@ -34,9 +34,13 @@
 #define IDC_STATIC_LABEL2               1024
 #define IDC_EDIT1                       1024
 #define IDC_STATIC_LABEL3               1025
+#define IDC_EDIT2                       1025
 #define IDC_STATIC_LABEL4               1026
+#define IDC_EDIT3                       1026
 #define IDC_STATIC_LABEL5               1027
+#define IDC_EDIT4                       1027
 #define IDC_STATIC_LABEL6               1028
+#define IDC_EDIT5                       1028
 #define IDC_STATIC_LABEL7               1029
 #define IDC_STATIC_LABEL8               1030
 #define IDC_STATIC_LABEL9               1031
@@ -64,7 +68,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        132
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1025
+#define _APS_NEXT_CONTROL_VALUE         1029
 #define _APS_NEXT_SYMED_VALUE           105
 #endif
 #endif

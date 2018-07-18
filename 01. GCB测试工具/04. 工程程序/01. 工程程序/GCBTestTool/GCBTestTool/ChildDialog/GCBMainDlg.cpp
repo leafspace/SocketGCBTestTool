@@ -44,7 +44,7 @@ BOOL GCBMainDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	const int nTableHeadNum = 5, nTableDataNum = 2;
+	const int nTableHeadNum = 5;
 	for (int nIndex = 0; nIndex < LIST_NUM; ++nIndex) {
 		CRect rect;
 		this->m_List[nIndex].GetClientRect(&rect); //获得当前listcontrol的宽度
@@ -312,6 +312,13 @@ void GCBMainDlg::RefreshPage()
 			if (this->showValueLst.size() > PICTRUE_SHOW_SIZE) {
 				this->showValueLst.pop_front();
 			}
+		}
+
+		// 将数据存入详细页面
+		CGCBTestToolDlg *pDlg = (CGCBTestToolDlg*)(AfxGetApp()->GetMainWnd());
+		GCBDetailFrameDlg *framePage = pDlg->GetFramePage(beanMessage.GetCMDType());
+		if (framePage != NULL) {
+			framePage->AddMessageBean(beanMessage);
 		}
 	}
 }
