@@ -52,14 +52,14 @@ BOOL GCBMainDlg::OnInitDialog()
 			LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 
 		this->m_List[nIndex].InsertColumn(0, _T("时间"), LVCFMT_CENTER,
-					rect.Width() / nTableHeadNum, 0);
+			rect.Width() / nTableHeadNum, 0);
 
 		// 插入表头标题		
 		for (int nJIndex = 1; nJIndex < nTableHeadNum; ++nJIndex) {
 			CString labelStr;
 			labelStr.Format(_T("数据%d"), nJIndex);
 			this->m_List[nIndex].InsertColumn(nJIndex, labelStr, LVCFMT_CENTER,
-					(rect.Width() - 20) / nTableHeadNum, nJIndex);
+				(rect.Width() - 20) / nTableHeadNum, nJIndex);
 		}
 	}
 
@@ -135,6 +135,24 @@ float GCBMainDlg::MakeTurn4ByteFloat(BYTE *list)
 	return retValue;
 }
 
+short GCBMainDlg::GetFormatSize(FRAME_CMD_TYPE cmdType)
+{
+	switch(cmdType)
+	{
+	case NOZZLE_CARTRIDGE_LEVEL : 
+	case MODE_LOCKED_SOLENOID_VALVE_WORKING :
+	case POSITIVE_NEGATIVE_PRESSURE_SOLENOID_VALVE_WORKING :
+	case INK_SUPPLY_PUMP_WORKING_CONDITION :
+		return 1;
+	case NOZZLE_CABINET_TEMPERATURE :
+	case AIR_NEGATIVE_PRESSURE_VALUE :
+	case AIR_POSITIVE_PRESSURE_VALUE :
+		return 4;
+	default:
+		return 1;
+	}
+}
+
 bool GCBMainDlg::WriteLog(MessageBean beanMessage, CString *timeStr, list<float> &retValueLst)
 {
 	ofstream outfile("gcb.log", ios::app);
@@ -156,30 +174,32 @@ bool GCBMainDlg::WriteLog(MessageBean beanMessage, CString *timeStr, list<float>
 
 	outfile << "0x" << hex << beanMessage.GetCMDType() << " :  ";
 
-	if (beanMessage.GetCMDType() == AIR_NEGATIVE_PRESSURE_VALUE && 
-	(beanMessage.GetParameterSize() - 2) % 4 == 0) {
-		list<BYTE> beanLst = beanMessage.GetParameterList();
-		list<BYTE>::iterator iter = beanLst.begin();
-		for (int nIndex = 0; nIndex < beanMessage.GetParameterSize() / 4; ++nIndex) {
-			BYTE list[4] = { 0 };
-			for (int nJIndex = 0; nJIndex < 4; ++nJIndex, ++iter) {
-				list[nJIndex] = *iter;
-			}
-			float retValue = this->MakeTurn4ByteFloat(list);
-			outfile << setiosflags(ios::fixed) << setprecision(2) << retValue << "\t";
-			retValueLst.push_back(retValue);
+	short formatSize = this->GetFormatSize(beanMessage.GetCMDType());
+	list<BYTE> beanPLst = beanMessage.GetParameterList();
+	list<BYTE>::iterator iterP = beanPLst.begin();
+	for (int nIndex = 0; nIndex < (beanMessage.GetParameterSize() - 2) / formatSize; ++nIndex) {
+		BYTE *list = new BYTE[formatSize];
+		for (int nJIndex = 0; nJIndex < formatSize; ++nJIndex, ++iterP) {
+			list[nJIndex] = *iterP;
 		}
+		
+		float retValue = formatSize == 4 ? this->MakeTurn4ByteFloat(list) : list[0];
+		
+		delete list;
+		outfile << setiosflags(ios::fixed) << setprecision(2) << retValue << "\t";
+		retValueLst.push_back(retValue);
 	}
 
 
 	outfile << "[";
-	list<BYTE> beanLst = beanMessage.GetParameterList();
-	list<BYTE>::iterator iter = beanLst.begin();
-	for (int nIndex = 0; nIndex < beanMessage.GetParameterSize(); ++nIndex, ++iter) {
-		if ((nIndex + 1) == beanMessage.GetParameterSize()) {
-			outfile << "0x" << hex << setw(2) << setfill('0') << (int)*iter;
-		} else {
-			outfile << "0x" << hex << setw(2) << setfill('0') << (int)*iter << "\t";
+	list<BYTE> beanOLst = beanMessage.GetOrginDataList();
+	list<BYTE>::iterator iterO = beanOLst.begin();
+	for (int nIndex = 0; nIndex < (int) beanOLst.size(); ++nIndex, ++iterO) {
+		if ((nIndex + 1) == beanOLst.size()) {
+			outfile << "0x" << hex << setw(2) << setfill('0') << (int)*iterO;
+		}
+		else {
+			outfile << "0x" << hex << setw(2) << setfill('0') << (int)*iterO << "\t";
 		}
 	}
 	outfile << "]";
@@ -219,7 +239,7 @@ void GCBMainDlg::StartDraw(int ControlID)
 	int oldMinX = 0, oldMinY = pitureHeight / 2;
 
 	list<float>::iterator iter = this->showValueLst.begin();
-	for (int i = 1; i < (int) min(PICTRUE_SHOW_SIZE, this->showValueLst.size()); ++i, iter++) {
+	for (int i = 1; i < (int)min(PICTRUE_SHOW_SIZE, this->showValueLst.size()); ++i, iter++) {
 		double showMax = 0, showMin = 0;
 
 		showMax = *iter;
@@ -266,9 +286,11 @@ void GCBMainDlg::RefreshPage()
 	list<float> retValueLst;
 	MessageBean beanMessage;
 	while (GCBMainDlg::recvMessageQueue.IsEmpty() == false) {
+		retValueLst.clear();
+
 		GCBMainDlg::recvMessageQueue.Pop_front(&beanMessage);
 		this->WriteLog(beanMessage, &timeStr, retValueLst);
-		
+
 		// 判断这个Message属于哪个组的命令
 		CListCtrl *beanList = this->JudgeMessageCMDCtrl(beanMessage);
 		// 将数据放入显示控件中
@@ -277,13 +299,14 @@ void GCBMainDlg::RefreshPage()
 		beanList->InsertItem(0, timeStr);
 		beanList->SetItemText(0, 0, timeStr);
 
+		double sumValue = 0;
+		for (int nIndex = 1; nIndex < (int)retValueLst.size(); ++nIndex, ++iter) {
+			sumValue += (*iter);
+			formatStr.Format(_T("%.2f"), *iter);
+			beanList->SetItemText(0, nIndex, formatStr);
+		}
+		// 计算平均值并写入到绘图数据表中
 		if (beanMessage.GetCMDType() == AIR_NEGATIVE_PRESSURE_VALUE) {
-			double sumValue = 0;
-			for (int nIndex = 1; nIndex < (int) retValueLst.size(); ++nIndex) {
-				sumValue += (*iter);
-				formatStr.Format(_T("%.2f"), *iter);
-				beanList->SetItemText(0, nIndex, formatStr);
-			}
 			sumValue = sumValue / retValueLst.size();
 			this->showValueLst.push_back((float)sumValue);
 			if (this->showValueLst.size() > PICTRUE_SHOW_SIZE) {

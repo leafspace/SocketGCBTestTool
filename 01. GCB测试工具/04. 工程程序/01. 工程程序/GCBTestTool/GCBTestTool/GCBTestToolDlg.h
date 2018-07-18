@@ -89,7 +89,7 @@ private:
 
 	list<BYTE> CreateMessage(const BYTE cmdID, const uint16_t uRegisterAddress, const uint16_t uReadNum); // 创建一条要发送的命令
 public:
-	static StateTable threadStateTable;	
+	static StateTable threadStateTable;
 
 	void ShowMessage(PROGRAM_STATE_CODE stateCode, PROGRAM_STATE_TYPE stateType);     // 跳出提示框
 	bool AddNewFrameTab(const int nIndex);                                  // Tab Control 添加一个页面

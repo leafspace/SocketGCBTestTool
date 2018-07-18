@@ -37,7 +37,22 @@ DWORD WINAPI ThreadSocketLinkRecv(LPVOID lpParamter)
 	do {
 		bool bIsSuccess = socketLink->recvOrders(rOrders, &nLen, ORDER_BUFFER_SIZE);
 		if (bIsSuccess) {
-			do {} while(GCBMainDlg::recvMessageQueue.IsFull());
+			do {} while (GCBMainDlg::recvMessageQueue.IsFull());
+
+			// 将接收到的原始数据写入log
+			SYSTEMTIME sys;
+			GetLocalTime(&sys);
+			CString timeStr;
+			timeStr.Format(_T("%4d-%02d-%02d %02d:%02d:%02d "), sys.wYear, sys.wMonth, sys.wDay, sys.wHour, sys.wMinute, sys.wSecond);
+
+			ofstream outfile("orgin.log", ios::app);
+			outfile << timeStr << "\t";
+			for (int nIndex = 0; nIndex < nLen; ++nIndex) {
+				outfile << hex << "0x" << (int)rOrders[nIndex] << " ";	
+			}
+			outfile << endl;
+			outfile.close();
+
 
 			// rOrders可能存在多个返回的指令集，所以在此对返回码进行拆分
 			for (int nBeIndex = 0, nEnIndex = 0, nIndex = 1; nIndex < nLen; ++nIndex) {
@@ -59,9 +74,10 @@ DWORD WINAPI ThreadSocketLinkRecv(LPVOID lpParamter)
 					nEnIndex = 0;
 				}
 			}
-			
+
 			Sleep(TIMER_GAP);
-		} else {
+		}
+		else {
 			threadRetValue = TIMER_STATE_ERROR_TYPE_BREAKNET;
 		}
 	} while (true);
@@ -86,7 +102,7 @@ DWORD WINAPI ThreadSocketLinkSend(LPVOID lpParamter)
 	int threadRetValue = TIMER_STATE_FINISH;
 	do
 	{
-		do {} while(GCBMainDlg::sendMessageQueue.IsEmpty());
+		do {} while (GCBMainDlg::sendMessageQueue.IsEmpty());
 		do {
 			MessageBean sendedMessageBean;
 			GCBMainDlg::sendMessageQueue.Pop_front(&sendedMessageBean);
@@ -94,15 +110,15 @@ DWORD WINAPI ThreadSocketLinkSend(LPVOID lpParamter)
 			BYTE *sOrders = new BYTE[sendOrginDataLst.size()];
 
 			list<BYTE>::iterator iter = sendOrginDataLst.begin();
-			for (int nIndex = 0; nIndex < (int) sendOrginDataLst.size(); ++nIndex, ++iter) {
+			for (int nIndex = 0; nIndex < (int)sendOrginDataLst.size(); ++nIndex, ++iter) {
 				sOrders[nIndex] = *iter;
 			}
 			socketLink->sendOrders(sOrders, sendOrginDataLst.size());
 			delete sOrders;
-		} while(!GCBMainDlg::sendMessageQueue.IsEmpty());
+		} while (!GCBMainDlg::sendMessageQueue.IsEmpty());
 
 		Sleep(TIMER_GAP);
-	} while(true);
+	} while (true);
 
 
 	// 将结果返回到状态表中

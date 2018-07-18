@@ -321,7 +321,8 @@ void CGCBTestToolDlg::OnBnClickedButtonLink()
 		KillTimer(TIMER_SOCKET_LINK_RECV);
 		KillTimer(TIMER_SOCKET_LINK_SEND);
 		this->mainPage.DeleteTimer(TIMER_DIALOG_DRAW);
-	} else {
+	}
+	else {
 		this->socketISLinking = true;
 		SetDlgItemText(IDC_BUTTON_LINK, _T("停止连接"));
 		this->mainPage.CreateTimer(TIMER_DIALOG_DRAW);
@@ -451,6 +452,7 @@ void CGCBTestToolDlg::SendRequestMessage()
 		GCBMainDlg::sendMessageQueue.Push_back(tempMessageBean);
 	}
 }
+
 void CGCBTestToolDlg::OnBnClickedButtonSetting()
 {
 	this->settingPage.DoModal();

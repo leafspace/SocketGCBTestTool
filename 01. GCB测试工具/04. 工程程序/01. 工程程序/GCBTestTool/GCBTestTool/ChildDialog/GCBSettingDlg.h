@@ -12,7 +12,7 @@ public:
 	GCBSettingDlg(CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~GCBSettingDlg();
 
-// 对话框数据
+	// 对话框数据
 	enum { IDD = IDD_SETTING_DIALOG };
 
 protected:

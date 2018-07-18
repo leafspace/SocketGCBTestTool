@@ -33,6 +33,7 @@ private:
 	CListCtrl* JudgeMessageCMDCtrl(MessageBean beanMessage);
 	float Make4ByteFloat(BYTE *list);
 	float MakeTurn4ByteFloat(BYTE *list);
+	short GetFormatSize(FRAME_CMD_TYPE cmdType);
 	bool WriteLog(MessageBean beanMessage, CString *timeStr, list<float> &retValueLst);
 
 	list<float> showValueLst;

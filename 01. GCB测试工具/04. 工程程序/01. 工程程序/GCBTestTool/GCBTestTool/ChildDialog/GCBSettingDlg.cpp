@@ -51,28 +51,28 @@ list<BYTE> GCBSettingDlg::CreateMessage(const BYTE cmdID, const uint16_t uRegist
 {
 	list<BYTE> retLst;
 
-    // Head
-    retLst.push_back(0xF0);
-    retLst.push_back(0xF1);
+	// Head
+	retLst.push_back(0xF0);
+	retLst.push_back(0xF1);
 
-    // CMD
-    retLst.push_back(cmdID);
+	// CMD
+	retLst.push_back(cmdID);
 
-    // Size
+	// Size
 	uint16_t uSize = sizeof(uRegisterAddress) + sizeof(uReadNum);
-    retLst.push_back(BYTE0(uSize));
+	retLst.push_back(BYTE0(uSize));
 	retLst.push_back(BYTE1(uSize));
 
-    // Parameter
-    retLst.push_back(BYTE0(uRegisterAddress));
-    retLst.push_back(BYTE1(uRegisterAddress));
+	// Parameter
+	retLst.push_back(BYTE0(uRegisterAddress));
+	retLst.push_back(BYTE1(uRegisterAddress));
 
-    retLst.push_back(BYTE0(uReadNum));
-    retLst.push_back(BYTE1(uReadNum));
+	retLst.push_back(BYTE0(uReadNum));
+	retLst.push_back(BYTE1(uReadNum));
 	retLst.push_back(BYTE2(uReadNum));
 	retLst.push_back(BYTE3(uReadNum));
 
-    // Tail
-    retLst.push_back(0xEC);
-    return retLst;
+	// Tail
+	retLst.push_back(0xEC);
+	return retLst;
 }

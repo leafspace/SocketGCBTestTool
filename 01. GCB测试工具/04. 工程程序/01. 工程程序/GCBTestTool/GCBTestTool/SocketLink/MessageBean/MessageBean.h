@@ -12,37 +12,37 @@ typedef unsigned int uint32_t;
 class MessageBean
 {
 private:
-    list<BYTE> orginDataLst;                                                // 原始接收的数据流
-    
-    FRAME_CMD_TYPE cmdType;
-    uint16_t uParameterSize;
-    list<BYTE> parameterLst;
+	list<BYTE> orginDataLst;                                                // 原始接收的数据流
 
-    uint16_t MakeUINT16Value(list<BYTE>::iterator iter, list<BYTE>::iterator iterEnd);
-    uint32_t MakeUINT32Value(list<BYTE>::iterator iter, list<BYTE>::iterator iterEnd);
+	FRAME_CMD_TYPE cmdType;
+	uint16_t uParameterSize;
+	list<BYTE> parameterLst;
 
-    bool JumpUINT16(list<BYTE>::iterator &iter, list<BYTE>::iterator iterEnd);
-    bool JumpUINT32(list<BYTE>::iterator &iter, list<BYTE>::iterator iterEnd);
+	uint16_t MakeUINT16Value(list<BYTE>::iterator iter, list<BYTE>::iterator iterEnd);
+	uint32_t MakeUINT32Value(list<BYTE>::iterator iter, list<BYTE>::iterator iterEnd);
 
-    int FindPackgeHeadPosition();
-    int FindPackgeTailPosition(const int nBeIndex);
+	bool JumpUINT16(list<BYTE>::iterator &iter, list<BYTE>::iterator iterEnd);
+	bool JumpUINT32(list<BYTE>::iterator &iter, list<BYTE>::iterator iterEnd);
+
+	int FindPackgeHeadPosition();
+	int FindPackgeTailPosition(const int nBeIndex);
 public:
-    MessageBean() {}
-    MessageBean(const BYTE *bMessageLst, const uint16_t uMessageSize);
+	MessageBean() {}
+	MessageBean(const BYTE *bMessageLst, const uint16_t uMessageSize);
 
-    void SetOrginDataList(list<BYTE> bMessageLst);
-    void SetOrginDataList(const BYTE *bMessageLst, const uint16_t uMessageSize);
-    void SetCMDType(const FRAME_CMD_TYPE cmdType);
-    void SetParameterSize(const uint16_t uParameterSize);
-    void SetParameterList(const list<BYTE> parameterLst);
+	void SetOrginDataList(list<BYTE> bMessageLst);
+	void SetOrginDataList(const BYTE *bMessageLst, const uint16_t uMessageSize);
+	void SetCMDType(const FRAME_CMD_TYPE cmdType);
+	void SetParameterSize(const uint16_t uParameterSize);
+	void SetParameterList(const list<BYTE> parameterLst);
 
-    list<BYTE> GetOrginDataList(void);
-    FRAME_CMD_TYPE GetCMDType(void);
-    uint16_t GetParameterSize(void);
-    list<BYTE> GetParameterList(void);
+	list<BYTE> GetOrginDataList(void);
+	FRAME_CMD_TYPE GetCMDType(void);
+	uint16_t GetParameterSize(void);
+	list<BYTE> GetParameterList(void);
 
-    PROGRAM_STATE_CODE AnalysisOrginDataLst();
-    PROGRAM_STATE_CODE AnalysisOrginDataLst(const BYTE *bMessageLst, const uint16_t uMessageSize);
+	PROGRAM_STATE_CODE AnalysisOrginDataLst();
+	PROGRAM_STATE_CODE AnalysisOrginDataLst(const BYTE *bMessageLst, const uint16_t uMessageSize);
 
 	MessageBean operator=(const MessageBean &messageBean);
 };
