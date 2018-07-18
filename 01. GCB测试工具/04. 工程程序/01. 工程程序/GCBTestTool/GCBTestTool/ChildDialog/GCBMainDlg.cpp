@@ -1,4 +1,5 @@
 ﻿#include "stdafx.h"
+#include <windows.h>
 #include "../GCBTestTool.h"
 #include "../GCBTestToolDlg.h"
 #include "GCBMainDlg.h"
@@ -32,6 +33,7 @@ void GCBMainDlg::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(GCBMainDlg, CDialog)
+	ON_WM_TIMER()
 	ON_CONTROL_RANGE(BN_CLICKED, IDC_DETAIL_BUTTON1, IDC_DETAIL_BUTTON12, OnButtonClick)
 END_MESSAGE_MAP()
 
@@ -67,6 +69,18 @@ BOOL GCBMainDlg::OnInitDialog()
 		SetDlgItemText(IDC_STATIC_LABEL1 + nIndex, GetLabel(nIndex));
 	}
 	return TRUE;
+}
+
+void GCBMainDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	switch (nIDEvent)
+	{
+	case TIMER_DIALOG_DRAW:
+		this->StartDraw(IDC_PICTURE1);
+		break;
+	default:
+		KillTimer(nIDEvent);
+	}
 }
 
 void GCBMainDlg::OnButtonClick(UINT nID)
@@ -128,20 +142,17 @@ bool GCBMainDlg::WriteLog(MessageBean beanMessage, CString *timeStr, list<float>
 		return false;
 	}
 
-	struct tm *tm_ptr;
-	time_t the_time;
-	(void)time(&the_time);
-	tm_ptr = gmtime(&the_time);
+	SYSTEMTIME sys;
+	GetLocalTime(&sys);
 
-	timeStr->Format(_T("%d-%d-%d %d:%d:%d "), tm_ptr->tm_year + 1900, tm_ptr->tm_mon + 1,
-	tm_ptr->tm_mday, tm_ptr->tm_hour, tm_ptr->tm_min, tm_ptr->tm_sec);
+	timeStr->Format(_T("%4d-%02d-%02d %02d:%02d:%02d "), sys.wYear, sys.wMonth, sys.wDay, sys.wHour, sys.wMinute, sys.wSecond);
 
-	outfile << setw(4) << setfill('0') << tm_ptr->tm_year + 1900 << "-";
-	outfile << setw(2) << setfill('0') << tm_ptr->tm_mon + 1 << "-";
-	outfile << setw(2) << setfill('0') << tm_ptr->tm_mday << " ";
-	outfile << setw(2) << setfill('0') << tm_ptr->tm_hour << ":";
-	outfile << setw(2) << setfill('0') << tm_ptr->tm_min << ":";
-	outfile << setw(2) << setfill('0') << tm_ptr->tm_sec << " ";
+	outfile << setw(4) << setfill('0') << sys.wYear << "-";
+	outfile << setw(2) << setfill('0') << sys.wMonth << "-";
+	outfile << setw(2) << setfill('0') << sys.wDay << " ";
+	outfile << setw(2) << setfill('0') << sys.wHour << ":";
+	outfile << setw(2) << setfill('0') << sys.wMinute << ":";
+	outfile << setw(2) << setfill('0') << sys.wSecond << " ";
 
 	outfile << "0x" << hex << beanMessage.GetCMDType() << " :  ";
 
@@ -245,6 +256,7 @@ void GCBMainDlg::StartDraw(int ControlID)
 
 	MemBitmap.DeleteObject();                                               // 绘图完成后的清理
 	MemDC.DeleteDC();
+	CDialog::OnPaint();
 }
 
 void GCBMainDlg::RefreshPage()
@@ -265,19 +277,28 @@ void GCBMainDlg::RefreshPage()
 		beanList->InsertItem(0, timeStr);
 		beanList->SetItemText(0, 0, timeStr);
 
-		double sumValue = 0;
-		for (int nIndex = 1; nIndex < (int) retValueLst.size(); ++nIndex) {
-			sumValue += (*iter);
-			formatStr.Format(_T("%.2f"), *iter);
-			beanList->SetItemText(0, nIndex, formatStr);
+		if (beanMessage.GetCMDType() == AIR_NEGATIVE_PRESSURE_VALUE) {
+			double sumValue = 0;
+			for (int nIndex = 1; nIndex < (int) retValueLst.size(); ++nIndex) {
+				sumValue += (*iter);
+				formatStr.Format(_T("%.2f"), *iter);
+				beanList->SetItemText(0, nIndex, formatStr);
+			}
+			sumValue = sumValue / retValueLst.size();
+			this->showValueLst.push_back((float)sumValue);
+			if (this->showValueLst.size() > PICTRUE_SHOW_SIZE) {
+				this->showValueLst.pop_front();
+			}
 		}
-		sumValue = sumValue / retValueLst.size();
-		this->showValueLst.push_back((float)sumValue);
-		if (this->showValueLst.size() > PICTRUE_SHOW_SIZE) {
-			this->showValueLst.pop_front();
-		}
-
-		this->StartDraw(IDC_PICTURE1);
-		CDialog::OnPaint();
 	}
+}
+
+void GCBMainDlg::CreateTimer(TIMER_TYPE timer)
+{
+	SetTimer(timer, DRAW_GAP, 0);
+}
+
+void GCBMainDlg::DeleteTimer(TIMER_TYPE timer)
+{
+	KillTimer(timer);
 }

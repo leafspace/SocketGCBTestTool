@@ -320,9 +320,11 @@ void CGCBTestToolDlg::OnBnClickedButtonLink()
 		KillTimer(TIMER_SOCKET_LINK_CONN);
 		KillTimer(TIMER_SOCKET_LINK_RECV);
 		KillTimer(TIMER_SOCKET_LINK_SEND);
+		this->mainPage.DeleteTimer(TIMER_DIALOG_DRAW);
 	} else {
 		this->socketISLinking = true;
 		SetDlgItemText(IDC_BUTTON_LINK, _T("停止连接"));
+		this->mainPage.CreateTimer(TIMER_DIALOG_DRAW);
 		this->OnBnClickedButtonLinktest();
 	}
 }

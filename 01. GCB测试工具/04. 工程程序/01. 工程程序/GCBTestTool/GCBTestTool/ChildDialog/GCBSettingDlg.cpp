@@ -35,7 +35,7 @@ void GCBSettingDlg::OnBnClickedOk()
 	CString inputStr;
 	GetDlgItemText(IDC_EDIT1, inputStr);
 
-	list<BYTE> retLsg = this->CreateMessage(NEGATIVE_PRESSURE_OUTPUT_VALUE_NOZZLE, 0x0001, _tstof(inputStr));
+	list<BYTE> retLsg = this->CreateMessage(NEGATIVE_PRESSURE_OUTPUT_VALUE_NOZZLE, 0x0001, (float)_tstof(inputStr));
 
 	MessageBean tempMessageBean;
 	tempMessageBean.SetOrginDataList(retLsg);

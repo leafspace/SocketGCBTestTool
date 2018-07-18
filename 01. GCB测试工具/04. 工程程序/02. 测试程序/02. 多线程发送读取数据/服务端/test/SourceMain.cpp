@@ -104,6 +104,7 @@ void main()
 			if (msg > 0) {
 				printf("服务器接收到了消息 %d \n", i++);
 				char buf[] = { 0xF0, 0xF1, 0x41, 0x0a, 0x00, 0x3e, 0xd8, 0x94, 0xc0, 0x3f, 0x5d, 0x8b, 0x6e, 0x00, 0x00, 0xec };
+				buf[2] = msg[2];
 				int iSend = send(sAccept, buf, sizeof(buf), 0);
 				printf("服务器发送了消息\n");
 			} else {

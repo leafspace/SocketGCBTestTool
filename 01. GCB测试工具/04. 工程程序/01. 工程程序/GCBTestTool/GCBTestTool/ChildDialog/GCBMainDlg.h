@@ -24,6 +24,7 @@ public:
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 	virtual BOOL OnInitDialog();
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnButtonClick(UINT nID);
 	DECLARE_MESSAGE_MAP()
 
@@ -42,4 +43,6 @@ public:
 
 	CListCtrl m_List[LIST_NUM];
 	void RefreshPage();
+	void CreateTimer(TIMER_TYPE timer);
+	void DeleteTimer(TIMER_TYPE timer);
 };

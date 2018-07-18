@@ -39,11 +39,25 @@ DWORD WINAPI ThreadSocketLinkRecv(LPVOID lpParamter)
 		if (bIsSuccess) {
 			do {} while(GCBMainDlg::recvMessageQueue.IsFull());
 
-			MessageBean recvedMessageBean;
-			recvedMessageBean.SetOrginDataList(rOrders, nLen);
-			PROGRAM_STATE_CODE retStateCode = recvedMessageBean.AnalysisOrginDataLst();
-			if (retStateCode == PROGRAM_ANALYSIS_ORGIN_DATA) {
-				GCBMainDlg::recvMessageQueue.Push_back(recvedMessageBean);
+			// rOrders可能存在多个返回的指令集，所以在此对返回码进行拆分
+			for (int nBeIndex = 0, nEnIndex = 0, nIndex = 1; nIndex < nLen; ++nIndex) {
+				if (rOrders[nIndex] == 0xF1 && rOrders[nIndex - 1] == 0xF0) {
+					nBeIndex = nIndex - 1;
+				}
+
+				if (rOrders[nIndex] == 0xEC) {
+					nEnIndex = nIndex;
+
+					MessageBean recvedMessageBean;
+					recvedMessageBean.SetOrginDataList(&rOrders[nBeIndex], nEnIndex - nBeIndex + 1);
+					PROGRAM_STATE_CODE retStateCode = recvedMessageBean.AnalysisOrginDataLst();
+					if (retStateCode == PROGRAM_ANALYSIS_ORGIN_DATA) {
+						GCBMainDlg::recvMessageQueue.Push_back(recvedMessageBean);
+					}
+
+					nBeIndex = 0;
+					nEnIndex = 0;
+				}
 			}
 			
 			Sleep(TIMER_GAP);

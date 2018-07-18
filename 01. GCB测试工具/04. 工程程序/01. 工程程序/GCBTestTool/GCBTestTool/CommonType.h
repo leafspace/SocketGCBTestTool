@@ -48,6 +48,9 @@ enum TIMER_TYPE
 	TIMER_SOCKET_LINK_CONN = 0x00,                      // 进行与服务器的连接测试
 	TIMER_SOCKET_LINK_RECV,
 	TIMER_SOCKET_LINK_SEND,
+
+
+	TIMER_DIALOG_DRAW,
 };
 
 enum TIMER_STATE_TYPE
