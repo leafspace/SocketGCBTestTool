@@ -32,15 +32,10 @@
 #define IDC_LIST12                      1022
 #define IDC_STATIC_LABEL1               1023
 #define IDC_STATIC_LABEL2               1024
-#define IDC_EDIT1                       1024
 #define IDC_STATIC_LABEL3               1025
-#define IDC_EDIT2                       1025
 #define IDC_STATIC_LABEL4               1026
-#define IDC_EDIT3                       1026
 #define IDC_STATIC_LABEL5               1027
-#define IDC_EDIT4                       1027
 #define IDC_STATIC_LABEL6               1028
-#define IDC_EDIT5                       1028
 #define IDC_STATIC_LABEL7               1029
 #define IDC_STATIC_LABEL8               1030
 #define IDC_STATIC_LABEL9               1031
@@ -60,7 +55,12 @@
 #define IDC_DETAIL_BUTTON11             1045
 #define IDC_DETAIL_BUTTON12             1046
 #define IDC_PICTURE1                    1047
-#define IDC_LISTMODEL                   1050
+#define IDC_LISTMODEL                   1048
+#define IDC_EDIT1                       1049
+#define IDC_EDIT2                       1050
+#define IDC_EDIT3                       1051
+#define IDC_EDIT4                       1052
+#define IDC_EDIT5                       1053
 
 // Next default values for new objects
 // 
