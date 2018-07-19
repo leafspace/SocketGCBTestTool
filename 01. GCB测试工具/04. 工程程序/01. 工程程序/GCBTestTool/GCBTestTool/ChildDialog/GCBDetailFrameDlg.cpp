@@ -45,13 +45,13 @@ BOOL GCBDetailFrameDlg::OnInitDialog()
 	const int nTableHeadNum = 4;
 
 	this->m_List.InsertColumn(0, _T("接收时间"), LVCFMT_CENTER,
-				100, 0);
+		100, 0);
 	this->m_List.InsertColumn(1, _T("指令类型"), LVCFMT_CENTER,
-				60, 1);
+		60, 1);
 	this->m_List.InsertColumn(2, _T("参数大小"), LVCFMT_CENTER,
-				60, 2);
+		60, 2);
 	this->m_List.InsertColumn(3, _T("指令数据"), LVCFMT_CENTER,
-				(rect.Width() - 240), 3);
+		(rect.Width() - 240), 3);
 
 	return TRUE;
 }
@@ -60,18 +60,18 @@ void GCBDetailFrameDlg::SetFrameType(int nFrameTypeNum)
 {
 	this->nFrameType = NOZZLE_CARTRIDGE_LEVEL;
 
-	switch(nFrameTypeNum)
+	switch (nFrameTypeNum)
 	{
-		case 0 : this->nFrameType = NOZZLE_CARTRIDGE_LEVEL; break;
-		case 1 : this->nFrameType = MODE_LOCKED_SOLENOID_VALVE_WORKING; break;
-		case 2 : this->nFrameType = POSITIVE_NEGATIVE_PRESSURE_SOLENOID_VALVE_WORKING; break;
-		case 3 : this->nFrameType = INK_SUPPLY_PUMP_WORKING_CONDITION; break;
-		case 4 : this->nFrameType = NOZZLE_CABINET_TEMPERATURE; break;
-		case 5 : this->nFrameType = AIR_NEGATIVE_PRESSURE_VALUE; break;
-		case 6 : this->nFrameType = AIR_POSITIVE_PRESSURE_VALUE; break;
-		default: this->nFrameType = NOZZLE_CARTRIDGE_LEVEL; break;
+	case 0: this->nFrameType = NOZZLE_CARTRIDGE_LEVEL; break;
+	case 1: this->nFrameType = MODE_LOCKED_SOLENOID_VALVE_WORKING; break;
+	case 2: this->nFrameType = POSITIVE_NEGATIVE_PRESSURE_SOLENOID_VALVE_WORKING; break;
+	case 3: this->nFrameType = INK_SUPPLY_PUMP_WORKING_CONDITION; break;
+	case 4: this->nFrameType = NOZZLE_CABINET_TEMPERATURE; break;
+	case 5: this->nFrameType = AIR_NEGATIVE_PRESSURE_VALUE; break;
+	case 6: this->nFrameType = AIR_POSITIVE_PRESSURE_VALUE; break;
+	default: this->nFrameType = NOZZLE_CARTRIDGE_LEVEL; break;
 	}
-	return ;
+	return;
 }
 
 FRAME_CMD_TYPE GCBDetailFrameDlg::GetFrameType(void)

@@ -113,7 +113,7 @@ CListCtrl* GCBMainDlg::JudgeMessageCMDCtrl(MessageBean beanMessage)
 	case AIR_POSITIVE_PRESSURE_VALUE:
 		return &this->m_List[6];
 	default:
-		return &this->m_List[0];
+		return NULL;
 	}
 }
 
@@ -137,16 +137,16 @@ float GCBMainDlg::MakeTurn4ByteFloat(BYTE *list)
 
 short GCBMainDlg::GetFormatSize(FRAME_CMD_TYPE cmdType)
 {
-	switch(cmdType)
+	switch (cmdType)
 	{
-	case NOZZLE_CARTRIDGE_LEVEL : 
-	case MODE_LOCKED_SOLENOID_VALVE_WORKING :
-	case POSITIVE_NEGATIVE_PRESSURE_SOLENOID_VALVE_WORKING :
-	case INK_SUPPLY_PUMP_WORKING_CONDITION :
+	case NOZZLE_CARTRIDGE_LEVEL:
+	case MODE_LOCKED_SOLENOID_VALVE_WORKING:
+	case POSITIVE_NEGATIVE_PRESSURE_SOLENOID_VALVE_WORKING:
+	case INK_SUPPLY_PUMP_WORKING_CONDITION:
 		return 1;
-	case NOZZLE_CABINET_TEMPERATURE :
-	case AIR_NEGATIVE_PRESSURE_VALUE :
-	case AIR_POSITIVE_PRESSURE_VALUE :
+	case NOZZLE_CABINET_TEMPERATURE:
+	case AIR_NEGATIVE_PRESSURE_VALUE:
+	case AIR_POSITIVE_PRESSURE_VALUE:
 		return 4;
 	default:
 		return 1;
@@ -182,9 +182,9 @@ bool GCBMainDlg::WriteLog(MessageBean beanMessage, CString *timeStr, list<float>
 		for (int nJIndex = 0; nJIndex < formatSize; ++nJIndex, ++iterP) {
 			list[nJIndex] = *iterP;
 		}
-		
+
 		float retValue = formatSize == 4 ? this->MakeTurn4ByteFloat(list) : list[0];
-		
+
 		delete list;
 		outfile << setiosflags(ios::fixed) << setprecision(2) << retValue << "\t";
 		retValueLst.push_back(retValue);
@@ -194,7 +194,7 @@ bool GCBMainDlg::WriteLog(MessageBean beanMessage, CString *timeStr, list<float>
 	outfile << "[";
 	list<BYTE> beanOLst = beanMessage.GetOrginDataList();
 	list<BYTE>::iterator iterO = beanOLst.begin();
-	for (int nIndex = 0; nIndex < (int) beanOLst.size(); ++nIndex, ++iterO) {
+	for (int nIndex = 0; nIndex < (int)beanOLst.size(); ++nIndex, ++iterO) {
 		if ((nIndex + 1) == beanOLst.size()) {
 			outfile << "0x" << hex << setw(2) << setfill('0') << (int)*iterO;
 		}
@@ -293,6 +293,10 @@ void GCBMainDlg::RefreshPage()
 
 		// 判断这个Message属于哪个组的命令
 		CListCtrl *beanList = this->JudgeMessageCMDCtrl(beanMessage);
+		if (beanList == NULL) {
+			continue;
+		}
+
 		// 将数据放入显示控件中
 		CString formatStr;
 		list<float>::iterator iter = retValueLst.begin();

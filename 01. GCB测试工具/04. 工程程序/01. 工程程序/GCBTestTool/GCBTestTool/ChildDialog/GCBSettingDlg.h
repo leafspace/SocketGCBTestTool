@@ -19,7 +19,4 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 	afx_msg void OnBnClickedOk();
 	DECLARE_MESSAGE_MAP()
-
-private:
-	list<BYTE> CreateMessage(const BYTE cmdID, const uint16_t uRegisterAddress, const float uReadNum);
 };

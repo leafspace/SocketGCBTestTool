@@ -33,46 +33,49 @@ END_MESSAGE_MAP()
 void GCBSettingDlg::OnBnClickedOk()
 {
 	CString inputStr;
-	GetDlgItemText(IDC_EDIT1, inputStr);
+	bool bSuccessFlag = true;
 
-	list<BYTE> retLsg = this->CreateMessage(NEGATIVE_PRESSURE_OUTPUT_VALUE_NOZZLE, 0x0001, (float)_tstof(inputStr));
+	for (int nIndexID = IDC_EDIT1; nIndexID <= IDC_EDIT5; ++nIndexID) {
+		GetDlgItemText(nIndexID, inputStr);
+		if (inputStr.GetLength() == 0) {
+			continue;
+		}
 
-	MessageBean tempMessageBean;
-	tempMessageBean.SetOrginDataList(retLsg);
-	tempMessageBean.AnalysisOrginDataLst();
-	GCBMainDlg::sendMessageQueue.Push_back(tempMessageBean);
+		list<BYTE> retLsg;
+		switch (nIndexID)
+		{
+		case IDC_EDIT1:
+			retLsg = CGCBTestToolDlg::CreateMessage(NEGATIVE_PRESSURE_OUTPUT_VALUE_NOZZLE, 0x0001, (float)_tstof(inputStr));
+			break;
+		case IDC_EDIT2:
+			retLsg = CGCBTestToolDlg::CreateMessage(INK_MOTOR_DELAY_TIME, 0x0001, (float)_tstof(inputStr));
+			break;
+		case IDC_EDIT3:
+			retLsg = CGCBTestToolDlg::CreateMessage(MODE_PRESSURE_NOZZLE_INK, 0x0001, (uint16_t)_tstoi(inputStr));
+			break;
+		case IDC_EDIT4:
+			retLsg = CGCBTestToolDlg::CreateMessage(START_WORKING_STATE_CIRCULATING_MOTOR, 0x0001, (uint16_t)_tstoi(inputStr));
+			break;
+		case IDC_EDIT5:
+			retLsg = CGCBTestToolDlg::CreateMessage(MANUALLY_OPEN_MODE_LOCKED_SOLENOID_VALVE_STATUS, 0x0001, (uint16_t)_tstoi(inputStr));
+			break;
+		default: break;
+		}
 
-	MessageBox(_T("成功写入消息队列"), _T("消息"), MB_ICONINFORMATION | MB_OK);
+		MessageBean tempMessageBean;
+		tempMessageBean.SetOrginDataList(retLsg);
+		tempMessageBean.AnalysisOrginDataLst();
+		bool isSuccess = GCBMainDlg::sendMessageQueue.Push_back(tempMessageBean);
+		bSuccessFlag = bSuccessFlag & isSuccess;
+	}
+
+	if (bSuccessFlag) {
+		MessageBox(_T("成功写入消息队列"), _T("消息"), MB_ICONINFORMATION | MB_OK);
+	}
+	else {
+		MessageBox(_T("未成功写入消息"), _T("错误"), MB_ICONERROR | MB_OK);
+	}
+
 	OnOK();
 }
 
-
-list<BYTE> GCBSettingDlg::CreateMessage(const BYTE cmdID, const uint16_t uRegisterAddress, const float uReadNum)
-{
-	list<BYTE> retLst;
-
-	// Head
-	retLst.push_back(0xF0);
-	retLst.push_back(0xF1);
-
-	// CMD
-	retLst.push_back(cmdID);
-
-	// Size
-	uint16_t uSize = sizeof(uRegisterAddress) + sizeof(uReadNum);
-	retLst.push_back(BYTE0(uSize));
-	retLst.push_back(BYTE1(uSize));
-
-	// Parameter
-	retLst.push_back(BYTE0(uRegisterAddress));
-	retLst.push_back(BYTE1(uRegisterAddress));
-
-	retLst.push_back(BYTE0(uReadNum));
-	retLst.push_back(BYTE1(uReadNum));
-	retLst.push_back(BYTE2(uReadNum));
-	retLst.push_back(BYTE3(uReadNum));
-
-	// Tail
-	retLst.push_back(0xEC);
-	return retLst;
-}

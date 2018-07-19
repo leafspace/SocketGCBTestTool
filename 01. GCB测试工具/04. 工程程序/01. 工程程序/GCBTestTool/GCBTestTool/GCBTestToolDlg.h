@@ -87,10 +87,12 @@ private:
 	void OnTimerSocketLinkTest();                                           // 处理测试连接后的循环事件
 	void OnTimerSocketLink();                                               // 处理连接按钮后的循环事件
 
-	list<BYTE> CreateMessage(const BYTE cmdID, const uint16_t uRegisterAddress, const uint16_t uReadNum); // 创建一条要发送的命令
 	int GetFrameTabIndex(const int nIndex);                                 // 获取按钮为nIndex的tab号
 public:
 	static StateTable threadStateTable;
+
+	static list<BYTE> CreateMessage(const BYTE cmdID, const uint16_t uRegisterAddress, const uint16_t uReadNum); // 创建一条要发送的命令
+	static list<BYTE> CreateMessage(const BYTE cmdID, const uint16_t uRegisterAddress, const float uReadNum);
 
 	void ShowMessage(PROGRAM_STATE_CODE stateCode, PROGRAM_STATE_TYPE stateType);     // 跳出提示框
 	bool AddNewFrameTab(const int nIndex);                                  // Tab Control 添加一个页面

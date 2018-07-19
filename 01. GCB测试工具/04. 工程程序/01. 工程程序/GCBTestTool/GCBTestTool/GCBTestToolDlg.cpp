@@ -335,7 +335,8 @@ void CGCBTestToolDlg::OnBnClickedButtonSetting()
 {
 	if (this->socketISLinking) {
 		this->settingPage.DoModal();
-	} else {
+	}
+	else {
 		this->ShowMessage(PROGRAM_UNLIKING, PROGRAM_STATE_ERROR);
 	}
 }
@@ -396,6 +397,30 @@ void CGCBTestToolDlg::OnTimerSocketLink()
 	SetTimer(TIMER_SOCKET_LINK_RECV, TIMER_GAP, 0);
 }
 
+int CGCBTestToolDlg::GetFrameTabIndex(const int nIndex)
+{
+	FRAME_CMD_TYPE cmdType = NOZZLE_CARTRIDGE_LEVEL;
+	switch (nIndex)
+	{
+	case 0: cmdType = NOZZLE_CARTRIDGE_LEVEL; break;
+	case 1: cmdType = MODE_LOCKED_SOLENOID_VALVE_WORKING; break;
+	case 2: cmdType = POSITIVE_NEGATIVE_PRESSURE_SOLENOID_VALVE_WORKING; break;
+	case 3: cmdType = INK_SUPPLY_PUMP_WORKING_CONDITION; break;
+	case 4: cmdType = NOZZLE_CABINET_TEMPERATURE; break;
+	case 5: cmdType = AIR_NEGATIVE_PRESSURE_VALUE; break;
+	case 6: cmdType = AIR_POSITIVE_PRESSURE_VALUE; break;
+	default: cmdType = NOZZLE_CARTRIDGE_LEVEL; break;
+	}
+
+	for (int nIndex = 0; nIndex < this->nDialogLen; ++nIndex) {
+		if (this->framePage[nIndex].GetFrameType() == cmdType) {
+			return nIndex + 1;
+		}
+	}
+
+	return -1;
+}
+
 list<BYTE> CGCBTestToolDlg::CreateMessage(const BYTE cmdID, const uint16_t uRegisterAddress, const uint16_t uReadNum)
 {
 	list<BYTE> retLst;
@@ -424,28 +449,34 @@ list<BYTE> CGCBTestToolDlg::CreateMessage(const BYTE cmdID, const uint16_t uRegi
 	return retLst;
 }
 
-int CGCBTestToolDlg::GetFrameTabIndex(const int nIndex)
+list<BYTE> CGCBTestToolDlg::CreateMessage(const BYTE cmdID, const uint16_t uRegisterAddress, const float uReadNum)
 {
-	FRAME_CMD_TYPE cmdType = NOZZLE_CARTRIDGE_LEVEL;
-	switch(nIndex)
-	{
-		case 0 : cmdType = NOZZLE_CARTRIDGE_LEVEL; break;
-		case 1 : cmdType = MODE_LOCKED_SOLENOID_VALVE_WORKING; break;
-		case 2 : cmdType = POSITIVE_NEGATIVE_PRESSURE_SOLENOID_VALVE_WORKING; break;
-		case 3 : cmdType = INK_SUPPLY_PUMP_WORKING_CONDITION; break;
-		case 4 : cmdType = NOZZLE_CABINET_TEMPERATURE; break;
-		case 5 : cmdType = AIR_NEGATIVE_PRESSURE_VALUE; break;
-		case 6 : cmdType = AIR_POSITIVE_PRESSURE_VALUE; break;
-		default: cmdType = NOZZLE_CARTRIDGE_LEVEL; break;
-	}
+	list<BYTE> retLst;
 
-	for (int nIndex = 0; nIndex < this->nDialogLen; ++nIndex) {
-		if (this->framePage[nIndex].GetFrameType() == cmdType) {
-			return nIndex + 1;
-		}
-	}
+	// Head
+	retLst.push_back(0xF0);
+	retLst.push_back(0xF1);
 
-	return -1;
+	// CMD
+	retLst.push_back(cmdID);
+
+	// Size
+	uint16_t uSize = sizeof(uRegisterAddress) + sizeof(uReadNum);
+	retLst.push_back(BYTE0(uSize));
+	retLst.push_back(BYTE1(uSize));
+
+	// Parameter
+	retLst.push_back(BYTE0(uRegisterAddress));
+	retLst.push_back(BYTE1(uRegisterAddress));
+
+	retLst.push_back(BYTE0(uReadNum));
+	retLst.push_back(BYTE1(uReadNum));
+	retLst.push_back(BYTE2(uReadNum));
+	retLst.push_back(BYTE3(uReadNum));
+
+	// Tail
+	retLst.push_back(0xEC);
+	return retLst;
 }
 
 void CGCBTestToolDlg::ShowMessage(PROGRAM_STATE_CODE stateCode, PROGRAM_STATE_TYPE stateType)
@@ -501,13 +532,13 @@ void CGCBTestToolDlg::SendRequestMessage()
 
 	// 获取组
 	list<BYTE> sendMsgLst[LIST_NUM];
-	sendMsgLst[0] = this->CreateMessage(NOZZLE_CARTRIDGE_LEVEL, 0x0001, 2);
-	sendMsgLst[1] = this->CreateMessage(MODE_LOCKED_SOLENOID_VALVE_WORKING, 0x0001, 2);
-	sendMsgLst[2] = this->CreateMessage(POSITIVE_NEGATIVE_PRESSURE_SOLENOID_VALVE_WORKING, 0x0001, 2);
-	sendMsgLst[3] = this->CreateMessage(INK_SUPPLY_PUMP_WORKING_CONDITION, 0x0001, 2);
-	sendMsgLst[4] = this->CreateMessage(NOZZLE_CABINET_TEMPERATURE, 0x0001, 2);
-	sendMsgLst[5] = this->CreateMessage(AIR_NEGATIVE_PRESSURE_VALUE, 0x0001, 2);
-	sendMsgLst[6] = this->CreateMessage(AIR_POSITIVE_PRESSURE_VALUE, 0x0001, 2);
+	sendMsgLst[0] = CGCBTestToolDlg::CreateMessage(NOZZLE_CARTRIDGE_LEVEL, 0x0001, (uint16_t)2);
+	sendMsgLst[1] = CGCBTestToolDlg::CreateMessage(MODE_LOCKED_SOLENOID_VALVE_WORKING, 0x0001, (uint16_t)2);
+	sendMsgLst[2] = CGCBTestToolDlg::CreateMessage(POSITIVE_NEGATIVE_PRESSURE_SOLENOID_VALVE_WORKING, 0x0001, (uint16_t)2);
+	sendMsgLst[3] = CGCBTestToolDlg::CreateMessage(INK_SUPPLY_PUMP_WORKING_CONDITION, 0x0001, (uint16_t)2);
+	sendMsgLst[4] = CGCBTestToolDlg::CreateMessage(NOZZLE_CABINET_TEMPERATURE, 0x0001, (uint16_t)2);
+	sendMsgLst[5] = CGCBTestToolDlg::CreateMessage(AIR_NEGATIVE_PRESSURE_VALUE, 0x0001, (uint16_t)2);
+	sendMsgLst[6] = CGCBTestToolDlg::CreateMessage(AIR_POSITIVE_PRESSURE_VALUE, 0x0001, (uint16_t)2);
 
 	// 临时设置为7个数
 	for (int nIndex = 0; nIndex < LIST_NUM; ++nIndex) {
