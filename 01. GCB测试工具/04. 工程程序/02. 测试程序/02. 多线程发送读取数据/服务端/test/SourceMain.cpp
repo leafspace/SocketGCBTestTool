@@ -1,13 +1,19 @@
-#include <stdio.h>
+ï»¿#include <stdio.h>
 #include <stdlib.h>
 #include <winsock.h>
-#pragma comment(lib, "ws2_32.lib") //»òÕßÔÚÏîÄ¿ÊôĞÔµÄÁ¬½ÓÆ÷µÄÊäÈëµÄ¸½¼ÓÒÀÀµÏîÖĞÌí¼Óws2_32.lib
+#pragma comment(lib, "ws2_32.lib") //æˆ–è€…åœ¨é¡¹ç›®å±æ€§çš„è¿æ¥å™¨çš„è¾“å…¥çš„é™„åŠ ä¾èµ–é¡¹ä¸­æ·»åŠ ws2_32.lib
 #define  PORT 10000
 
-HANDLE hMutexSocketLinkRecv;                                                // ½ÓÊÕÊı¾İÏß³ÌµÄĞÅºÅ
-HANDLE hMutexSocketLinkSend;                                                // ·¢ËÍÊı¾İÏß³ÌµÄĞÅºÅ
+HANDLE hMutexSocketLinkRecv;                                                // æ¥æ”¶æ•°æ®çº¿ç¨‹çš„ä¿¡å·
+HANDLE hMutexSocketLinkSend;                                                // å‘é€æ•°æ®çº¿ç¨‹çš„ä¿¡å·
+
+HANDLE hThreadSocketLinkRecv;                                           // çº¿ç¨‹å¥æŸ„
+HANDLE hThreadSocketLinkSend;                                           // çº¿ç¨‹å¥æŸ„
 
 SOCKET sAccept;
+
+int index;
+unsigned char cmdType;
 
 DWORD WINAPI ThreadSocketLinkRecv(LPVOID lpParamter)
 {
@@ -16,7 +22,8 @@ DWORD WINAPI ThreadSocketLinkRecv(LPVOID lpParamter)
 		char* msg = new char[500];
 		int msgLen = recv(sAccept, msg, 500, 0);
 		if (msg > 0) {
-			printf("·şÎñÆ÷½ÓÊÕµ½ÁËÏûÏ¢\n");
+			printf("æœåŠ¡å™¨æ¥æ”¶åˆ°äº†æ¶ˆæ¯[%d]\n", ++index);
+			cmdType = msg[2];
 		}
 	} while (true);
 
@@ -30,9 +37,10 @@ DWORD WINAPI ThreadSocketLinkSend(LPVOID lpParamter)
 	WaitForSingleObject(hMutexSocketLinkSend, INFINITE);
 	do
 	{
-		char buf[] = { 0xF0, 0xF1, 0x41, 0x0A, 0x00, 0x00, 0x00, 0x3e, 0xd6, 0x2b, 0xdd, 0x3f, 0x52, 0xec };
-		int iSend = send(sAccept, buf, sizeof(buf), 0);
-		printf("·şÎñÆ÷·¢ËÍÁËÏûÏ¢\n");
+		//char buf[] = { 0xF0, 0xF1, 0x41, 0x0A, 0x00, 0x00, 0x00, 0x3e, 0xd6, 0x2b, 0xdd, 0x3f, 0x52, 0xec };
+		//buf[2] = cmdType;
+		//int iSend = send(sAccept, buf, sizeof(buf), 0);
+		printf("æœåŠ¡å™¨å‘é€äº†æ¶ˆæ¯[%d]\n", ++index);
 	} while(true);
 
 	ReleaseMutex(hMutexSocketLinkSend);
@@ -44,49 +52,49 @@ void main()
 	int port = PORT;
 	WSADATA wsaData;
 	SOCKET sListen;
+	index = 0;
 
-	int iLen;  //¿Í»§µØÖ·³¤¶È
-	int iSend;  //·¢ËÍÊı¾İ³¤¶È
-	char buf[] = "hello,how are you";//ĞèÒª·¢ËÍµÄĞÅÏ¢
-	struct sockaddr_in serv, client;//·şÎñÆ÷¡¢¿Í»§µÄµØÖ·
+	int iLen;  //å®¢æˆ·åœ°å€é•¿åº¦
+	int iSend;  //å‘é€æ•°æ®é•¿åº¦
+	struct sockaddr_in serv, client;//æœåŠ¡å™¨ã€å®¢æˆ·çš„åœ°å€
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
 	{
 		printf("Winsock load failed\n");
 		return;
 	}
 
-	sListen = socket(AF_INET, SOCK_STREAM, 0);//´´½¨Ì×½Ó×Ö
+	sListen = socket(AF_INET, SOCK_STREAM, 0);//åˆ›å»ºå¥—æ¥å­—
 	if (sListen == INVALID_SOCKET)
 	{
-		//´´½¨Ì×½Ó×ÖÊ§°Ü
-		printf("socket failed:%d\n", WSAGetLastError());//Êä³ö´íÎó
+		//åˆ›å»ºå¥—æ¥å­—å¤±è´¥
+		printf("socket failed:%d\n", WSAGetLastError());//è¾“å‡ºé”™è¯¯
 		return;
 	}
 
-	//½¨Á¢·şÎñÆ÷µØÖ·
+	//å»ºç«‹æœåŠ¡å™¨åœ°å€
 	serv.sin_family = AF_INET;
-	serv.sin_port = htons(port);//°ÑÒ»¸öË«×Ö½ÚÖ÷»ú×Ö½ÚË³ĞòµÄÊı¾İ×ª»»ÎªÍøÂç×Ö½ÚË³Ğò
-	serv.sin_addr.s_addr = htonl(INADDR_ANY);//°ÑËÄ×Ö½ÚÖ÷»ú×Ö½ÚË³Ğò×ª»»ÎªÍøÂç×Ö½ÚË³Ğò£¬INADDR_ANYÎªÏµÍ³Ö¸¶¨µÄIPµØÖ·
+	serv.sin_port = htons(port);//æŠŠä¸€ä¸ªåŒå­—èŠ‚ä¸»æœºå­—èŠ‚é¡ºåºçš„æ•°æ®è½¬æ¢ä¸ºç½‘ç»œå­—èŠ‚é¡ºåº
+	serv.sin_addr.s_addr = htonl(INADDR_ANY);//æŠŠå››å­—èŠ‚ä¸»æœºå­—èŠ‚é¡ºåºè½¬æ¢ä¸ºç½‘ç»œå­—èŠ‚é¡ºåºï¼ŒINADDR_ANYä¸ºç³»ç»ŸæŒ‡å®šçš„IPåœ°å€
 
-	//°ó¶¨
+	//ç»‘å®š
 	if (bind(sListen, (LPSOCKADDR)&serv, sizeof(serv)) == SOCKET_ERROR)
 	{
-		//°ó¶¨Ê§°Ü
+		//ç»‘å®šå¤±è´¥
 		printf("bind() failed:%d\n", WSAGetLastError());
 		return;
 	}
 
-	//½øÈë¼àÌı×´Ì¬
-	if (listen(sListen, 5) == SOCKET_ERROR)//ÕıÔÚµÈ´ıÁ¬½ÓµÄ×î´ó¸öÊıÊÇ5
+	//è¿›å…¥ç›‘å¬çŠ¶æ€
+	if (listen(sListen, 5) == SOCKET_ERROR)//æ­£åœ¨ç­‰å¾…è¿æ¥çš„æœ€å¤§ä¸ªæ•°æ˜¯5
 	{
-		//ÕìÌı³ö´í
+		//ä¾¦å¬å‡ºé”™
 		printf("listen() failed:%d\n", WSAGetLastError());
 		return;
 	}
 
-	iLen = sizeof(client);//³õÊ¼»¯¿Í»§µØÖ·³¤¶È
+	iLen = sizeof(client);//åˆå§‹åŒ–å®¢æˆ·åœ°å€é•¿åº¦
 
-	//½øÈëÑ­»·µÈ´ı¿Í»§¶ËÁ¬½ÓÇëÇó
+	//è¿›å…¥å¾ªç¯ç­‰å¾…å®¢æˆ·ç«¯è¿æ¥è¯·æ±‚
 	while(true)
 	{
 		sAccept = accept(sListen, (struct sockaddr*)&client, &iLen);
@@ -96,28 +104,33 @@ void main()
 			exit(1);
 		}
 
+		
 		int i = 0;
 		do 
 		{
 			char* msg = new char[500];
 			int msgLen = recv(sAccept, msg, 500, 0);
-			if (msg > 0) {
-				printf("·şÎñÆ÷½ÓÊÕµ½ÁËÏûÏ¢ %d \n", i++);
+			if (msgLen > 0) {
+				printf("æœåŠ¡å™¨æ¥æ”¶åˆ°äº†æ¶ˆæ¯[%d]\n", i);
+
+				/*for (int nIndex = 0; nIndex < msgLen; ++nIndex) {
+					if (msg[nIndex] == 0xF0) {
+						
+					}
+				}*/
 				char buf[] = { 0xF0, 0xF1, 0x41, 0x0a, 0x00, 0x3e, 0xd8, 0x94, 0xc0, 0x3f, 0x5d, 0x8b, 0x6e, 0x00, 0x00, 0xec };
 				buf[2] = msg[2];
 				int iSend = send(sAccept, buf, sizeof(buf), 0);
-				printf("·şÎñÆ÷·¢ËÍÁËÏûÏ¢\n");
+				printf("æœåŠ¡å™¨å‘é€äº†æ¶ˆæ¯[%d]\n", i);
+				++i;
 			} else {
 				break;
 			}
 
 		} while (true);
+		
 	}
 
-	//CreateThread(NULL, 0, ThreadSocketLinkRecv, NULL, 0, NULL);
-	//CreateThread(NULL, 0, ThreadSocketLinkSend, NULL, 0, NULL);
-
-	Sleep(600000);
 	closesocket(sListen);
 	WSACleanup();
 }
