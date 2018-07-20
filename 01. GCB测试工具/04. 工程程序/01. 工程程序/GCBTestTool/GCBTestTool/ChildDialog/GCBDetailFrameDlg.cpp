@@ -45,13 +45,13 @@ BOOL GCBDetailFrameDlg::OnInitDialog()
 	const int nTableHeadNum = 4;
 
 	this->m_List.InsertColumn(0, _T("接收时间"), LVCFMT_CENTER,
-		100, 0);
+		120, 0);
 	this->m_List.InsertColumn(1, _T("指令类型"), LVCFMT_CENTER,
 		60, 1);
 	this->m_List.InsertColumn(2, _T("参数大小"), LVCFMT_CENTER,
 		60, 2);
 	this->m_List.InsertColumn(3, _T("指令数据"), LVCFMT_CENTER,
-		(rect.Width() - 240), 3);
+		(rect.Width() - 260), 3);
 
 	return TRUE;
 }
@@ -115,4 +115,5 @@ void GCBDetailFrameDlg::AddMessageBean(MessageBean beanMessage)
 void GCBDetailFrameDlg::ClearAllData(void)
 {
 	this->histroyLst.clear();
+	this->m_List.DeleteAllItems();
 }

@@ -52,14 +52,14 @@ BOOL GCBMainDlg::OnInitDialog()
 			LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 
 		this->m_List[nIndex].InsertColumn(0, _T("时间"), LVCFMT_CENTER,
-			rect.Width() / nTableHeadNum, 0);
+			rect.Width() / nTableHeadNum + 10, 0);
 
 		// 插入表头标题		
 		for (int nJIndex = 1; nJIndex < nTableHeadNum; ++nJIndex) {
 			CString labelStr;
 			labelStr.Format(_T("数据%d"), nJIndex);
 			this->m_List[nIndex].InsertColumn(nJIndex, labelStr, LVCFMT_CENTER,
-				(rect.Width() - 20) / nTableHeadNum, nJIndex);
+				(rect.Width() - 30) / nTableHeadNum, nJIndex);
 		}
 	}
 
@@ -177,9 +177,12 @@ bool GCBMainDlg::WriteLog(MessageBean beanMessage, CString *timeStr, list<float>
 	short formatSize = this->GetFormatSize(beanMessage.GetCMDType());
 	list<BYTE> beanPLst = beanMessage.GetParameterList();
 	list<BYTE>::iterator iterP = beanPLst.begin();
-	iterP++;// 地址位
-	iterP++;// 地址位
+
+	iterP++;
+	iterP++;
+
 	for (int nIndex = 0; nIndex < (beanMessage.GetParameterSize() - 2) / formatSize; ++nIndex) {
+
 		BYTE *list = new BYTE[formatSize];
 		for (int nJIndex = 0; nJIndex < formatSize; ++nJIndex, ++iterP) {
 			list[nJIndex] = *iterP;
@@ -342,4 +345,10 @@ void GCBMainDlg::DeleteTimer(TIMER_TYPE timer)
 void GCBMainDlg::ClearAllData(void)
 {
 	this->showValueLst.clear();
+	for (int nIndex = 0; nIndex < LIST_NUM; ++nIndex) {
+		this->m_List[nIndex].DeleteAllItems();
+	}
+
+	this->recvMessageQueue.Clear();
+	this->sendMessageQueue.Clear();
 }
