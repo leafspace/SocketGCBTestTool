@@ -33,4 +33,6 @@ public:
 
 	void AddMessageBean(MessageBean beanMessage);
 
+	void ClearAllData(void);
+
 };

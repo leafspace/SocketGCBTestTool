@@ -177,6 +177,8 @@ bool GCBMainDlg::WriteLog(MessageBean beanMessage, CString *timeStr, list<float>
 	short formatSize = this->GetFormatSize(beanMessage.GetCMDType());
 	list<BYTE> beanPLst = beanMessage.GetParameterList();
 	list<BYTE>::iterator iterP = beanPLst.begin();
+	iterP++;// 地址位
+	iterP++;// 地址位
 	for (int nIndex = 0; nIndex < (beanMessage.GetParameterSize() - 2) / formatSize; ++nIndex) {
 		BYTE *list = new BYTE[formatSize];
 		for (int nJIndex = 0; nJIndex < formatSize; ++nJIndex, ++iterP) {
@@ -304,7 +306,7 @@ void GCBMainDlg::RefreshPage()
 		beanList->SetItemText(0, 0, timeStr);
 
 		double sumValue = 0;
-		for (int nIndex = 1; nIndex < (int)retValueLst.size(); ++nIndex, ++iter) {
+		for (int nIndex = 1; nIndex < (int)retValueLst.size() + 1; ++nIndex, ++iter) {
 			sumValue += (*iter);
 			formatStr.Format(_T("%.2f"), *iter);
 			beanList->SetItemText(0, nIndex, formatStr);
@@ -335,4 +337,9 @@ void GCBMainDlg::CreateTimer(TIMER_TYPE timer)
 void GCBMainDlg::DeleteTimer(TIMER_TYPE timer)
 {
 	KillTimer(timer);
+}
+
+void GCBMainDlg::ClearAllData(void)
+{
+	this->showValueLst.clear();
 }

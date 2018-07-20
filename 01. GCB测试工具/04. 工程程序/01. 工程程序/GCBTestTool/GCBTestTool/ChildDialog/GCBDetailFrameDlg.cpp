@@ -111,3 +111,8 @@ void GCBDetailFrameDlg::AddMessageBean(MessageBean beanMessage)
 	this->m_List.SetItemText(0, 3, tempStr);
 
 }
+
+void GCBDetailFrameDlg::ClearAllData(void)
+{
+	this->histroyLst.clear();
+}

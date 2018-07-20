@@ -24,4 +24,8 @@ public:
 
 	bool RemoveThreadFinishedFlag(const TIMER_TYPE key);
 	bool RemoveThreadRetValueFlag(const TIMER_TYPE key);
+
+	void ClearThreadFinishedFlag(void);
+	void ClearThreadRetValueFlag(void);
+	void ClearThreadAllFlag(void);
 };

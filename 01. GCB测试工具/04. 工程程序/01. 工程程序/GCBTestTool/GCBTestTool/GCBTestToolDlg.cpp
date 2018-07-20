@@ -326,6 +326,7 @@ void CGCBTestToolDlg::OnBnClickedButtonLink()
 	else {
 		this->socketISLinking = true;
 		SetDlgItemText(IDC_BUTTON_LINK, _T("停止连接"));
+		this->ClearAllData();		
 		this->mainPage.CreateTimer(TIMER_DIALOG_DRAW);
 		this->OnBnClickedButtonLinktest();
 	}
@@ -419,6 +420,16 @@ int CGCBTestToolDlg::GetFrameTabIndex(const int nIndex)
 	}
 
 	return -1;
+}
+
+void CGCBTestToolDlg::ClearAllData(void)
+{
+	CGCBTestToolDlg::threadStateTable.ClearThreadAllFlag();
+	this->mainPage.ClearAllData();
+
+	for (int nIndex = 0; nIndex < this->nDialogLen; ++nIndex) {
+		this->framePage[nIndex].ClearAllData();
+	}
 }
 
 list<BYTE> CGCBTestToolDlg::CreateMessage(const BYTE cmdID, const uint16_t uRegisterAddress, const uint16_t uReadNum)
@@ -532,13 +543,13 @@ void CGCBTestToolDlg::SendRequestMessage()
 
 	// 获取组
 	list<BYTE> sendMsgLst[LIST_NUM];
-	sendMsgLst[0] = CGCBTestToolDlg::CreateMessage(NOZZLE_CARTRIDGE_LEVEL, 0x0001, (uint16_t)2);
-	sendMsgLst[1] = CGCBTestToolDlg::CreateMessage(MODE_LOCKED_SOLENOID_VALVE_WORKING, 0x0001, (uint16_t)2);
-	sendMsgLst[2] = CGCBTestToolDlg::CreateMessage(POSITIVE_NEGATIVE_PRESSURE_SOLENOID_VALVE_WORKING, 0x0001, (uint16_t)2);
-	sendMsgLst[3] = CGCBTestToolDlg::CreateMessage(INK_SUPPLY_PUMP_WORKING_CONDITION, 0x0001, (uint16_t)2);
-	sendMsgLst[4] = CGCBTestToolDlg::CreateMessage(NOZZLE_CABINET_TEMPERATURE, 0x0001, (uint16_t)2);
-	sendMsgLst[5] = CGCBTestToolDlg::CreateMessage(AIR_NEGATIVE_PRESSURE_VALUE, 0x0001, (uint16_t)2);
-	sendMsgLst[6] = CGCBTestToolDlg::CreateMessage(AIR_POSITIVE_PRESSURE_VALUE, 0x0001, (uint16_t)2);
+	sendMsgLst[0] = CGCBTestToolDlg::CreateMessage(NOZZLE_CARTRIDGE_LEVEL, 0x0000, (uint16_t)2);
+	sendMsgLst[1] = CGCBTestToolDlg::CreateMessage(MODE_LOCKED_SOLENOID_VALVE_WORKING, 0x0000, (uint16_t)2);
+	sendMsgLst[2] = CGCBTestToolDlg::CreateMessage(POSITIVE_NEGATIVE_PRESSURE_SOLENOID_VALVE_WORKING, 0x0000, (uint16_t)2);
+	sendMsgLst[3] = CGCBTestToolDlg::CreateMessage(INK_SUPPLY_PUMP_WORKING_CONDITION, 0x0000, (uint16_t)2);
+	sendMsgLst[4] = CGCBTestToolDlg::CreateMessage(NOZZLE_CABINET_TEMPERATURE, 0x0000, (uint16_t)2);
+	sendMsgLst[5] = CGCBTestToolDlg::CreateMessage(AIR_NEGATIVE_PRESSURE_VALUE, 0x0000, (uint16_t)2);
+	sendMsgLst[6] = CGCBTestToolDlg::CreateMessage(AIR_POSITIVE_PRESSURE_VALUE, 0x0000, (uint16_t)1);
 
 	// 临时设置为7个数
 	for (int nIndex = 0; nIndex < LIST_NUM; ++nIndex) {

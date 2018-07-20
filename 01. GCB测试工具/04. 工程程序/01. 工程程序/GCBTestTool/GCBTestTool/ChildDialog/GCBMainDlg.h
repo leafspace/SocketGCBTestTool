@@ -43,7 +43,9 @@ public:
 	static MessageQueue sendMessageQueue;
 
 	CListCtrl m_List[LIST_NUM];
-	void RefreshPage();
+	void RefreshPage(void);
 	void CreateTimer(TIMER_TYPE timer);
 	void DeleteTimer(TIMER_TYPE timer);
+
+	void ClearAllData(void);
 };

@@ -1,22 +1,18 @@
-﻿
-// GCBTestToolDlg.h : 头文件
-//
-
-#pragma once
+﻿#pragma once
 
 #define LIST_NUM			7
 #define TOPBAR_SIZE			20                                              // 顶端标签到边缘的大小
 #define SCROLLBAR_MIN		0                                               // Scroll Bar最小值
 #define SCROLLBAR_MAX		530                                             // Scroll Bar最大值
 #define TIMER_OUT			3000                                            // 超时
-#define TIMER_GAP			1000                                            // 时间间隔
+#define TIMER_GAP			3000                                            // 时间间隔
 #define DRAW_GAP			3000                                            // 绘画的时间间隔
 #define ORDER_BUFFER_SIZE   100                                             // 命令字节缓存大小
 
-#define BYTE0(dwTemp)       (*(char *)(&dwTemp))
-#define BYTE1(dwTemp)       (*((char *)(&dwTemp) + 1))
-#define BYTE2(dwTemp)       (*((char *)(&dwTemp) + 2))
-#define BYTE3(dwTemp)       (*((char *)(&dwTemp) + 3))
+#define BYTE0(dwTemp)       (*(char *)(&dwTemp))                            // 获取某个数的第一个字节 从最低位开始
+#define BYTE1(dwTemp)       (*((char *)(&dwTemp) + 1))                      // 获取某个数的第二个字节 从最低位开始
+#define BYTE2(dwTemp)       (*((char *)(&dwTemp) + 2))                      // 获取某个数的第三个字节 从最低位开始
+#define BYTE3(dwTemp)       (*((char *)(&dwTemp) + 3))                      // 获取某个数的第四个字节 从最低位开始
 
 #include "afxwin.h"
 #include "GCBTestTool.h"
@@ -28,25 +24,18 @@
 #include "ChildDialog/GCBDetailFrameDlg.h"
 
 
-// CGCBTestToolDlg 对话框
+// 主页面 对话框
 class CGCBTestToolDlg : public CDialog
 {
-	// 构造
 public:
-	CGCBTestToolDlg(CWnd* pParent = NULL);	// 标准构造函数
-
-// 对话框数据
+	CGCBTestToolDlg(CWnd* pParent = NULL);
 	enum { IDD = IDD_GCBTESTTOOL_DIALOG };
 
-protected:
-	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 支持
-
-
-// 实现
 protected:
 	HICON m_hIcon;
 
 	// 生成的消息映射函数
+	virtual void DoDataExchange(CDataExchange* pDX);
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg HCURSOR OnQueryDragIcon();
@@ -84,10 +73,12 @@ private:
 	HANDLE hThreadSocketLinkRecv;                                           // 线程句柄
 	HANDLE hThreadSocketLinkSend;                                           // 线程句柄
 
-	void OnTimerSocketLinkTest();                                           // 处理测试连接后的循环事件
-	void OnTimerSocketLink();                                               // 处理连接按钮后的循环事件
+	void OnTimerSocketLinkTest(void);                                       // 处理测试连接后的循环事件
+	void OnTimerSocketLink(void);                                           // 处理连接按钮后的循环事件
 
 	int GetFrameTabIndex(const int nIndex);                                 // 获取按钮为nIndex的tab号
+
+	void ClearAllData(void);
 public:
 	static StateTable threadStateTable;
 
@@ -96,8 +87,7 @@ public:
 
 	void ShowMessage(PROGRAM_STATE_CODE stateCode, PROGRAM_STATE_TYPE stateType);     // 跳出提示框
 	bool AddNewFrameTab(const int nIndex);                                  // Tab Control 添加一个页面
-	void SendRequestMessage();
+	void SendRequestMessage(void);
 
 	GCBDetailFrameDlg *GetFramePage(FRAME_CMD_TYPE cmdType);
-
 };

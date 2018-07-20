@@ -57,3 +57,19 @@ bool StateTable::RemoveThreadRetValueFlag(const TIMER_TYPE key)
 {
 	return true;
 }
+
+void StateTable::ClearThreadFinishedFlag(void)
+{
+	this->threadFinishedFlag.clear();
+}
+
+void StateTable::ClearThreadRetValueFlag(void)
+{
+	this->threadRetValueFlag.clear();
+}
+
+void StateTable::ClearThreadAllFlag(void)
+{
+	this->ClearThreadFinishedFlag();
+	this->ClearThreadRetValueFlag();
+}
