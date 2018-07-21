@@ -44,8 +44,8 @@
 
 
 
-
-
+// 设置窗口风格
+/*
 
 #ifdef _UNICODE
 #if defined _M_IX86
@@ -59,4 +59,4 @@
 #endif
 #endif
 
-
+*/
