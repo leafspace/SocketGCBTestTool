@@ -11,11 +11,13 @@
 #define IDD_MAIN_DIALOG                 129
 #define IDD_DETAIL_DIALOG               130
 #define IDD_SETTING_DIALOG              131
+#define IDD_GCB_SETTING_DIALOG          131
 #define IDC_FRAMETAB                    1000
-#define IDC_GCB_IPADDRESS               1001
+#define IDC_GCB_EDIT_IPADDRESS          1001
 #define IDC_GCB_EDIT_PORT               1002
 #define IDC_BUTTON_LINKTEST             1003
-#define IDC_BUTTON_SETTING              1004
+#define IDC_BUTTON_GCB_SETTING          1004
+#define IDC_BUTTON_SYSTEM_SETTING       1029
 #define IDC_BUTTON_LINK                 1005
 #define IDC_SCROLLBAR                   1010
 #define IDC_LIST1                       1011
@@ -68,7 +70,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        132
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1029
+#define _APS_NEXT_CONTROL_VALUE         1030
 #define _APS_NEXT_SYMED_VALUE           105
 #endif
 #endif

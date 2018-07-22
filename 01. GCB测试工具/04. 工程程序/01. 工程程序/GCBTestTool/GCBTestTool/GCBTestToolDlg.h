@@ -36,15 +36,15 @@ protected:
 
 	// 生成的消息映射函数
 	virtual void DoDataExchange(CDataExchange* pDX);
-	virtual BOOL OnInitDialog();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg HCURSOR OnQueryDragIcon();
+	virtual BOOL OnInitDialog();
 
-	afx_msg void OnPaint();
-	afx_msg void OnTimer(UINT_PTR nIDEvent);
-	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
-	afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
-	afx_msg void OnTcnSelchangeFrametab(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnPaint();                                                 // 窗口绘图函数
+	afx_msg void OnTimer(UINT_PTR nIDEvent);                                // 定时器相应函数
+	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);        // 检测滑轮的位置
+	afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);// 滑轮移动的动作
+	afx_msg void OnTcnSelchangeFrametab(NMHDR *pNMHDR, LRESULT *pResult);   // 切换Control Tab的页面
 	afx_msg void OnBnClickedButtonLinktest();
 	afx_msg void OnBnClickedButtonLink();
 	afx_msg void OnBnClickedButtonSetting();
@@ -80,7 +80,7 @@ private:
 
 	void ClearAllData(void);
 public:
-	static StateTable threadStateTable;
+	static StateTable threadStateTable;                                     // 线程运行状态表
 
 	static list<BYTE> CreateMessage(const BYTE cmdID, const uint16_t uRegisterAddress, const uint16_t uReadNum); // 创建一条要发送的命令
 	static list<BYTE> CreateMessage(const BYTE cmdID, const uint16_t uRegisterAddress, const float uReadNum);

@@ -1,8 +1,4 @@
-﻿
-// GCBTestToolDlg.cpp : 实现文件
-//
-
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "CommonType.h"
 #include "GCBTestTool.h"
 #include "GCBTestToolDlg.h"
@@ -12,20 +8,14 @@
 #endif
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
-
 class CAboutDlg : public CDialog
 {
 public:
 	CAboutDlg();
-
-	// 对话框数据
 	enum { IDD = IDD_ABOUTBOX };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
-
-	// 实现
-protected:
+	virtual void DoDataExchange(CDataExchange* pDX);
 	DECLARE_MESSAGE_MAP()
 };
 
@@ -41,22 +31,14 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialog)
 END_MESSAGE_MAP()
 
-StateTable CGCBTestToolDlg::threadStateTable;
+//=============================================================================
+StateTable CGCBTestToolDlg::threadStateTable;                               // 线程运行状态表
 
-// CGCBTestToolDlg 对话框
 
-CGCBTestToolDlg::CGCBTestToolDlg(CWnd* pParent /*=NULL*/)
+CGCBTestToolDlg::CGCBTestToolDlg(CWnd* pParent)
 	: CDialog(CGCBTestToolDlg::IDD, pParent)
 {
-	this->m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
-
-	this->nCurSelTab = 0;
-	this->nDialogLen = 0;
-
-	this->strServerIP = _T("172.16.5.30");
-	this->strServerPort = _T("10000");
-
-	this->socketISLinking = false;
+	this->m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);                   // 加载图标
 }
 
 void CGCBTestToolDlg::DoDataExchange(CDataExchange* pDX)
@@ -67,26 +49,40 @@ void CGCBTestToolDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CGCBTestToolDlg, CDialog)
-	ON_WM_SYSCOMMAND()
-	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_WM_MOUSEWHEEL()
+	ON_WM_SYSCOMMAND()
 	ON_WM_VSCROLL()
-	ON_NOTIFY(TCN_SELCHANGE, IDC_FRAMETAB, &CGCBTestToolDlg::OnTcnSelchangeFrametab)
-	ON_BN_CLICKED(IDC_BUTTON_LINKTEST, &CGCBTestToolDlg::OnBnClickedButtonLinktest)
+	ON_WM_PAINT()
 	ON_WM_TIMER()
+	ON_NOTIFY(TCN_SELCHANGE, IDC_FRAMETAB, &CGCBTestToolDlg::OnTcnSelchangeFrametab)
+	ON_BN_CLICKED(IDC_BUTTON_GCB_SETTING, &CGCBTestToolDlg::OnBnClickedButtonSetting)
+	ON_BN_CLICKED(IDC_BUTTON_LINKTEST, &CGCBTestToolDlg::OnBnClickedButtonLinktest)
 	ON_BN_CLICKED(IDC_BUTTON_LINK, &CGCBTestToolDlg::OnBnClickedButtonLink)
-	ON_BN_CLICKED(IDC_BUTTON_SETTING, &CGCBTestToolDlg::OnBnClickedButtonSetting)
 END_MESSAGE_MAP()
 
-// CGCBTestToolDlg 消息处理程序
+void CGCBTestToolDlg::OnSysCommand(UINT nID, LPARAM lParam)
+{
+	if ((nID & 0xFFF0) == IDM_ABOUTBOX)
+	{
+		CAboutDlg dlgAbout;
+		dlgAbout.DoModal();
+	}
+	else
+	{
+		CDialog::OnSysCommand(nID, lParam);
+	}
+}
+
+//当用户拖动最小化窗口时系统调用此函数取得光标显示
+HCURSOR CGCBTestToolDlg::OnQueryDragIcon()
+{
+	return static_cast<HCURSOR>(m_hIcon);
+}
 
 BOOL CGCBTestToolDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-
-	// 将“关于...”菜单项添加到系统菜单中。
-
 	// IDM_ABOUTBOX 必须在系统命令范围内。
 	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
 	ASSERT(IDM_ABOUTBOX < 0xF000);
@@ -106,19 +102,27 @@ BOOL CGCBTestToolDlg::OnInitDialog()
 	}
 
 	// 设置此对话框的图标。当应用程序主窗口不是对话框时，框架将自动
-	//  执行此操作
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
+
+	// 窗口初始化代码	
+	this->nCurSelTab = 0;
+	this->nDialogLen = 0;
+
+	this->strServerIP = _T("172.16.5.30");
+	this->strServerPort = _T("10000");
+
+	this->socketISLinking = false;
 
 	// Tab Control 添加主页面
 	this->m_FrameTabCtrl.InsertItem(0, _T("概览"));
 
 	this->mainPage.Create(IDD_MAIN_DIALOG, &this->m_FrameTabCtrl);
 	// 设定页面在Tab内显示的范围
-	CRect rc;
-	this->m_FrameTabCtrl.GetClientRect(rc);
-	rc.bottom -= 20;
-	this->mainPage.MoveWindow(&rc);
+	CRect cRect;
+	this->m_FrameTabCtrl.GetClientRect(cRect);
+	cRect.bottom -= 20;
+	this->mainPage.MoveWindow(&cRect);
 
 	this->pDialog[0] = &this->mainPage;
 	this->pDialog[0]->ShowWindow(SW_SHOW);
@@ -127,35 +131,14 @@ BOOL CGCBTestToolDlg::OnInitDialog()
 	this->m_DlgScrollBar.SetScrollRange(SCROLLBAR_MIN, SCROLLBAR_MAX);
 
 	// 设置输入框的默认参数
-	SetDlgItemText(IDC_GCB_IPADDRESS, this->strServerIP);
+	SetDlgItemText(IDC_GCB_EDIT_IPADDRESS, this->strServerIP);
 	SetDlgItemText(IDC_GCB_EDIT_PORT, this->strServerPort);
-	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
+	return TRUE;
 }
 
-void CGCBTestToolDlg::OnSysCommand(UINT nID, LPARAM lParam)
-{
-	if ((nID & 0xFFF0) == IDM_ABOUTBOX)
-	{
-		CAboutDlg dlgAbout;
-		dlgAbout.DoModal();
-	}
-	else
-	{
-		CDialog::OnSysCommand(nID, lParam);
-	}
-}
-
-//当用户拖动最小化窗口时系统调用此函数取得光标
-//显示。
-HCURSOR CGCBTestToolDlg::OnQueryDragIcon()
-{
-	return static_cast<HCURSOR>(m_hIcon);
-}
-
-// 如果向对话框添加最小化按钮，则需要下面的代码
+//  如果向对话框添加最小化按钮，则需要下面的代码
 //  来绘制该图标。对于使用文档/视图模型的 MFC 应用程序，
 //  这将由框架自动完成。
-
 void CGCBTestToolDlg::OnPaint()
 {
 	if (IsIconic())
@@ -185,28 +168,25 @@ void CGCBTestToolDlg::OnTimer(UINT_PTR nIDEvent)
 {
 	switch (nIDEvent)
 	{
-	case TIMER_SOCKET_LINK_CONN:
+	case TIMER_SOCKET_LINK_CONN:                                            // 检测Socket的连接状态是否成功
 		this->OnTimerSocketLinkTest();
 		break;
-	case TIMER_SOCKET_LINK_RECV:
+	case TIMER_SOCKET_LINK_RECV:                                            // 处理接收到的数据并显示在页面上
 		this->mainPage.RefreshPage();
 		break;
-	case TIMER_SOCKET_LINK_SEND:
+	case TIMER_SOCKET_LINK_SEND:                                            // 向GCB请求一次数据
 		this->SendRequestMessage();
 		break;
-	default:
+	default:                                                                // 异常处理
 		KillTimer(nIDEvent);
 	}
 }
 
 BOOL CGCBTestToolDlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 {
-	if (zDelta < 0)
-	{
+	if (zDelta < 0) {
 		OnVScroll(SB_LINEDOWN, GetScrollPos(SB_VERT), GetScrollBarCtrl(SB_VERT));
-	}
-	else if (zDelta > 0)
-	{
+	} else if (zDelta > 0) {
 		OnVScroll(SB_LINEUP, GetScrollPos(SB_VERT), GetScrollBarCtrl(SB_VERT));
 	}
 	return CDialog::OnMouseWheel(nFlags, zDelta, pt);
@@ -230,10 +210,10 @@ void CGCBTestToolDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 		break;
 	}
 
+	// 滑轮滚动超过最大值
 	if (nCurpos > SCROLLBAR_MAX) {
 		nCurpos = SCROLLBAR_MAX;
-	}
-	else if (nCurpos < SCROLLBAR_MIN) {
+	} else if (nCurpos < SCROLLBAR_MIN) {
 		nCurpos = SCROLLBAR_MIN;
 	}
 
@@ -241,18 +221,19 @@ void CGCBTestToolDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 	this->m_DlgScrollBar.SetScrollPos(nCurpos);
 
 	// 设置子窗口移动位置
-	CRect rc;
-	this->m_FrameTabCtrl.GetClientRect(rc);
-	rc.top = rc.top - nCurpos;
-	rc.bottom = rc.bottom - TOPBAR_SIZE;
+	CRect cRect;
+	this->m_FrameTabCtrl.GetClientRect(cRect);
+	cRect.top = cRect.top - nCurpos;
+	cRect.bottom = cRect.bottom - TOPBAR_SIZE;
 
+	// 
 	switch (this->nCurSelTab)
 	{
 	case 0:
-		this->mainPage.MoveWindow(&rc);
+		this->mainPage.MoveWindow(&cRect);
 		break;
 	default:
-		this->framePage[this->nCurSelTab - 1].MoveWindow(&rc);
+		this->framePage[this->nCurSelTab - 1].MoveWindow(&cRect);
 	}
 
 	CDialog::OnVScroll(nSBCode, nPos, pScrollBar);
@@ -280,7 +261,7 @@ void CGCBTestToolDlg::OnBnClickedButtonLinktest()
 	bool bIsSuccess = true;
 
 	// 获取连接的测试IP与端口号
-	GetDlgItemText(IDC_GCB_IPADDRESS, this->strServerIP);
+	GetDlgItemText(IDC_GCB_EDIT_IPADDRESS, this->strServerIP);
 	GetDlgItemText(IDC_GCB_EDIT_PORT, this->strServerPort);
 
 	GetDlgItem(IDC_BUTTON_LINKTEST)->EnableWindow(false);

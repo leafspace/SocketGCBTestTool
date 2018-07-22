@@ -45,6 +45,15 @@ BOOL GCBMainDlg::OnInitDialog()
 	CDialog::OnInitDialog();
 
 	const int nTableHeadNum = 5;
+	const CString strTableHeadLable[] = {
+		_T("墨盒"),
+		_T("继电器"),
+		_T("继电器"),
+		_T("供墨泵"),
+		_T("数据"),
+		_T("数据"),
+		_T("数据")
+	};
 	for (int nIndex = 0; nIndex < LIST_NUM; ++nIndex) {
 		CRect rect;
 		this->m_List[nIndex].GetClientRect(&rect); //获得当前listcontrol的宽度
@@ -56,10 +65,10 @@ BOOL GCBMainDlg::OnInitDialog()
 
 		// 插入表头标题		
 		for (int nJIndex = 1; nJIndex < nTableHeadNum; ++nJIndex) {
-			CString labelStr;
-			labelStr.Format(_T("数据%d"), nJIndex);
+			CString labelStr = strTableHeadLable[nIndex];
+			labelStr.Format(_T("%s%d"), labelStr, nJIndex);
 			this->m_List[nIndex].InsertColumn(nJIndex, labelStr, LVCFMT_CENTER,
-				(rect.Width() - 30) / nTableHeadNum, nJIndex);
+				(rect.Width() - 40) / nTableHeadNum, nJIndex);
 		}
 	}
 
