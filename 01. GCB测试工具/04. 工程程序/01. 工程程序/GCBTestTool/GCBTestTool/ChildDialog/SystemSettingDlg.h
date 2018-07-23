@@ -19,5 +19,5 @@ protected:
 private:
 	bool isCheckAll;
 public:
-	
+
 };
