@@ -3,6 +3,16 @@
 class CommunicationCore
 {
 private:
-public:
+    SocketLink socketLink;                                                  // 建立的Socket连接
 
+    HANDLE hThreadSocketLinkTest;                                           // 线程句柄
+	HANDLE hThreadSocketLinkRecv;                                           // 线程句柄
+	HANDLE hThreadSocketLinkSend;                                           // 线程句柄
+public:
+    static StateTable threadStateTable;                                     // 线程运行状态表
+
+	static list<BYTE> CreateMessage(const BYTE cmdID, const uint16_t uRegisterAddress, const uint16_t uReadNum); // 创建一条要发送的命令
+	static list<BYTE> CreateMessage(const BYTE cmdID, const uint16_t uRegisterAddress, const float uReadNum);
+
+    void SendRequestMessage(void);
 };

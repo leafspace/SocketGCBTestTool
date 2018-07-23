@@ -70,12 +70,7 @@ private:
 	CString strServerIP;                                                    // 服务器的IP
 	CString strServerPort;                                                  // 通讯的端口号
 
-	SocketLink socketLink;                                                  // 建立的Socket连接
 	bool socketISLinking;                                                   // 当前是否处在持续连接中
-
-	HANDLE hThreadSocketLinkTest;                                           // 线程句柄
-	HANDLE hThreadSocketLinkRecv;                                           // 线程句柄
-	HANDLE hThreadSocketLinkSend;                                           // 线程句柄
 
 	void OnTimerSocketLinkTest(void);                                       // 处理测试连接后的循环事件
 	void OnTimerSocketLink(void);                                           // 处理连接按钮后的循环事件
@@ -84,14 +79,9 @@ private:
 
 	void ClearAllData(void);
 public:
-	static StateTable threadStateTable;                                     // 线程运行状态表
-
-	static list<BYTE> CreateMessage(const BYTE cmdID, const uint16_t uRegisterAddress, const uint16_t uReadNum); // 创建一条要发送的命令
-	static list<BYTE> CreateMessage(const BYTE cmdID, const uint16_t uRegisterAddress, const float uReadNum);
 
 	void ShowMessage(PROGRAM_STATE_CODE stateCode, PROGRAM_STATE_TYPE stateType);     // 跳出提示框
 	bool AddNewFrameTab(const int nIndex);                                  // Tab Control 添加一个页面
-	void SendRequestMessage(void);
 
 	GCBDetailFrameDlg *GetFramePage(FRAME_CMD_TYPE cmdType);
 };
