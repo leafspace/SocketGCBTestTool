@@ -20,35 +20,35 @@ enum FRAME_CMD_TYPE
 
 enum COMM_RESULT_GCB
 {
-	gcb_comm_result_successed = 0x00,	                // 指令正常执行完成
-	gcb_comm_result_failed = 0x01,            			// 指令操作失败
-	gcb_comm_result_invalid = 0x02,			            // 无效命令
-	gcb_comm_result_data = 0x03,            			// 参数数据错误
-	gcb_comm_result_other = 0xFF,		            	// 其它错误，如系统正忙，如操作步骤错误
+	gcb_comm_result_successed = 0x00,	                                    // 指令正常执行完成
+	gcb_comm_result_failed = 0x01,            			                    // 指令操作失败
+	gcb_comm_result_invalid = 0x02,			                                // 无效命令
+	gcb_comm_result_data = 0x03,            			                    // 参数数据错误
+	gcb_comm_result_other = 0xFF,		            	                    // 其它错误，如系统正忙，如操作步骤错误
 };
 
 enum PROGRAM_STATE_CODE
 {
-	PROGRAM_CANT_LINK_SERVER = 0x00,							// 【TIMER_SOCKET_LINK_TEST】无法连接服务器
-	PROGRAM_LINK_SERVER,										// 【TIMER_SOCKET_LINK_TEST】连接服务器成功
-	PROGRAM_UNDEFINE_CMD,										// 未定义的CMD类型
-	PROGRAM_CANT_ANALYSIS,										// 无法解析原始命令码
-	PROGRAM_ANALYSIS_ORGIN_DATA,								// 解析原始命令码成功
-	PROGRAM_UNLIKING,                                           // 当前未连接服务器
+	PROGRAM_CANT_LINK_SERVER = 0x00,							            // 【TIMER_SOCKET_LINK_TEST】无法连接服务器
+	PROGRAM_LINK_SERVER,									            	// 【TIMER_SOCKET_LINK_TEST】连接服务器成功
+	PROGRAM_UNDEFINE_CMD,									            	// 未定义的CMD类型
+	PROGRAM_CANT_ANALYSIS,									            	// 无法解析原始命令码
+	PROGRAM_ANALYSIS_ORGIN_DATA,							            	// 解析原始命令码成功
+	PROGRAM_UNLIKING,                                                       // 当前未连接服务器
 };
 
-enum PROGRAM_STATE_TYPE                                 // MessageBox的三种状态
+enum PROGRAM_STATE_TYPE                                                     // MessageBox的三种状态
 {
-	PROGRAM_STATE_ERROR = 0x00,
-	PROGRAM_STATE_WARNING,
-	PROGRAM_STATE_TIP,
+	PROGRAM_STATE_ERROR = 0x00,                                             // 错误
+	PROGRAM_STATE_WARNING,                                                  // 警告
+	PROGRAM_STATE_TIP,                                                      // 提示
 };
 
 enum TIMER_TYPE
 {
-	TIMER_SOCKET_LINK_CONN = 0x00,                      // 进行与服务器的连接测试
-	TIMER_SOCKET_LINK_RECV,
-	TIMER_SOCKET_LINK_SEND,
+	TIMER_SOCKET_LINK_CONN = 0x00,                                          // 进行与服务器的连接测试
+	TIMER_SOCKET_LINK_RECV,                                                 // 进行数据接收处理
+	TIMER_SOCKET_LINK_SEND,                                                 // 进行发送数据的处理
 
 
 	TIMER_DIALOG_DRAW,
@@ -56,10 +56,10 @@ enum TIMER_TYPE
 
 enum TIMER_STATE_TYPE
 {
-	TIMER_STATE_UNRUNNING = 0x00,                       // 线程尚未启动
-	TIMER_STATE_RUNNING,                                // 线程正在运行
-	TIMER_STATE_FINISH,                                 // 线程运行结束
-	TIMER_STATE_ERROR = 0xFF,                           // 线程出现错误
+	TIMER_STATE_UNRUNNING = 0x00,                                           // 线程尚未启动
+	TIMER_STATE_RUNNING,                                                    // 线程正在运行
+	TIMER_STATE_FINISH,                                                     // 线程运行结束
+	TIMER_STATE_ERROR = 0xFF,                                               // 线程出现错误
 };
 
 enum TIMER_STATE_ERROR_TYPE
@@ -71,8 +71,8 @@ enum TIMER_STATE_ERROR_TYPE
 extern const CString strLabel[];                                            // 12种不同测试对象的文言
 extern const CString strStateCodeMessage[];                                 // 系统状态对应的错误信息或提示信息
 
-int GetLabelSize();
-int GetStateCodeMessageSize();
+int GetLabelSize();                                                         // 获取种类标题文言信息的个数
+int GetStateCodeMessageSize();                                              // 获取错误文言信息的个数
 
-CString GetLabel(const unsigned int nIndex);
-CString GetStateCodeMessage(const unsigned int nIndex);
+CString GetLabel(const unsigned int nIndex);                                // 获取测试对象的文言
+CString GetStateCodeMessage(const unsigned int nIndex);                     // 获取错误信息

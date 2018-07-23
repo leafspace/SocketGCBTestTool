@@ -57,6 +57,7 @@ DWORD WINAPI ThreadSocketLinkRecv(LPVOID lpParamter)
 				if (rOrders[nIndex] == 0xEC) {
 					nEnIndex = nIndex;
 
+					// 将原始指令数据封装成对象
 					MessageBean recvedMessageBean;
 					recvedMessageBean.SetOrginDataList(&rOrders[nBeIndex], nEnIndex - nBeIndex + 1);
 					PROGRAM_STATE_CODE retStateCode = recvedMessageBean.AnalysisOrginDataLst();

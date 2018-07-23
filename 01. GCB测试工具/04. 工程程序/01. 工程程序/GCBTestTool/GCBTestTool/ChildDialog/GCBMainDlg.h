@@ -38,6 +38,8 @@ private:
 
 	list<float> showValueLst;
 	void StartDraw(int ControlID);
+
+	CString GetFormatStrLable(FRAME_CMD_TYPE cmdType, float value);
 public:
 	static MessageQueue recvMessageQueue;
 	static MessageQueue sendMessageQueue;

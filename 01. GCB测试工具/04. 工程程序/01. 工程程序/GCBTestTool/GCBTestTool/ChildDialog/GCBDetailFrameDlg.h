@@ -2,37 +2,33 @@
 #include "afxcmn.h"
 #include "../CommonType.h"
 
-
-// GCBDetailFrameDlg 对话框
-
 class GCBDetailFrameDlg : public CDialog
 {
 	DECLARE_DYNAMIC(GCBDetailFrameDlg)
 
 public:
-	GCBDetailFrameDlg(CWnd* pParent = NULL);   // 标准构造函数
+	GCBDetailFrameDlg(CWnd* pParent = NULL);
 	virtual ~GCBDetailFrameDlg();
 
 	// 对话框数据
 	enum { IDD = IDD_DETAIL_DIALOG };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
+	virtual void DoDataExchange(CDataExchange* pDX);
 	virtual BOOL OnInitDialog();
 	DECLARE_MESSAGE_MAP()
 
 private:
-	FRAME_CMD_TYPE nFrameType;
+	FRAME_CMD_TYPE nFrameType;                                              // 设置当前页面保存的指令类型
 
 public:
-	CListCtrl m_List;
-	list<MessageBean> histroyLst;
+	CListCtrl m_List;                                                       // 本页对应的数据列表
+	list<MessageBean> histroyLst;                                           // 保存的历史数据
 
-	void SetFrameType(int nFrameTypeNum);
-	FRAME_CMD_TYPE GetFrameType(void);
+	void SetFrameType(int nFrameTypeNum);                                   // 设置本页的指令类型
+	FRAME_CMD_TYPE GetFrameType(void);                                      // 获取本页的指令类型
 
-	void AddMessageBean(MessageBean beanMessage);
+	void AddMessageBean(MessageBean beanMessage);                           // 添加一个历史消息
 
-	void ClearAllData(void);
-
+	void ClearAllData(void);                                                // 清除所有的数据
 };

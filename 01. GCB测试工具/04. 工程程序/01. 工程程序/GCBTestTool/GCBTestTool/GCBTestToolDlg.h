@@ -47,7 +47,8 @@ protected:
 	afx_msg void OnTcnSelchangeFrametab(NMHDR *pNMHDR, LRESULT *pResult);   // 切换Control Tab的页面
 	afx_msg void OnBnClickedButtonLinktest();
 	afx_msg void OnBnClickedButtonLink();
-	afx_msg void OnBnClickedButtonSetting();
+	afx_msg void OnBnClickedButtonGcbSetting();
+	afx_msg void OnBnClickedButtonSystemSetting();
 	DECLARE_MESSAGE_MAP()
 
 

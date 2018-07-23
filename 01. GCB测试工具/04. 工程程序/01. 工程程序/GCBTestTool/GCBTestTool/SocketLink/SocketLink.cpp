@@ -1,6 +1,12 @@
 ﻿#include "stdafx.h"
 #include "SocketLink.h"
 
+SocketLink::SocketLink()
+{
+	this->port = 0;
+	this->targetIP = "";
+}
+
 bool SocketLink::initSocket()
 {
 	if (WSAStartup(MAKEWORD(2, 2), &this->wsaData) != 0) {

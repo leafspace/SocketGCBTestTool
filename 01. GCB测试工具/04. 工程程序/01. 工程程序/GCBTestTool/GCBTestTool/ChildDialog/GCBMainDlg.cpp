@@ -5,18 +5,14 @@
 #include "GCBMainDlg.h"
 #include "GCBDetailFrameDlg.h"
 
-
 MessageQueue GCBMainDlg::recvMessageQueue;
 MessageQueue GCBMainDlg::sendMessageQueue;
 
-// GCBMainDlg 对话框
-
 IMPLEMENT_DYNAMIC(GCBMainDlg, CDialog)
 
-GCBMainDlg::GCBMainDlg(CWnd* pParent /*=NULL*/)
+GCBMainDlg::GCBMainDlg(CWnd* pParent)
 	: CDialog(GCBMainDlg::IDD, pParent)
 {
-
 }
 
 GCBMainDlg::~GCBMainDlg()
@@ -293,6 +289,59 @@ void GCBMainDlg::StartDraw(int ControlID)
 	CDialog::OnPaint();
 }
 
+CString GCBMainDlg::GetFormatStrLable(FRAME_CMD_TYPE cmdType, float value)
+{
+	CString formatStr;
+	formatStr.Format(_T("%.2f"), value);
+	switch (cmdType)
+	{
+	case NOZZLE_CARTRIDGE_LEVEL:
+	{
+		switch ((int)value)
+		{
+		case 0: return _T("正常");
+		case 1: return _T("高液位");
+		case -1: return _T("低液位");
+		default: return _T("未知(") + formatStr + _T(")");
+
+		}
+	}
+	break;
+	case MODE_LOCKED_SOLENOID_VALVE_WORKING:
+	case POSITIVE_NEGATIVE_PRESSURE_SOLENOID_VALVE_WORKING:
+	{
+		switch ((int)value)
+		{
+		case 0x00: return _T("默认状态");
+		case 0xff: return _T("状态改变");
+		default: return _T("未知(") + formatStr + _T(")");
+
+		}
+	}
+	break;
+	case INK_SUPPLY_PUMP_WORKING_CONDITION:
+	{
+		switch ((int)value)
+		{
+		case 0x00: return _T("停止状态");
+		case 0xff: return _T("工作状态");
+		default: return _T("未知(") + formatStr + _T(")");
+
+		}
+	}
+	break;
+	case NOZZLE_CABINET_TEMPERATURE:
+	case AIR_NEGATIVE_PRESSURE_VALUE:
+	case AIR_POSITIVE_PRESSURE_VALUE:
+	{
+		return formatStr;
+	}
+	break;
+	default:
+		return _T("未知(") + formatStr + _T(")");
+	}
+}
+
 void GCBMainDlg::RefreshPage()
 {
 	// 刷新页面数据
@@ -320,7 +369,7 @@ void GCBMainDlg::RefreshPage()
 		double sumValue = 0;
 		for (int nIndex = 1; nIndex < (int)retValueLst.size() + 1; ++nIndex, ++iter) {
 			sumValue += (*iter);
-			formatStr.Format(_T("%.2f"), *iter);
+			formatStr = this->GetFormatStrLable(beanMessage.GetCMDType(), *iter);
 			beanList->SetItemText(0, nIndex, formatStr);
 		}
 		// 计算平均值并写入到绘图数据表中

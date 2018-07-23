@@ -3,12 +3,9 @@
 #include "../GCBTestToolDlg.h"
 #include "GCBDetailFrameDlg.h"
 
-
-// GCBDetailFrameDlg 对话框
-
 IMPLEMENT_DYNAMIC(GCBDetailFrameDlg, CDialog)
 
-GCBDetailFrameDlg::GCBDetailFrameDlg(CWnd* pParent /*=NULL*/)
+GCBDetailFrameDlg::GCBDetailFrameDlg(CWnd* pParent)
 	: CDialog(GCBDetailFrameDlg::IDD, pParent)
 {
 	this->SetFrameType(0);
@@ -24,12 +21,9 @@ void GCBDetailFrameDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LISTMODEL, m_List);
 }
 
-
 BEGIN_MESSAGE_MAP(GCBDetailFrameDlg, CDialog)
 END_MESSAGE_MAP()
 
-
-// GCBDetailFrameDlg 消息处理程序
 
 BOOL GCBDetailFrameDlg::OnInitDialog()
 {
@@ -81,11 +75,12 @@ FRAME_CMD_TYPE GCBDetailFrameDlg::GetFrameType(void)
 
 void GCBDetailFrameDlg::AddMessageBean(MessageBean beanMessage)
 {
+	// 将数据存入列表中
 	this->histroyLst.push_back(beanMessage);
 
 	CString tempStr;
 
-	this->m_List.InsertItem(0, tempStr);
+	this->m_List.InsertItem(0, tempStr);                                    // 插入一行数据
 
 	SYSTEMTIME sys;
 	GetLocalTime(&sys);
@@ -109,7 +104,6 @@ void GCBDetailFrameDlg::AddMessageBean(MessageBean beanMessage)
 	}
 
 	this->m_List.SetItemText(0, 3, tempStr);
-
 }
 
 void GCBDetailFrameDlg::ClearAllData(void)

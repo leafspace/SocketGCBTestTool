@@ -2,12 +2,9 @@
 #include "../GCBTestToolDlg.h"
 #include "GCBSettingDlg.h"
 
-
-// GCBSettingDlg 对话框
-
 IMPLEMENT_DYNAMIC(GCBSettingDlg, CDialog)
 
-GCBSettingDlg::GCBSettingDlg(CWnd* pParent /*=NULL*/)
+GCBSettingDlg::GCBSettingDlg(CWnd* pParent)
 	: CDialog(GCBSettingDlg::IDD, pParent)
 {
 
@@ -27,8 +24,6 @@ BEGIN_MESSAGE_MAP(GCBSettingDlg, CDialog)
 	ON_BN_CLICKED(IDOK, &GCBSettingDlg::OnBnClickedOk)
 END_MESSAGE_MAP()
 
-
-// GCBSettingDlg 消息处理程序
 
 void GCBSettingDlg::OnBnClickedOk()
 {

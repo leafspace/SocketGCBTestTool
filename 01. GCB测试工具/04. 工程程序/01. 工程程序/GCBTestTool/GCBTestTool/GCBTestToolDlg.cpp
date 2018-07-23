@@ -56,9 +56,10 @@ BEGIN_MESSAGE_MAP(CGCBTestToolDlg, CDialog)
 	ON_WM_PAINT()
 	ON_WM_TIMER()
 	ON_NOTIFY(TCN_SELCHANGE, IDC_FRAMETAB, &CGCBTestToolDlg::OnTcnSelchangeFrametab)
-	ON_BN_CLICKED(IDC_BUTTON_GCB_SETTING, &CGCBTestToolDlg::OnBnClickedButtonSetting)
-	ON_BN_CLICKED(IDC_BUTTON_LINKTEST, &CGCBTestToolDlg::OnBnClickedButtonLinktest)
 	ON_BN_CLICKED(IDC_BUTTON_LINK, &CGCBTestToolDlg::OnBnClickedButtonLink)
+	ON_BN_CLICKED(IDC_BUTTON_LINKTEST, &CGCBTestToolDlg::OnBnClickedButtonLinktest)
+	ON_BN_CLICKED(IDC_BUTTON_GCB_SETTING, &CGCBTestToolDlg::OnBnClickedButtonGcbSetting)
+	ON_BN_CLICKED(IDC_BUTTON_SYSTEM_SETTING, &CGCBTestToolDlg::OnBnClickedButtonSystemSetting)
 END_MESSAGE_MAP()
 
 void CGCBTestToolDlg::OnSysCommand(UINT nID, LPARAM lParam)
@@ -186,7 +187,8 @@ BOOL CGCBTestToolDlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 {
 	if (zDelta < 0) {
 		OnVScroll(SB_LINEDOWN, GetScrollPos(SB_VERT), GetScrollBarCtrl(SB_VERT));
-	} else if (zDelta > 0) {
+	}
+	else if (zDelta > 0) {
 		OnVScroll(SB_LINEUP, GetScrollPos(SB_VERT), GetScrollBarCtrl(SB_VERT));
 	}
 	return CDialog::OnMouseWheel(nFlags, zDelta, pt);
@@ -213,7 +215,8 @@ void CGCBTestToolDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 	// 滑轮滚动超过最大值
 	if (nCurpos > SCROLLBAR_MAX) {
 		nCurpos = SCROLLBAR_MAX;
-	} else if (nCurpos < SCROLLBAR_MIN) {
+	}
+	else if (nCurpos < SCROLLBAR_MIN) {
 		nCurpos = SCROLLBAR_MIN;
 	}
 
@@ -226,7 +229,7 @@ void CGCBTestToolDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 	cRect.top = cRect.top - nCurpos;
 	cRect.bottom = cRect.bottom - TOPBAR_SIZE;
 
-	// 
+	// 根据当前Control Tab显示的页面来移动窗口
 	switch (this->nCurSelTab)
 	{
 	case 0:
@@ -241,15 +244,15 @@ void CGCBTestToolDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 
 void CGCBTestToolDlg::OnTcnSelchangeFrametab(NMHDR *pNMHDR, LRESULT *pResult)
 {
-	this->pDialog[this->nCurSelTab]->ShowWindow(SW_HIDE);
-	this->nCurSelTab = this->m_FrameTabCtrl.GetCurSel();
-	this->pDialog[this->nCurSelTab]->ShowWindow(SW_SHOW);
+	this->pDialog[this->nCurSelTab]->ShowWindow(SW_HIDE);                   // 隐藏旧窗口
+	this->nCurSelTab = this->m_FrameTabCtrl.GetCurSel();                    // 获取新窗口号
+	this->pDialog[this->nCurSelTab]->ShowWindow(SW_SHOW);                   // 显示新窗口
 
 	// 重置页面显示位置
-	CRect rc;
-	this->m_FrameTabCtrl.GetClientRect(rc);
-	rc.bottom = rc.bottom - TOPBAR_SIZE;
-	this->pDialog[this->nCurSelTab]->MoveWindow(&rc);
+	CRect cRect;
+	this->m_FrameTabCtrl.GetClientRect(cRect);
+	cRect.bottom = cRect.bottom - TOPBAR_SIZE;
+	this->pDialog[this->nCurSelTab]->MoveWindow(&cRect);
 
 	// 设置滚动条位置
 	this->m_DlgScrollBar.SetScrollPos(0);
@@ -267,9 +270,12 @@ void CGCBTestToolDlg::OnBnClickedButtonLinktest()
 	GetDlgItem(IDC_BUTTON_LINKTEST)->EnableWindow(false);
 
 	do {
+		// CString 转 String
 		wstring wstr(this->strServerIP);
 		string strString;
 		strString.assign(wstr.begin(), wstr.end());
+
+		// 初始化Socket
 		bIsSuccess = this->socketLink.initSocket(strString, _ttoi(this->strServerPort));
 		if (bIsSuccess == false) {
 			break;
@@ -292,7 +298,7 @@ void CGCBTestToolDlg::OnBnClickedButtonLinktest()
 
 void CGCBTestToolDlg::OnBnClickedButtonLink()
 {
-	if (this->socketISLinking) {
+	if (this->socketISLinking) {                                            // 如果当前处于正在连接的状态
 		this->socketISLinking = false;
 		SetDlgItemText(IDC_BUTTON_LINK, _T("连接"));
 		CloseHandle(this->hThreadSocketLinkTest);
@@ -307,13 +313,13 @@ void CGCBTestToolDlg::OnBnClickedButtonLink()
 	else {
 		this->socketISLinking = true;
 		SetDlgItemText(IDC_BUTTON_LINK, _T("停止连接"));
-		this->ClearAllData();		
+		this->ClearAllData();
 		this->mainPage.CreateTimer(TIMER_DIALOG_DRAW);
 		this->OnBnClickedButtonLinktest();
 	}
 }
 
-void CGCBTestToolDlg::OnBnClickedButtonSetting()
+void CGCBTestToolDlg::OnBnClickedButtonGcbSetting()
 {
 	if (this->socketISLinking) {
 		this->settingPage.DoModal();
@@ -323,10 +329,17 @@ void CGCBTestToolDlg::OnBnClickedButtonSetting()
 	}
 }
 
+void CGCBTestToolDlg::OnBnClickedButtonSystemSetting()
+{
+	// TODO: 在此添加控件通知处理程序代码
+}
+
+
 void CGCBTestToolDlg::OnTimerSocketLinkTest()
 {
 	bool bIsSuccess = true;
 	// 检查线程是否结束
+	// 获取线程状态
 	int retState = CGCBTestToolDlg::threadStateTable.GetThreadFinishedFlag(TIMER_SOCKET_LINK_CONN);
 	switch (retState)
 	{
@@ -336,7 +349,7 @@ void CGCBTestToolDlg::OnTimerSocketLinkTest()
 	case TIMER_STATE_ERROR:
 		return;
 	case TIMER_STATE_FINISH:
-		KillTimer(TIMER_SOCKET_LINK_CONN);
+		KillTimer(TIMER_SOCKET_LINK_CONN);                                  // 取消定时器
 		bIsSuccess = CGCBTestToolDlg::threadStateTable.GetThreadRetValueFlag(TIMER_SOCKET_LINK_CONN) > 0;
 		CGCBTestToolDlg::threadStateTable.RemoveThreadFinishedFlag(TIMER_SOCKET_LINK_CONN);
 		CGCBTestToolDlg::threadStateTable.RemoveThreadRetValueFlag(TIMER_SOCKET_LINK_CONN);
@@ -345,13 +358,14 @@ void CGCBTestToolDlg::OnTimerSocketLinkTest()
 		return;
 	}
 
-	if (bIsSuccess) {
+	if (bIsSuccess) {                                                       // 板卡能够接通
 		this->ShowMessage(PROGRAM_LINK_SERVER, PROGRAM_STATE_TIP);
 	}
 	else {
 		this->ShowMessage(PROGRAM_CANT_LINK_SERVER, PROGRAM_STATE_ERROR);
-		if (this->socketISLinking) {
+		if (this->socketISLinking) {                                        // 不能接通，且这个检测是由“连接”按钮触发的
 			GetDlgItem(IDC_BUTTON_LINK)->EnableWindow(true);
+			this->socketISLinking = false;
 		}
 	}
 
@@ -493,14 +507,14 @@ bool CGCBTestToolDlg::AddNewFrameTab(const int nIndex)
 	int newTabIndex = 0;
 	if ((newTabIndex = this->GetFrameTabIndex(nIndex)) < 0) {
 		this->m_FrameTabCtrl.InsertItem(this->nDialogLen + 1, GetLabel(nIndex));
-		this->framePage[this->nDialogLen].SetFrameType(nIndex);
+		this->framePage[this->nDialogLen].SetFrameType(nIndex);             // 设置页面窗口的属性
 		this->framePage[this->nDialogLen].Create(IDD_DETAIL_DIALOG, &this->m_FrameTabCtrl);
 
 		// 设定在Tab内显示的范围
-		CRect rc;
-		this->m_FrameTabCtrl.GetClientRect(rc);
-		rc.bottom = rc.bottom - TOPBAR_SIZE;
-		this->framePage[this->nDialogLen].MoveWindow(&rc);
+		CRect cRect;
+		this->m_FrameTabCtrl.GetClientRect(cRect);
+		cRect.bottom = cRect.bottom - TOPBAR_SIZE;
+		this->framePage[this->nDialogLen].MoveWindow(&cRect);
 
 		this->pDialog[this->nDialogLen + 1] = &this->framePage[this->nDialogLen];
 		newTabIndex = this->nDialogLen + 1;
