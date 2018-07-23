@@ -104,11 +104,17 @@ DWORD WINAPI ThreadSocketLinkSend(LPVOID lpParamter)
 			list<BYTE> sendOrginDataLst = sendedMessageBean.GetOrginDataList();
 			BYTE *sOrders = new BYTE[sendOrginDataLst.size()];
 
+			ofstream outfile("send.log", ios::app);
 			list<BYTE>::iterator iter = sendOrginDataLst.begin();
 			for (int nIndex = 0; nIndex < (int)sendOrginDataLst.size(); ++nIndex, ++iter) {
 				sOrders[nIndex] = *iter;
+				outfile << "0x" << hex << setw(2) << setfill('0') << (int)sOrders[nIndex] << " ";
 			}
+			outfile << endl;
+			outfile.close();
+
 			socketLink->sendOrders(sOrders, sendOrginDataLst.size());
+
 			delete sOrders;
 		} while (!GCBMainDlg::sendMessageQueue.IsEmpty());
 

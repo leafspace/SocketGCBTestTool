@@ -232,6 +232,10 @@
 					RelativePath=".\ChildDialog\GCBSettingDlg.cpp"
 					>
 				</File>
+				<File
+					RelativePath=".\ChildDialog\SystemSettingDlg.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="SocketLink"
@@ -316,6 +320,10 @@
 				</File>
 				<File
 					RelativePath=".\ChildDialog\GCBSettingDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ChildDialog\SystemSettingDlg.h"
 					>
 				</File>
 			</Filter>

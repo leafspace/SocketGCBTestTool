@@ -322,7 +322,7 @@ void CGCBTestToolDlg::OnBnClickedButtonLink()
 void CGCBTestToolDlg::OnBnClickedButtonGcbSetting()
 {
 	if (this->socketISLinking) {
-		this->settingPage.DoModal();
+		this->gcbSettingPage.DoModal();
 	}
 	else {
 		this->ShowMessage(PROGRAM_UNLIKING, PROGRAM_STATE_ERROR);
@@ -331,7 +331,7 @@ void CGCBTestToolDlg::OnBnClickedButtonGcbSetting()
 
 void CGCBTestToolDlg::OnBnClickedButtonSystemSetting()
 {
-	// TODO: 在此添加控件通知处理程序代码
+	this->systemSettingPage.DoModal();
 }
 
 

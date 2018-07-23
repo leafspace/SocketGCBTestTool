@@ -11,7 +11,7 @@ public:
 	virtual ~GCBSettingDlg();
 
 	// 对话框数据
-	enum { IDD = IDD_SETTING_DIALOG };
+	enum { IDD = IDD_GCB_SETTING_DIALOG };
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);

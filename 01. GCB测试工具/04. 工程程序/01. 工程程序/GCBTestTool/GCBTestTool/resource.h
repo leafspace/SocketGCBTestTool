@@ -10,15 +10,15 @@
 #define IDR_MAINFRAME                   128
 #define IDD_MAIN_DIALOG                 129
 #define IDD_DETAIL_DIALOG               130
-#define IDD_SETTING_DIALOG              131
 #define IDD_GCB_SETTING_DIALOG          131
+#define IDD_SYSTEM_SETTING_DIALOG       132
 #define IDC_FRAMETAB                    1000
 #define IDC_GCB_EDIT_IPADDRESS          1001
 #define IDC_GCB_EDIT_PORT               1002
 #define IDC_BUTTON_LINKTEST             1003
 #define IDC_BUTTON_GCB_SETTING          1004
-#define IDC_BUTTON_SYSTEM_SETTING       1029
-#define IDC_BUTTON_LINK                 1005
+#define IDC_BUTTON_SYSTEM_SETTING       1006
+#define IDC_BUTTON_LINK                 1007
 #define IDC_SCROLLBAR                   1010
 #define IDC_LIST1                       1011
 #define IDC_LIST2                       1012
@@ -61,16 +61,35 @@
 #define IDC_EDIT1                       1049
 #define IDC_EDIT2                       1050
 #define IDC_EDIT3                       1051
-#define IDC_EDIT4                       1052
-#define IDC_EDIT5                       1053
+#define IDC_RADIO1                      1052
+#define IDC_RADIO2                      1053
+#define IDC_RADIO3                      1054
+#define IDC_RADIO4                      1055
+#define IDC_EDIT_NUM1                   1056
+#define IDC_EDIT_NUM2                   1057
+#define IDC_EDIT_NUM3                   1058
+#define IDC_EDIT_NUM4                   1059
+#define IDC_EDIT_NUM5                   1060
+#define IDC_EDIT_NUM6                   1061
+#define IDC_EDIT_NUM7                   1062
+#define IDC_CHECK_ALL                   1063
+#define IDC_CHECK1                      1064
+#define IDC_CHECK2                      1065
+#define IDC_CHECK3                      1066
+#define IDC_CHECK4                      1067
+#define IDC_CHECK5                      1068
+#define IDC_CHECK6                      1069
+#define IDC_CHECK7                      1070
+#define IDC_EDIT_TIMEGAP                1071
+#define IDC_EDIT_DRAWGAP                1072
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        132
+#define _APS_NEXT_RESOURCE_VALUE        133
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1030
+#define _APS_NEXT_CONTROL_VALUE         1040
 #define _APS_NEXT_SYMED_VALUE           105
 #endif
 #endif

@@ -21,6 +21,7 @@
 #include "ChildDialog/GCBMainDlg.h"
 #include "ThreadHandle/ThreadHandle.h"
 #include "ChildDialog/GCBSettingDlg.h"
+#include "ChildDialog/SystemSettingDlg.h"
 #include "ChildDialog/GCBDetailFrameDlg.h"
 
 
@@ -62,7 +63,9 @@ private:
 
 	GCBMainDlg mainPage;                                                    // 概览页面
 	GCBDetailFrameDlg framePage[LIST_NUM];                                  // 详情页面
-	GCBSettingDlg settingPage;                                              // 设置页面
+	GCBSettingDlg gcbSettingPage;                                           // 板卡设置页面
+	SystemSettingDlg systemSettingPage;                                     // 系统设置页面
+
 
 	CString strServerIP;                                                    // 服务器的IP
 	CString strServerPort;                                                  // 通讯的端口号
