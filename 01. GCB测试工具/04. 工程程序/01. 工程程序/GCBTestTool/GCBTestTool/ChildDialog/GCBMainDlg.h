@@ -30,19 +30,10 @@ protected:
 
 
 private:
-	CListCtrl* JudgeMessageCMDCtrl(MessageBean beanMessage);
-	float Make4ByteFloat(BYTE *list);
-	float MakeTurn4ByteFloat(BYTE *list);
-	short GetFormatSize(FRAME_CMD_TYPE cmdType);
-	bool WriteLog(MessageBean beanMessage, CString *timeStr, list<float> &retValueLst);
-
 	list<float> showValueLst;
 	void StartDraw(int ControlID);
-
-	CString GetFormatStrLable(FRAME_CMD_TYPE cmdType, float value);
+	CListCtrl* JudgeMessageCMDCtrl(MessageBean beanMessage);
 public:
-	static MessageQueue recvMessageQueue;
-	static MessageQueue sendMessageQueue;
 
 	CListCtrl m_List[LIST_NUM];
 	void RefreshPage(void);
