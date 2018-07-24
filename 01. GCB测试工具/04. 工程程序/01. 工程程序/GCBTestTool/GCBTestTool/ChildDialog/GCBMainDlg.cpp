@@ -177,7 +177,8 @@ bool GCBMainDlg::WriteLog(MessageBean beanMessage, CString *timeStr, list<float>
 	outfile << setw(2) << setfill('0') << sys.wMinute << ":";
 	outfile << setw(2) << setfill('0') << sys.wSecond << " ";
 
-	outfile << "0x" << hex << beanMessage.GetCMDType() << " :  ";
+	outfile << "\t";
+	outfile << "0x" << hex << beanMessage.GetCMDType() << "\t:\t";
 
 	short formatSize = this->GetFormatSize(beanMessage.GetCMDType());
 	list<BYTE> beanPLst = beanMessage.GetParameterList();
@@ -196,12 +197,12 @@ bool GCBMainDlg::WriteLog(MessageBean beanMessage, CString *timeStr, list<float>
 		float retValue = formatSize == 4 ? this->MakeTurn4ByteFloat(list) : list[0];
 
 		delete list;
-		outfile << setiosflags(ios::fixed) << setprecision(2) << retValue << "\t";
+		outfile << setiosflags(ios::fixed) << setprecision(2) << retValue << " ";
 		retValueLst.push_back(retValue);
 	}
 
 
-	outfile << "[";
+	outfile << "\t[";
 	list<BYTE> beanOLst = beanMessage.GetOrginDataList();
 	list<BYTE>::iterator iterO = beanOLst.begin();
 	for (int nIndex = 0; nIndex < (int)beanOLst.size(); ++nIndex, ++iterO) {
