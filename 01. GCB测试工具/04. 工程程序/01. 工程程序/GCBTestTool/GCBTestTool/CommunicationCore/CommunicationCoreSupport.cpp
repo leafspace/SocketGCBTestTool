@@ -1,29 +1,67 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "CommunicationCore.h"
+#include "../GCBTestToolDlg.h"
 
-
-void CommunicationCore::SendRequestMessage()
+bool CommunicateCore::InisSocketLink(string ipAddress, int port)
 {
-	// 全部类型发送一遍请求数据
-	list<BYTE> sendMsgLst[LIST_NUM];
-	sendMsgLst[0] = CommunicationCore::CreateMessage(NOZZLE_CARTRIDGE_LEVEL, 0x0000, (uint16_t)2);
-	sendMsgLst[1] = CommunicationCore::CreateMessage(MODE_LOCKED_SOLENOID_VALVE_WORKING, 0x0000, (uint16_t)2);
-	sendMsgLst[2] = CommunicationCore::CreateMessage(POSITIVE_NEGATIVE_PRESSURE_SOLENOID_VALVE_WORKING, 0x0000, (uint16_t)2);
-	sendMsgLst[3] = CommunicationCore::CreateMessage(INK_SUPPLY_PUMP_WORKING_CONDITION, 0x0000, (uint16_t)2);
-	sendMsgLst[4] = CommunicationCore::CreateMessage(NOZZLE_CABINET_TEMPERATURE, 0x0000, (uint16_t)2);
-	sendMsgLst[5] = CommunicationCore::CreateMessage(AIR_NEGATIVE_PRESSURE_VALUE, 0x0000, (uint16_t)2);
-	sendMsgLst[6] = CommunicationCore::CreateMessage(AIR_POSITIVE_PRESSURE_VALUE, 0x0000, (uint16_t)1);
-
-	// 临时设置为7个数(下行)
-	for (int nIndex = 0; nIndex < LIST_NUM; ++nIndex) {
-		MessageBean beanMessage;
-		beanMessage.SetOrginDataList(sendMsgLst[nIndex]);
-		beanMessage.AnalysisOrginDataLst();
-		this->sendMessageQueue.Push_back(beanMessage);
-	}
+	return this->socketLink.initSocket(ipAddress, port);
 }
 
-short CommunicationCore::GetFormatSize(FRAME_CMD_TYPE cmdType)
+bool CommunicateCore::InisSocketLink(CString ipAddress, int port)
+{
+	// CString 转 String
+	wstring wstr(ipAddress);
+	string strString;
+	strString.assign(wstr.begin(), wstr.end());
+
+	return this->InisSocketLink(strString, port);
+}
+
+bool CommunicateCore::SendRequestMessage()
+{
+	list<BYTE> sendMsgLst[LIST_NUM];
+	const uint16_t beginAddress[] = { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 };
+	const uint16_t driveNums[] = { 2, 2, 2, 2, 2, 2, 1 };
+
+	// 全部类型发送一遍请求数据
+	// 临时设置为7个数(下行)
+
+	bool bIsSuccess = true;
+	for (int nIndex = 0; nIndex < LIST_NUM; ++nIndex) {
+		list<BYTE> sendMsg;
+		MessageBean beanMessage;
+
+		sendMsg = CommunicateCore::CreateMessage(CommunicateCore::GetCMDIdFromIndex(nIndex),
+			beginAddress[nIndex], driveNums[nIndex]);
+
+		beanMessage.SetOrginDataList(sendMsg);
+		beanMessage.AnalysisOrginDataLst();
+		bIsSuccess = bIsSuccess && this->SendRequestMessage(beanMessage);
+	}
+	return bIsSuccess;
+}
+
+bool CommunicateCore::SendRequestMessage(const MessageBean beanMessage)
+{
+	return this->sendMessageQueue.Push_back(beanMessage);
+}
+
+bool CommunicateCore::RecvResponseMessage(MessageBean *beanMessage)
+{
+	return  this->recvMessageQueue.Pop_front(beanMessage);
+}
+
+bool CommunicateCore::HaveRecvMessageResidual(void)
+{
+	return !this->recvMessageQueue.IsEmpty();
+}
+
+bool CommunicateCore::HaveSednMessageResidual(void)
+{
+	return !this->sendMessageQueue.IsEmpty();
+}
+
+short CommunicateCore::GetFormatSize(const FRAME_CMD_TYPE cmdType)
 {
 	switch (cmdType)
 	{
@@ -41,9 +79,9 @@ short CommunicationCore::GetFormatSize(FRAME_CMD_TYPE cmdType)
 	}
 }
 
-bool CommunicationCore::WriteLog(MessageBean beanMessage, CString *timeStr, list<float> &retValueLst)
+bool CommunicateCore::WriteLog(ofstream &outfile, MessageBean beanMessage, CString *timeStr, list<float> &retValueLst)
 {
-	ofstream outfile("gcb.log", ios::app);
+	// 文件未打开
 	if (!outfile) {
 		return false;
 	}
@@ -99,7 +137,89 @@ bool CommunicationCore::WriteLog(MessageBean beanMessage, CString *timeStr, list
 	outfile << "]";
 	outfile << endl;
 
-	outfile.close();
 	return true;
 }
 
+bool CommunicateCore::CreateSocketLinkTestThread()
+{
+	this->hThreadSocketLinkTest = CreateThread(NULL, 0, ThreadSocketLinkConn, &this->socketLink, 0, NULL);
+	return true;
+}
+
+bool CommunicateCore::CreateSocketLinkRecvThread()
+{
+	this->hThreadSocketLinkRecv = CreateThread(NULL, 0, ThreadSocketLinkRecv, &this->socketLink, 0, NULL);
+	return true;
+}
+
+bool CommunicateCore::CreateSocketLinkSendThread()
+{
+	this->hThreadSocketLinkSend = CreateThread(NULL, 0, ThreadSocketLinkSend, &this->socketLink, 0, NULL);
+	return true;
+}
+
+bool CommunicateCore::CloseSocketLinkTestThread()
+{
+	CloseHandle(this->hThreadSocketLinkTest);
+	return true;
+}
+
+bool CommunicateCore::CloseSocketLinkRecvThread()
+{
+	CloseHandle(this->hThreadSocketLinkRecv);
+	return true;
+}
+
+bool CommunicateCore::CloseSocketLinkSendThread()
+{
+	CloseHandle(this->hThreadSocketLinkSend);
+	return true;
+}
+
+int CommunicateCore::GetSocketLinkTestThreadState()
+{
+	return this->threadStateTable.GetThreadFinishedFlag(TIMER_SOCKET_LINK_CONN);
+}
+
+int CommunicateCore::GetSocketLinkRecvThreadState()
+{
+	return this->threadStateTable.GetThreadFinishedFlag(TIMER_SOCKET_LINK_RECV);
+}
+
+int CommunicateCore::GetSocketLinkSendThreadState()
+{
+	return this->threadStateTable.GetThreadFinishedFlag(TIMER_SOCKET_LINK_SEND);
+}
+
+int CommunicateCore::GetSocketLinkTestThreadRetValue()
+{
+	return this->threadStateTable.GetThreadRetValueFlag(TIMER_SOCKET_LINK_CONN);
+}
+
+int CommunicateCore::GetSocketLinkRecvThreadRetValue()
+{
+	return this->threadStateTable.GetThreadRetValueFlag(TIMER_SOCKET_LINK_RECV);
+}
+
+int CommunicateCore::GetSocketLinkSendThreadRetValue()
+{
+	return this->threadStateTable.GetThreadRetValueFlag(TIMER_SOCKET_LINK_SEND);
+}
+
+void CommunicateCore::RemoveSocketLinkTestThreadSteAndVlu(void)
+{
+	this->threadStateTable.RemoveThreadFinishedFlag(TIMER_SOCKET_LINK_CONN);
+	this->threadStateTable.RemoveThreadRetValueFlag(TIMER_SOCKET_LINK_CONN);
+}
+
+void CommunicateCore::RemoveSocketLinkRecvThreadSteAndVlu(void)
+{
+	this->threadStateTable.RemoveThreadFinishedFlag(TIMER_SOCKET_LINK_RECV);
+	this->threadStateTable.RemoveThreadRetValueFlag(TIMER_SOCKET_LINK_RECV);
+}
+
+void CommunicateCore::RemoveSocketLinkSendThreadSteAndVlu(void)
+{
+	this->threadStateTable.RemoveThreadFinishedFlag(TIMER_SOCKET_LINK_SEND);
+	this->threadStateTable.RemoveThreadRetValueFlag(TIMER_SOCKET_LINK_SEND);
+}

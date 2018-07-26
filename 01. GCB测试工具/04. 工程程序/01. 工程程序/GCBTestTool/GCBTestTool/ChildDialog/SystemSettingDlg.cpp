@@ -1,7 +1,6 @@
 ﻿#include "stdafx.h"
-#include "../GCBTestTool.h"
-#include "../GCBTestToolDlg.h"
 #include "SystemSettingDlg.h"
+#include "../GCBTestToolDlg.h"
 
 IMPLEMENT_DYNAMIC(SystemSettingDlg, CDialog)
 

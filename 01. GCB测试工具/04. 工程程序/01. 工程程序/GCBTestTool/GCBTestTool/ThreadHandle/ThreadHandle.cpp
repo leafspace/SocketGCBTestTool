@@ -1,33 +1,48 @@
 ﻿#include "stdafx.h"
 #include "ThreadHandle.h"
-#include "../GCBTestToolDlg.h"
-#include "../SocketLink/SocketLink.h"
 
 HANDLE hMutexSocketLinkConn;                                                // 连接测试线程的信号
 HANDLE hMutexSocketLinkRecv;                                                // 接收数据线程的信号
 HANDLE hMutexSocketLinkSend;                                                // 发送数据线程的信号
-HANDLE hMutexSocketLinkHand;                                                // 处理指令线程的信号
 
 DWORD WINAPI ThreadSocketLinkConn(LPVOID lpParamter)
 {
-	CGCBTestToolDlg::threadStateTable.InsertThreadFinishedFlag(TIMER_SOCKET_LINK_CONN, TIMER_STATE_UNRUNNING);
+	CommunicateCore *communicationCore = NULL;
+	CGCBTestToolDlg *pMainDlg = (CGCBTestToolDlg*)(AfxGetApp()->GetMainWnd());
+	if (pMainDlg) {
+		communicationCore = pMainDlg->GetCommunicateCore();
+	}
+	if (communicationCore == NULL) {
+		return 0;
+	}
+
+	communicationCore->GetStateTable()->InsertThreadFinishedFlag(TIMER_SOCKET_LINK_CONN, TIMER_STATE_UNRUNNING);
 	WaitForSingleObject(hMutexSocketLinkConn, INFINITE);
-	CGCBTestToolDlg::threadStateTable.SetThreadFinishedFlag(TIMER_SOCKET_LINK_CONN, TIMER_STATE_RUNNING);
+	communicationCore->GetStateTable()->SetThreadFinishedFlag(TIMER_SOCKET_LINK_CONN, TIMER_STATE_RUNNING);
 	SocketLink *socketLink = (SocketLink*)lpParamter;
 	bool bIsSuccess = socketLink->linkServer();
 	// 将结果返回到状态表中
-	CGCBTestToolDlg::threadStateTable.InsertThreadRetValueFlag(TIMER_SOCKET_LINK_CONN, (int)bIsSuccess);
+	communicationCore->GetStateTable()->InsertThreadRetValueFlag(TIMER_SOCKET_LINK_CONN, (int)bIsSuccess);
 
 	ReleaseMutex(hMutexSocketLinkConn);
-	CGCBTestToolDlg::threadStateTable.SetThreadFinishedFlag(TIMER_SOCKET_LINK_CONN, TIMER_STATE_FINISH);
+	communicationCore->GetStateTable()->SetThreadFinishedFlag(TIMER_SOCKET_LINK_CONN, TIMER_STATE_FINISH);
 	return 0;
 }
 
 DWORD WINAPI ThreadSocketLinkRecv(LPVOID lpParamter)
 {
-	CGCBTestToolDlg::threadStateTable.InsertThreadFinishedFlag(TIMER_SOCKET_LINK_RECV, TIMER_STATE_UNRUNNING);
+	CommunicateCore *communicationCore = NULL;
+	CGCBTestToolDlg *pMainDlg = (CGCBTestToolDlg*)(AfxGetApp()->GetMainWnd());
+	if (pMainDlg) {
+		communicationCore = pMainDlg->GetCommunicateCore();
+	}
+	if (communicationCore == NULL) {
+		return 0;
+	}
+
+	communicationCore->GetStateTable()->InsertThreadFinishedFlag(TIMER_SOCKET_LINK_RECV, TIMER_STATE_UNRUNNING);
 	WaitForSingleObject(hMutexSocketLinkRecv, INFINITE);
-	CGCBTestToolDlg::threadStateTable.SetThreadFinishedFlag(TIMER_SOCKET_LINK_RECV, TIMER_STATE_RUNNING);
+	communicationCore->GetStateTable()->SetThreadFinishedFlag(TIMER_SOCKET_LINK_RECV, TIMER_STATE_RUNNING);
 
 	// 接收数据循环操作
 	SocketLink *socketLink = (SocketLink*)lpParamter;
@@ -37,7 +52,7 @@ DWORD WINAPI ThreadSocketLinkRecv(LPVOID lpParamter)
 	do {
 		bool bIsSuccess = socketLink->recvOrders(rOrders, &nLen, ORDER_BUFFER_SIZE);
 		if (bIsSuccess) {
-			do {} while (GCBMainDlg::recvMessageQueue.IsFull());
+			do {} while (communicationCore->GetRecvMessageQueue()->IsFull());
 
 			// 将接收到的原始数据写入log
 			ofstream outfile("orgin.log", ios::app);
@@ -62,7 +77,7 @@ DWORD WINAPI ThreadSocketLinkRecv(LPVOID lpParamter)
 					recvedMessageBean.SetOrginDataList(&rOrders[nBeIndex], nEnIndex - nBeIndex + 1);
 					PROGRAM_STATE_CODE retStateCode = recvedMessageBean.AnalysisOrginDataLst();
 					if (retStateCode == PROGRAM_ANALYSIS_ORGIN_DATA) {
-						GCBMainDlg::recvMessageQueue.Push_back(recvedMessageBean);
+						communicationCore->GetRecvMessageQueue()->Push_back(recvedMessageBean);
 					}
 
 					nBeIndex = 0;
@@ -78,29 +93,38 @@ DWORD WINAPI ThreadSocketLinkRecv(LPVOID lpParamter)
 	} while (true);
 
 	// 将结果返回到状态表中
-	CGCBTestToolDlg::threadStateTable.InsertThreadRetValueFlag(TIMER_SOCKET_LINK_RECV, threadRetValue);
+	communicationCore->GetStateTable()->InsertThreadRetValueFlag(TIMER_SOCKET_LINK_RECV, threadRetValue);
 
 	ReleaseMutex(hMutexSocketLinkRecv);
-	CGCBTestToolDlg::threadStateTable.SetThreadFinishedFlag(TIMER_SOCKET_LINK_RECV, TIMER_STATE_FINISH);
+	communicationCore->GetStateTable()->SetThreadFinishedFlag(TIMER_SOCKET_LINK_RECV, TIMER_STATE_FINISH);
 
 	return 0;
 }
 
 DWORD WINAPI ThreadSocketLinkSend(LPVOID lpParamter)
 {
-	CGCBTestToolDlg::threadStateTable.InsertThreadFinishedFlag(TIMER_SOCKET_LINK_SEND, TIMER_STATE_UNRUNNING);
+	CommunicateCore *communicationCore = NULL;
+	CGCBTestToolDlg *pMainDlg = (CGCBTestToolDlg*)(AfxGetApp()->GetMainWnd());
+	if (pMainDlg) {
+		communicationCore = pMainDlg->GetCommunicateCore();
+	}
+	if (communicationCore == NULL) {
+		return 0;
+	}
+
+	communicationCore->GetStateTable()->InsertThreadFinishedFlag(TIMER_SOCKET_LINK_SEND, TIMER_STATE_UNRUNNING);
 	WaitForSingleObject(hMutexSocketLinkSend, INFINITE);
-	CGCBTestToolDlg::threadStateTable.SetThreadFinishedFlag(TIMER_SOCKET_LINK_SEND, TIMER_STATE_RUNNING);
+	communicationCore->GetStateTable()->SetThreadFinishedFlag(TIMER_SOCKET_LINK_SEND, TIMER_STATE_RUNNING);
 
 	// 发送数据循环操作
 	SocketLink *socketLink = (SocketLink*)lpParamter;
 	int threadRetValue = TIMER_STATE_FINISH;
 	do
 	{
-		do {} while (GCBMainDlg::sendMessageQueue.IsEmpty());
+		do {} while (communicationCore->GetSendMessageQueue()->IsEmpty());
 		do {
 			MessageBean sendedMessageBean;
-			GCBMainDlg::sendMessageQueue.Pop_front(&sendedMessageBean);
+			communicationCore->GetSendMessageQueue()->Pop_front(&sendedMessageBean);
 			list<BYTE> sendOrginDataLst = sendedMessageBean.GetOrginDataList();
 			BYTE *sOrders = new BYTE[sendOrginDataLst.size()];
 
@@ -116,16 +140,16 @@ DWORD WINAPI ThreadSocketLinkSend(LPVOID lpParamter)
 			socketLink->sendOrders(sOrders, sendOrginDataLst.size());
 
 			delete sOrders;
-		} while (!GCBMainDlg::sendMessageQueue.IsEmpty());
+		} while (!communicationCore->GetSendMessageQueue()->IsEmpty());
 
 		Sleep(TIMER_GAP);
 	} while (true);
 
 
 	// 将结果返回到状态表中
-	CGCBTestToolDlg::threadStateTable.InsertThreadRetValueFlag(TIMER_SOCKET_LINK_SEND, threadRetValue);
+	communicationCore->GetStateTable()->InsertThreadRetValueFlag(TIMER_SOCKET_LINK_SEND, threadRetValue);
 
 	ReleaseMutex(hMutexSocketLinkSend);
-	CGCBTestToolDlg::threadStateTable.SetThreadFinishedFlag(TIMER_SOCKET_LINK_SEND, TIMER_STATE_FINISH);
+	communicationCore->GetStateTable()->SetThreadFinishedFlag(TIMER_SOCKET_LINK_SEND, TIMER_STATE_FINISH);
 	return 0;
 }

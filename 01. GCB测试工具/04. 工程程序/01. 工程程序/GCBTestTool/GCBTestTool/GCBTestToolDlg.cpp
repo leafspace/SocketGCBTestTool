@@ -1,11 +1,10 @@
 ﻿#include "stdafx.h"
-#include "CommonType.h"
-#include "GCBTestTool.h"
 #include "GCBTestToolDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
 class CAboutDlg : public CDialog
@@ -32,8 +31,6 @@ BEGIN_MESSAGE_MAP(CAboutDlg, CDialog)
 END_MESSAGE_MAP()
 
 //=============================================================================
-StateTable CGCBTestToolDlg::threadStateTable;                               // 线程运行状态表
-
 
 CGCBTestToolDlg::CGCBTestToolDlg(CWnd* pParent)
 	: CDialog(CGCBTestToolDlg::IDD, pParent)
@@ -173,10 +170,10 @@ void CGCBTestToolDlg::OnTimer(UINT_PTR nIDEvent)
 		this->OnTimerSocketLinkTest();
 		break;
 	case TIMER_SOCKET_LINK_RECV:                                            // 处理接收到的数据并显示在页面上
-		this->mainPage.RefreshPage();
+		this->mainPage.RefreshPage(&this->communicationCore);
 		break;
 	case TIMER_SOCKET_LINK_SEND:                                            // 向GCB请求一次数据
-		this->SendRequestMessage();
+		this->communicationCore.SendRequestMessage();
 		break;
 	default:                                                                // 异常处理
 		KillTimer(nIDEvent);
@@ -270,13 +267,8 @@ void CGCBTestToolDlg::OnBnClickedButtonLinktest()
 	GetDlgItem(IDC_BUTTON_LINKTEST)->EnableWindow(false);
 
 	do {
-		// CString 转 String
-		wstring wstr(this->strServerIP);
-		string strString;
-		strString.assign(wstr.begin(), wstr.end());
-
 		// 初始化Socket
-		bIsSuccess = this->socketLink.initSocket(strString, _ttoi(this->strServerPort));
+		bIsSuccess = this->communicationCore.InisSocketLink(this->strServerIP, _ttoi(this->strServerPort));
 		if (bIsSuccess == false) {
 			break;
 		}
@@ -285,7 +277,7 @@ void CGCBTestToolDlg::OnBnClickedButtonLinktest()
 
 	if (bIsSuccess) {
 		// 创建线程用于网络连接测试
-		this->hThreadSocketLinkTest = CreateThread(NULL, 0, ThreadSocketLinkConn, &this->socketLink, 0, NULL);
+		this->communicationCore.CreateSocketLinkTestThread();
 
 		// 创建定时器定时检测连接线程是否结束
 		SetTimer(TIMER_SOCKET_LINK_CONN, TIMER_OUT, 0);
@@ -301,13 +293,11 @@ void CGCBTestToolDlg::OnBnClickedButtonLink()
 	if (this->socketISLinking) {                                            // 如果当前处于正在连接的状态
 		this->socketISLinking = false;
 		SetDlgItemText(IDC_BUTTON_LINK, _T("连接"));
-		CloseHandle(this->hThreadSocketLinkTest);
-		CloseHandle(this->hThreadSocketLinkRecv);
-		CloseHandle(this->hThreadSocketLinkSend);
 		KillTimer(TIMER_SOCKET_LINK_CONN);
 		KillTimer(TIMER_SOCKET_LINK_RECV);
 		KillTimer(TIMER_SOCKET_LINK_SEND);
-		this->socketLink.freeSocket();
+		this->communicationCore.CloseAllThread();
+		this->communicationCore.CloseSocketLink();
 		this->mainPage.DeleteTimer(TIMER_DIALOG_DRAW);
 	}
 	else {
@@ -340,7 +330,7 @@ void CGCBTestToolDlg::OnTimerSocketLinkTest()
 	bool bIsSuccess = true;
 	// 检查线程是否结束
 	// 获取线程状态
-	int retState = CGCBTestToolDlg::threadStateTable.GetThreadFinishedFlag(TIMER_SOCKET_LINK_CONN);
+	int retState = this->communicationCore.GetSocketLinkTestThreadState();
 	switch (retState)
 	{
 	case TIMER_STATE_UNRUNNING:
@@ -349,11 +339,13 @@ void CGCBTestToolDlg::OnTimerSocketLinkTest()
 	case TIMER_STATE_ERROR:
 		return;
 	case TIMER_STATE_FINISH:
-		KillTimer(TIMER_SOCKET_LINK_CONN);                                  // 取消定时器
-		bIsSuccess = CGCBTestToolDlg::threadStateTable.GetThreadRetValueFlag(TIMER_SOCKET_LINK_CONN) > 0;
-		CGCBTestToolDlg::threadStateTable.RemoveThreadFinishedFlag(TIMER_SOCKET_LINK_CONN);
-		CGCBTestToolDlg::threadStateTable.RemoveThreadRetValueFlag(TIMER_SOCKET_LINK_CONN);
-		break;
+	{
+		KillTimer(TIMER_SOCKET_LINK_CONN);                              // 取消定时器
+		int retValue = this->communicationCore.GetSocketLinkTestThreadRetValue();
+		bIsSuccess = (retValue > 0) && (retValue != TIMER_STATE_ERROR);
+		this->communicationCore.RemoveSocketLinkTestThreadSteAndVlu();
+	}
+	break;
 	default:
 		return;
 	}
@@ -376,15 +368,15 @@ void CGCBTestToolDlg::OnTimerSocketLinkTest()
 		this->OnTimerSocketLink();
 	}
 	else {
-		this->socketLink.freeSocket();
+		this->communicationCore.CloseSocketLink();
 	}
 }
 
 void CGCBTestToolDlg::OnTimerSocketLink()
 {
 	// 创建各个线程开始监听
-	this->hThreadSocketLinkSend = CreateThread(NULL, 0, ThreadSocketLinkSend, &this->socketLink, 0, NULL);
-	this->hThreadSocketLinkRecv = CreateThread(NULL, 0, ThreadSocketLinkRecv, &this->socketLink, 0, NULL);
+	this->communicationCore.CreateSocketLinkRecvThread();
+	this->communicationCore.CreateSocketLinkSendThread();
 
 	// 创建定时器，每隔一秒向GCB板子请求一次数据
 	SetTimer(TIMER_SOCKET_LINK_SEND, TIMER_GAP, 0);
@@ -419,7 +411,7 @@ int CGCBTestToolDlg::GetFrameTabIndex(const int nIndex)
 
 void CGCBTestToolDlg::ClearAllData(void)
 {
-	CGCBTestToolDlg::threadStateTable.ClearThreadAllFlag();
+	this->communicationCore.ClearQueueData();
 	this->mainPage.ClearAllData();
 
 	for (int nIndex = 0; nIndex < this->nDialogLen; ++nIndex) {
@@ -483,4 +475,9 @@ GCBDetailFrameDlg *CGCBTestToolDlg::GetFramePage(FRAME_CMD_TYPE cmdType)
 		}
 	}
 	return NULL;
+}
+
+CommunicateCore* CGCBTestToolDlg::GetCommunicateCore(void)
+{
+	return &this->communicationCore;
 }

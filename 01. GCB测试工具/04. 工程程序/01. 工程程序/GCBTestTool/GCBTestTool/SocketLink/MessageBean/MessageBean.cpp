@@ -6,66 +6,6 @@ MessageBean::MessageBean(const BYTE *bMessageLst, const uint16_t uMessageSize)
 	this->SetOrginDataList(bMessageLst, uMessageSize);
 }
 
-uint16_t MessageBean::MakeUINT16Value(list<BYTE>::iterator iter, list<BYTE>::iterator iterEnd)
-{
-	BYTE lowByte = 0x00, heiByte = 0x00;
-	if (iter == iterEnd) {
-		return 0x0000;
-	}
-
-	lowByte = (*iter);
-
-	iter++;
-	if (iter == iterEnd) {
-		return (uint16_t)lowByte;
-	}
-
-	heiByte = (*iter);
-
-	return lowByte + heiByte * 0x100;
-}
-
-uint32_t MessageBean::MakeUINT32Value(list<BYTE>::iterator iter, list<BYTE>::iterator iterEnd)
-{
-	uint16_t lowWord = 0x0000, heiWord = 0x0000;
-
-	if (iter == iterEnd) {
-		return 0x0000;
-	}
-
-	lowWord = this->MakeUINT16Value(iter, iterEnd);
-
-	this->JumpUINT16(iter, iterEnd);
-
-	heiWord = this->MakeUINT16Value(iter, iterEnd);
-
-	return lowWord + heiWord * 0x10000;
-}
-
-bool MessageBean::JumpUINT16(list<BYTE>::iterator &iter, list<BYTE>::iterator iterEnd)
-{
-	for (int nIndex = 0; nIndex < 2; nIndex++) {
-		iter++;
-		if (iter == iterEnd) {
-			return false;
-		}
-	}
-
-	return true;
-}
-
-bool MessageBean::JumpUINT32(list<BYTE>::iterator &iter, list<BYTE>::iterator iterEnd)
-{
-	for (int nIndex = 0; nIndex < 4; nIndex++) {
-		iter++;
-		if (iter == iterEnd) {
-			return false;
-		}
-	}
-
-	return true;
-}
-
 int MessageBean::FindPackgeHeadPosition()
 {
 	int nBeIndex = 0;
@@ -99,6 +39,66 @@ int MessageBean::FindPackgeTailPosition(const int nBeIndex)
 	}
 
 	return -1;
+}
+
+uint16_t MessageBean::MakeUINT16Value(list<BYTE>::iterator iter, list<BYTE>::iterator iterEnd)
+{
+	BYTE lowByte = 0x00, heiByte = 0x00;
+	if (iter == iterEnd) {
+		return 0x0000;
+	}
+
+	lowByte = (*iter);
+
+	iter++;
+	if (iter == iterEnd) {
+		return (uint16_t)lowByte;
+	}
+
+	heiByte = (*iter);
+
+	return lowByte + heiByte * 0x100;
+}
+
+uint32_t MessageBean::MakeUINT32Value(list<BYTE>::iterator iter, list<BYTE>::iterator iterEnd)
+{
+	uint16_t lowWord = 0x0000, heiWord = 0x0000;
+
+	if (iter == iterEnd) {
+		return 0x0000;
+	}
+
+	lowWord = MessageBean::MakeUINT16Value(iter, iterEnd);
+
+	MessageBean::JumpUINT16(iter, iterEnd);
+
+	heiWord = MessageBean::MakeUINT16Value(iter, iterEnd);
+
+	return lowWord + heiWord * 0x10000;
+}
+
+bool MessageBean::JumpUINT16(list<BYTE>::iterator &iter, list<BYTE>::iterator iterEnd)
+{
+	for (int nIndex = 0; nIndex < 2; nIndex++) {
+		iter++;
+		if (iter == iterEnd) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool MessageBean::JumpUINT32(list<BYTE>::iterator &iter, list<BYTE>::iterator iterEnd)
+{
+	for (int nIndex = 0; nIndex < 4; nIndex++) {
+		iter++;
+		if (iter == iterEnd) {
+			return false;
+		}
+	}
+
+	return true;
 }
 
 void MessageBean::SetOrginDataList(list<BYTE> bMessageLst)
@@ -175,8 +175,8 @@ PROGRAM_STATE_CODE MessageBean::AnalysisOrginDataLst()
 	iter++; // 0xF1
 
 	BYTE uCMD = *(iter++);
-	uint16_t uSize = this->MakeUINT16Value(iter, this->orginDataLst.end());
-	bool bIsSuccess = this->JumpUINT16(iter, this->orginDataLst.end());
+	uint16_t uSize = MessageBean::MakeUINT16Value(iter, this->orginDataLst.end());
+	bool bIsSuccess = MessageBean::JumpUINT16(iter, this->orginDataLst.end());
 	if (bIsSuccess == false) {
 		return PROGRAM_CANT_ANALYSIS;
 	}

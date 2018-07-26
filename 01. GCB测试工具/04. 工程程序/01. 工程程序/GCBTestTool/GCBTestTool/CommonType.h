@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include <afx.h>
 
 enum FRAME_CMD_TYPE
 {

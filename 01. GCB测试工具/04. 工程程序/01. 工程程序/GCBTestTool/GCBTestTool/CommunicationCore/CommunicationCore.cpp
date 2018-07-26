@@ -1,77 +1,76 @@
 ﻿#include "stdafx.h"
 #include "CommunicationCore.h"
 
-CommunicationCore::CommunicationCore()
+CommunicateCore::CommunicateCore()
 {
-    this->InitCoreData();
+	this->InitCoreData();
 }
 
-~CommunicationCore::CommunicationCore()
+CommunicateCore::~CommunicateCore()
 {
-    this->ClearCoreData();
+	this->ClearCoreData();
 }
 
-void CommunicationCore::InitCoreData(void)
+void CommunicateCore::InitCoreData(void)
 {
-    this->ClearCoreData();
 }
 
-void CommunicationCore::ClearCoreData(void)
+void CommunicateCore::ClearCoreData(void)
 {
-    this->CloseSocketLink();
-    this->CloseAllThread();
-    this->ClearQueueData();
+	this->CloseSocketLink();
+	this->CloseAllThread();
+	this->ClearQueueData();
 }
 
-void CommunicationCore::CloseSocketLink(void)
+void CommunicateCore::CloseSocketLink(void)
 {
-    this->socketLink.freeSocket();
+	this->socketLink.freeSocket();
 }
 
-void CommunicationCore::CloseAllThread(void)
+void CommunicateCore::CloseAllThread(void)
 {
-    CloseHandle(this->hThreadSocketLinkTest);
-    CloseHandle(this->hThreadSocketLinkTest);
-    CloseHandle(this->hThreadSocketLinkTest);
+	this->CloseSocketLinkTestThread();
+	this->CloseSocketLinkRecvThread();
+	this->CloseSocketLinkSendThread();
 }
-void CommunicationCore::ClearQueueData(void)
+void CommunicateCore::ClearQueueData(void)
 {
-    this->threadStateTable.ClearThreadAllFlag();
-    this->recvMessageQueue.Clear();
-    this->sendMessageQueue.Clear();
-}
-
-SocketLink* CommunicationCore::GetSocketLink(void)
-{
-    return &this->socketLink;
+	this->threadStateTable.ClearThreadAllFlag();
+	this->recvMessageQueue.Clear();
+	this->sendMessageQueue.Clear();
 }
 
-HANDLE* CommunicationCore::GetThreadLinkTestHandle(void)
+SocketLink* CommunicateCore::GetSocketLink(void)
 {
-    return &this->hThreadSocketLinkTest;
+	return &this->socketLink;
 }
 
-HANDLE* CommunicationCore::GetThreadLinkRecvHandle(void)
+HANDLE* CommunicateCore::GetThreadLinkTestHandle(void)
 {
-    return &this->hThreadSocketLinkRecv;
+	return &this->hThreadSocketLinkTest;
 }
 
-HANDLE* CommunicationCore::GetThreadLinkSendHandle(void)
+HANDLE* CommunicateCore::GetThreadLinkRecvHandle(void)
 {
-    return &this->hThreadSocketLinkSend;
+	return &this->hThreadSocketLinkRecv;
 }
 
-StateTable* CommunicationCore::GetStateTable(void)
+HANDLE* CommunicateCore::GetThreadLinkSendHandle(void)
 {
-    return &this->threadStateTable;
+	return &this->hThreadSocketLinkSend;
 }
 
-MessageQueue* CommunicationCore::GetRecvMessageQueue(void)
+StateTable* CommunicateCore::GetStateTable(void)
 {
-    return &this->recvMessageQueue;
+	return &this->threadStateTable;
 }
 
-MessageQueue* CommunicationCore::GetSendMessageQueue(void)
+MessageQueue* CommunicateCore::GetRecvMessageQueue(void)
 {
-    return &this->sendMessageQueue;
+	return &this->recvMessageQueue;
+}
+
+MessageQueue* CommunicateCore::GetSendMessageQueue(void)
+{
+	return &this->sendMessageQueue;
 }

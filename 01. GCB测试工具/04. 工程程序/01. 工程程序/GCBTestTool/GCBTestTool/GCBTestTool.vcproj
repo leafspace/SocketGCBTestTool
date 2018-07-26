@@ -51,7 +51,7 @@
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
-				DebugInformationFormat="3"
+				DebugInformationFormat="4"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -67,7 +67,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				LinkIncremental="1"
+				LinkIncremental="0"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -277,6 +277,22 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="CommunicationCore"
+				>
+				<File
+					RelativePath=".\CommunicationCore\CommunicationCore.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CommunicationCore\CommunicationCoreCommon.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CommunicationCore\CommunicationCoreSupport.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"
@@ -364,6 +380,14 @@
 				>
 				<File
 					RelativePath=".\StateTable\StateTable.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="CommunicationCore"
+				>
+				<File
+					RelativePath=".\CommunicationCore\CommunicationCore.h"
 					>
 				</File>
 			</Filter>

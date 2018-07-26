@@ -1,12 +1,8 @@
 ﻿#include "stdafx.h"
-#include <windows.h>
 #include "../GCBTestTool.h"
 #include "../GCBTestToolDlg.h"
 #include "GCBMainDlg.h"
 #include "GCBDetailFrameDlg.h"
-
-MessageQueue GCBMainDlg::recvMessageQueue;
-MessageQueue GCBMainDlg::sendMessageQueue;
 
 IMPLEMENT_DYNAMIC(GCBMainDlg, CDialog)
 
@@ -192,17 +188,19 @@ void GCBMainDlg::StartDraw(int ControlID)
 	CDialog::OnPaint();
 }
 
-void GCBMainDlg::RefreshPage()
+void GCBMainDlg::RefreshPage(CommunicateCore* communicationCore)
 {
 	// 刷新页面数据
 	CString timeStr;
 	list<float> retValueLst;
 	MessageBean beanMessage;
-	while (GCBMainDlg::recvMessageQueue.IsEmpty() == false) {
+	while (communicationCore->HaveRecvMessageResidual()) {
 		retValueLst.clear();
 
-		GCBMainDlg::recvMessageQueue.Pop_front(&beanMessage);
-		this->WriteLog(beanMessage, &timeStr, retValueLst);
+		ofstream outfile("gcb.log", ios::app);
+		communicationCore->RecvResponseMessage(&beanMessage);
+		communicationCore->WriteLog(outfile, beanMessage, &timeStr, retValueLst);
+		outfile.close();
 
 		// 判断这个Message属于哪个组的命令
 		CListCtrl *beanList = this->JudgeMessageCMDCtrl(beanMessage);
@@ -219,7 +217,7 @@ void GCBMainDlg::RefreshPage()
 		double sumValue = 0;
 		for (int nIndex = 1; nIndex < (int)retValueLst.size() + 1; ++nIndex, ++iter) {
 			sumValue += (*iter);
-			formatStr = this->GetFormatStrLable(beanMessage.GetCMDType(), *iter);
+			formatStr = CommunicateCore::GetFormatStrLable(beanMessage.GetCMDType(), *iter);
 			beanList->SetItemText(0, nIndex, formatStr);
 		}
 		// 计算平均值并写入到绘图数据表中
@@ -256,7 +254,4 @@ void GCBMainDlg::ClearAllData(void)
 	for (int nIndex = 0; nIndex < LIST_NUM; ++nIndex) {
 		this->m_List[nIndex].DeleteAllItems();
 	}
-
-	this->recvMessageQueue.Clear();
-	this->sendMessageQueue.Clear();
 }

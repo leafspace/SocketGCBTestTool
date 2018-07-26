@@ -9,12 +9,8 @@
 #define DRAW_GAP			3000                                            // 绘画的时间间隔
 #define ORDER_BUFFER_SIZE   100                                             // 命令字节缓存大小
 
-#define BYTE0(dwTemp)       (*(char *)(&dwTemp))                            // 获取某个数的第一个字节 从最低位开始
-#define BYTE1(dwTemp)       (*((char *)(&dwTemp) + 1))                      // 获取某个数的第二个字节 从最低位开始
-#define BYTE2(dwTemp)       (*((char *)(&dwTemp) + 2))                      // 获取某个数的第三个字节 从最低位开始
-#define BYTE3(dwTemp)       (*((char *)(&dwTemp) + 3))                      // 获取某个数的第四个字节 从最低位开始
-
 #include "afxwin.h"
+#include "CommonType.h"
 #include "GCBTestTool.h"
 #include "StateTable/StateTable.h"
 #include "SocketLink/SocketLink.h"
@@ -23,7 +19,7 @@
 #include "ChildDialog/GCBSettingDlg.h"
 #include "ChildDialog/SystemSettingDlg.h"
 #include "ChildDialog/GCBDetailFrameDlg.h"
-
+#include "CommunicationCore/CommunicationCore.h"
 
 // 主页面 对话框
 class CGCBTestToolDlg : public CDialog
@@ -66,6 +62,8 @@ private:
 	GCBSettingDlg gcbSettingPage;                                           // 板卡设置页面
 	SystemSettingDlg systemSettingPage;                                     // 系统设置页面
 
+	CommunicateCore communicationCore;
+
 
 	CString strServerIP;                                                    // 服务器的IP
 	CString strServerPort;                                                  // 通讯的端口号
@@ -84,4 +82,6 @@ public:
 	bool AddNewFrameTab(const int nIndex);                                  // Tab Control 添加一个页面
 
 	GCBDetailFrameDlg *GetFramePage(FRAME_CMD_TYPE cmdType);
+
+	CommunicateCore* GetCommunicateCore(void);
 };

@@ -1,7 +1,7 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "CommunicationCore.h"
 
-list<BYTE> CommunicationCore::CreateMessage(const BYTE cmdID, const uint16_t uRegisterAddress, const uint16_t uReadNum)
+list<BYTE> CommunicateCore::CreateMessage(const BYTE cmdID, const uint16_t uRegisterAddress, const uint16_t uReadNum)
 {
 	list<BYTE> retLst;
 
@@ -29,7 +29,7 @@ list<BYTE> CommunicationCore::CreateMessage(const BYTE cmdID, const uint16_t uRe
 	return retLst;
 }
 
-list<BYTE> CommunicationCore::CreateMessage(const BYTE cmdID, const uint16_t uRegisterAddress, const float uReadNum)
+list<BYTE> CommunicateCore::CreateMessage(const BYTE cmdID, const uint16_t uRegisterAddress, const float uReadNum)
 {
 	list<BYTE> retLst;
 
@@ -59,25 +59,25 @@ list<BYTE> CommunicationCore::CreateMessage(const BYTE cmdID, const uint16_t uRe
 	return retLst;
 }
 
-float CommunicationCore::Make4ByteFloat(BYTE *list)
+float CommunicateCore::Make4ByteFloat(const BYTE *list)
 {
 	float retValue;
 	memcpy(&retValue, list, sizeof(retValue));
 	return retValue;
 }
 
-float CommunicationCore::MakeTurn4ByteFloat(BYTE *list)
+float CommunicateCore::MakeTurn4ByteFloat(const BYTE *list)
 {
 	BYTE newList[4] = { 0 };
 	for (int nIndex = 0; nIndex < 4; ++nIndex) {
 		newList[nIndex] = list[3 - nIndex];
 	}
 
-	float retValue = this->Make4ByteFloat(newList);
+	float retValue = CommunicateCore::Make4ByteFloat(newList);
 	return retValue;
 }
 
-CString CommunicationCore::GetFormatStrLable(FRAME_CMD_TYPE cmdType, float value)
+CString CommunicateCore::GetFormatStrLable(const FRAME_CMD_TYPE cmdType, const float value)
 {
 	CString formatStr;
 	formatStr.Format(_T("%.2f"), value);
@@ -130,51 +130,51 @@ CString CommunicationCore::GetFormatStrLable(FRAME_CMD_TYPE cmdType, float value
 	}
 }
 
-FRAME_CMD_TYPE CommunicationCore::GetCMDIdFromIndex(int nIndex)
+FRAME_CMD_TYPE CommunicateCore::GetCMDIdFromIndex(const int nIndex)
 {
 	FRAME_CMD_TYPE retValue = NOZZLE_CARTRIDGE_LEVEL;
-	switch(nIndex)
+	switch (nIndex)
 	{
-		case 0: retValue = NOZZLE_CARTRIDGE_LEVEL; break;
-		case 1: retValue = MODE_LOCKED_SOLENOID_VALVE_WORKING; break;
-		case 2: retValue = POSITIVE_NEGATIVE_PRESSURE_SOLENOID_VALVE_WORKING; break;
-		case 3: retValue = INK_SUPPLY_PUMP_WORKING_CONDITION; break;
-		case 4: retValue = NOZZLE_CABINET_TEMPERATURE; break;
-		case 5: retValue = AIR_NEGATIVE_PRESSURE_VALUE; break;
-		case 6: retValue = AIR_POSITIVE_PRESSURE_VALUE; break;
-		case 7: retValue = NEGATIVE_PRESSURE_OUTPUT_VALUE_NOZZLE; break;
-		case 8: retValue = INK_MOTOR_DELAY_TIME; break;
-		case 9: retValue = MODE_PRESSURE_NOZZLE_INK; break;
-		case 10: retValue = START_WORKING_STATE_CIRCULATING_MOTOR; break;
-		case 11: retValue = MANUALLY_OPEN_MODE_LOCKED_SOLENOID_VALVE_STATUS; break;
+	case 0: retValue = NOZZLE_CARTRIDGE_LEVEL; break;
+	case 1: retValue = MODE_LOCKED_SOLENOID_VALVE_WORKING; break;
+	case 2: retValue = POSITIVE_NEGATIVE_PRESSURE_SOLENOID_VALVE_WORKING; break;
+	case 3: retValue = INK_SUPPLY_PUMP_WORKING_CONDITION; break;
+	case 4: retValue = NOZZLE_CABINET_TEMPERATURE; break;
+	case 5: retValue = AIR_NEGATIVE_PRESSURE_VALUE; break;
+	case 6: retValue = AIR_POSITIVE_PRESSURE_VALUE; break;
+	case 7: retValue = NEGATIVE_PRESSURE_OUTPUT_VALUE_NOZZLE; break;
+	case 8: retValue = INK_MOTOR_DELAY_TIME; break;
+	case 9: retValue = MODE_PRESSURE_NOZZLE_INK; break;
+	case 10: retValue = START_WORKING_STATE_CIRCULATING_MOTOR; break;
+	case 11: retValue = MANUALLY_OPEN_MODE_LOCKED_SOLENOID_VALVE_STATUS; break;
 
-		default:
-			retValue = NOZZLE_CARTRIDGE_LEVEL; break;
+	default:
+		retValue = NOZZLE_CARTRIDGE_LEVEL; break;
 	}
 
 	return retValue;
 }
 
-int CommunicationCore::GetIndexFromCMDId(FRAME_CMD_TYPE cmdType)
+int CommunicateCore::GetIndexFromCMDId(const FRAME_CMD_TYPE cmdType)
 {
 	int retValue = 0;
-	switch(cmdType)
+	switch (cmdType)
 	{
-		case NOZZLE_CARTRIDGE_LEVEL: retValue = 0; break;
-		case MODE_LOCKED_SOLENOID_VALVE_WORKING: retValue = 1; break;
-		case POSITIVE_NEGATIVE_PRESSURE_SOLENOID_VALVE_WORKING: retValue = 2; break;
-		case INK_SUPPLY_PUMP_WORKING_CONDITION: retValue = 3; break;
-		case NOZZLE_CABINET_TEMPERATURE: retValue = 4; break;
-		case AIR_NEGATIVE_PRESSURE_VALUE: retValue = 5; break;
-		case AIR_POSITIVE_PRESSURE_VALUE: retValue = 6; break;
-		case NEGATIVE_PRESSURE_OUTPUT_VALUE_NOZZLE: retValue = 7; break;
-		case INK_MOTOR_DELAY_TIME: retValue = 8; break;
-		case MODE_PRESSURE_NOZZLE_INK: retValue = 9; break;
-		case START_WORKING_STATE_CIRCULATING_MOTOR: retValue = 10; break;
-		case MANUALLY_OPEN_MODE_LOCKED_SOLENOID_VALVE_STATUS: retValue = 11; break;
+	case NOZZLE_CARTRIDGE_LEVEL: retValue = 0; break;
+	case MODE_LOCKED_SOLENOID_VALVE_WORKING: retValue = 1; break;
+	case POSITIVE_NEGATIVE_PRESSURE_SOLENOID_VALVE_WORKING: retValue = 2; break;
+	case INK_SUPPLY_PUMP_WORKING_CONDITION: retValue = 3; break;
+	case NOZZLE_CABINET_TEMPERATURE: retValue = 4; break;
+	case AIR_NEGATIVE_PRESSURE_VALUE: retValue = 5; break;
+	case AIR_POSITIVE_PRESSURE_VALUE: retValue = 6; break;
+	case NEGATIVE_PRESSURE_OUTPUT_VALUE_NOZZLE: retValue = 7; break;
+	case INK_MOTOR_DELAY_TIME: retValue = 8; break;
+	case MODE_PRESSURE_NOZZLE_INK: retValue = 9; break;
+	case START_WORKING_STATE_CIRCULATING_MOTOR: retValue = 10; break;
+	case MANUALLY_OPEN_MODE_LOCKED_SOLENOID_VALVE_STATUS: retValue = 11; break;
 
-		default:
-			retValue = 0; break;
+	default:
+		retValue = 0; break;
 	}
 
 	return retValue;

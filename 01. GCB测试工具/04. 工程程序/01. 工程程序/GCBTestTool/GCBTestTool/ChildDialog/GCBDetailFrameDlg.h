@@ -1,6 +1,8 @@
 ﻿#pragma once
+
 #include "afxcmn.h"
 #include "../CommonType.h"
+#include "../SocketLink/MessageBean/MessageBean.h"
 
 class GCBDetailFrameDlg : public CDialog
 {

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "MessageQueue.h"
 
 bool MessageQueue::Push_back(const MessageBean beanMessage)

@@ -1,7 +1,8 @@
-#pragma once
+﻿#pragma once
+
+#define QUEUE_MAX_LEN   100
 
 #include "../MessageBean/MessageBean.h"
-#define QUEUE_MAX_LEN   100
 
 class MessageQueue
 {
