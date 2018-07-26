@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "../GCBTestTool.h"
+
 class SystemSettingDlg : public CDialog
 {
 	DECLARE_DYNAMIC(SystemSettingDlg)
@@ -19,5 +21,5 @@ protected:
 private:
 	bool isCheckAll;
 public:
-	
+
 };

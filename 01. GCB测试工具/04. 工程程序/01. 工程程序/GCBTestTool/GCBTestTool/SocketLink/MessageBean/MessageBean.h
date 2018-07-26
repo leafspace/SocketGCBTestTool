@@ -1,4 +1,5 @@
 ﻿#pragma once
+
 #include <list>
 #include "../SocketLink.h"
 #include "../../CommonType.h"
@@ -18,17 +19,17 @@ private:
 	uint16_t uParameterSize;                                                // 参数大小
 	list<BYTE> parameterLst;                                                // 参数列表
 
-	uint16_t MakeUINT16Value(list<BYTE>::iterator iter, list<BYTE>::iterator iterEnd);// 将BYTE流制作一个16bit数据
-	uint32_t MakeUINT32Value(list<BYTE>::iterator iter, list<BYTE>::iterator iterEnd);// 将BYTE流制作一个32bit数据
-
-	bool JumpUINT16(list<BYTE>::iterator &iter, list<BYTE>::iterator iterEnd);        // BYTE流跳跃16bit
-	bool JumpUINT32(list<BYTE>::iterator &iter, list<BYTE>::iterator iterEnd);        // BYTE流跳跃32bit
-
 	int FindPackgeHeadPosition();                                           // 找到包头的位置
 	int FindPackgeTailPosition(const int nBeIndex);                         // 找到包尾的位置
 public:
 	MessageBean() {}
 	MessageBean(const BYTE *bMessageLst, const uint16_t uMessageSize);
+
+	static uint16_t MakeUINT16Value(list<BYTE>::iterator iter, list<BYTE>::iterator iterEnd);                       // 将BYTE流制作一个16bit数据
+	static uint32_t MakeUINT32Value(list<BYTE>::iterator iter, list<BYTE>::iterator iterEnd);                       // 将BYTE流制作一个32bit数据
+
+	static bool JumpUINT16(list<BYTE>::iterator &iter, list<BYTE>::iterator iterEnd);                               // BYTE流跳跃16bit
+	static bool JumpUINT32(list<BYTE>::iterator &iter, list<BYTE>::iterator iterEnd);                               // BYTE流跳跃32bit
 
 	void SetOrginDataList(list<BYTE> bMessageLst);                          // 设置原始字节流
 	void SetOrginDataList(const BYTE *bMessageLst, const uint16_t uMessageSize);

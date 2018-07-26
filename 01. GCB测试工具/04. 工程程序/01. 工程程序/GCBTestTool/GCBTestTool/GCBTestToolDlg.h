@@ -9,12 +9,8 @@
 #define DRAW_GAP			3000                                            // 绘画的时间间隔
 #define ORDER_BUFFER_SIZE   100                                             // 命令字节缓存大小
 
-#define BYTE0(dwTemp)       (*(char *)(&dwTemp))                            // 获取某个数的第一个字节 从最低位开始
-#define BYTE1(dwTemp)       (*((char *)(&dwTemp) + 1))                      // 获取某个数的第二个字节 从最低位开始
-#define BYTE2(dwTemp)       (*((char *)(&dwTemp) + 2))                      // 获取某个数的第三个字节 从最低位开始
-#define BYTE3(dwTemp)       (*((char *)(&dwTemp) + 3))                      // 获取某个数的第四个字节 从最低位开始
-
 #include "afxwin.h"
+#include "CommonType.h"
 #include "GCBTestTool.h"
 #include "StateTable/StateTable.h"
 #include "SocketLink/SocketLink.h"
@@ -23,7 +19,7 @@
 #include "ChildDialog/GCBSettingDlg.h"
 #include "ChildDialog/SystemSettingDlg.h"
 #include "ChildDialog/GCBDetailFrameDlg.h"
-
+#include "CommunicationCore/CommunicationCore.h"
 
 // 主页面 对话框
 class CGCBTestToolDlg : public CDialog
@@ -66,16 +62,13 @@ private:
 	GCBSettingDlg gcbSettingPage;                                           // 板卡设置页面
 	SystemSettingDlg systemSettingPage;                                     // 系统设置页面
 
+	CommunicateCore communicationCore;
+
 
 	CString strServerIP;                                                    // 服务器的IP
 	CString strServerPort;                                                  // 通讯的端口号
 
-	SocketLink socketLink;                                                  // 建立的Socket连接
 	bool socketISLinking;                                                   // 当前是否处在持续连接中
-
-	HANDLE hThreadSocketLinkTest;                                           // 线程句柄
-	HANDLE hThreadSocketLinkRecv;                                           // 线程句柄
-	HANDLE hThreadSocketLinkSend;                                           // 线程句柄
 
 	void OnTimerSocketLinkTest(void);                                       // 处理测试连接后的循环事件
 	void OnTimerSocketLink(void);                                           // 处理连接按钮后的循环事件
@@ -84,14 +77,11 @@ private:
 
 	void ClearAllData(void);
 public:
-	static StateTable threadStateTable;                                     // 线程运行状态表
-
-	static list<BYTE> CreateMessage(const BYTE cmdID, const uint16_t uRegisterAddress, const uint16_t uReadNum); // 创建一条要发送的命令
-	static list<BYTE> CreateMessage(const BYTE cmdID, const uint16_t uRegisterAddress, const float uReadNum);
 
 	void ShowMessage(PROGRAM_STATE_CODE stateCode, PROGRAM_STATE_TYPE stateType);     // 跳出提示框
 	bool AddNewFrameTab(const int nIndex);                                  // Tab Control 添加一个页面
-	void SendRequestMessage(void);
 
 	GCBDetailFrameDlg *GetFramePage(FRAME_CMD_TYPE cmdType);
+
+	CommunicateCore* GetCommunicateCore(void);
 };

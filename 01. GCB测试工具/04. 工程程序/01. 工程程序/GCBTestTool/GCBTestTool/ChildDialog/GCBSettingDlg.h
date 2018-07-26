@@ -1,6 +1,6 @@
 ﻿#pragma once
-#include "../CommonType.h"
-#include "../SocketLink/MessageBean/MessageBean.h"
+
+#include "../GCBTestTool.h"
 
 class GCBSettingDlg : public CDialog
 {
