@@ -5,8 +5,6 @@
 #define new DEBUG_NEW
 #endif
 
-
-// 用于应用程序“关于”菜单项的 CAboutDlg 对话框
 class CAboutDlg : public CDialog
 {
 public:
@@ -57,6 +55,7 @@ BEGIN_MESSAGE_MAP(CGCBTestToolDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_LINKTEST, &CGCBTestToolDlg::OnBnClickedButtonLinktest)
 	ON_BN_CLICKED(IDC_BUTTON_GCB_SETTING, &CGCBTestToolDlg::OnBnClickedButtonGcbSetting)
 	ON_BN_CLICKED(IDC_BUTTON_SYSTEM_SETTING, &CGCBTestToolDlg::OnBnClickedButtonSystemSetting)
+	ON_BN_CLICKED(IDC_BUTTON_CLEARDATA, &CGCBTestToolDlg::OnBnClickedButtonCleardata)
 END_MESSAGE_MAP()
 
 void CGCBTestToolDlg::OnSysCommand(UINT nID, LPARAM lParam)
@@ -231,28 +230,13 @@ void CGCBTestToolDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 	cRect.bottom = cRect.bottom - TOPBAR_SIZE;
 
 	// 根据当前Control Tab显示的页面来移动窗口
-	switch (this->nCurSelTab)
-	{
-	case 0:
-	{
-		this->mainPage.MoveWindow(&cRect);
-	}
-	break;
-	default:
-	{
-		this->framePage[this->nCurSelTab - 1].MoveWindow(&cRect);
-	}
-	break;
-	}
-
+	this->pDialog[this->nCurSelTab]->MoveWindow(&cRect);
 	CDialog::OnVScroll(nSBCode, nPos, pScrollBar);
 }
 
 void CGCBTestToolDlg::OnTcnSelchangeFrametab(NMHDR *pNMHDR, LRESULT *pResult)
 {
-	this->pDialog[this->nCurSelTab]->ShowWindow(SW_HIDE);                   // 隐藏旧窗口
-	this->nCurSelTab = this->m_FrameTabCtrl.GetCurSel();                    // 获取新窗口号
-	this->pDialog[this->nCurSelTab]->ShowWindow(SW_SHOW);                   // 显示新窗口
+	this->ChangeTabCtrl(this->m_FrameTabCtrl.GetCurSel());
 
 	// 重置页面显示位置
 	CRect cRect;
@@ -283,7 +267,6 @@ void CGCBTestToolDlg::OnBnClickedButtonLinktest()
 		if (bIsSuccess == false) {
 			break;
 		}
-
 	} while (false);
 
 	if (bIsSuccess) {
@@ -323,7 +306,7 @@ void CGCBTestToolDlg::OnBnClickedButtonLink()
 void CGCBTestToolDlg::OnBnClickedButtonGcbSetting()
 {
 	if (this->socketISLinking) {
-		this->gcbSettingPage.DoModal();
+		this->mainPage.ShowSettingDialog();
 	}
 	else {
 		this->ShowMessage(PROGRAM_UNLIKING, PROGRAM_STATE_ERROR);
@@ -335,6 +318,13 @@ void CGCBTestToolDlg::OnBnClickedButtonSystemSetting()
 	this->systemSettingPage.DoModal();
 }
 
+void CGCBTestToolDlg::OnBnClickedButtonCleardata()
+{
+	this->ClearAllData();
+}
+
+
+//=============================================================================
 
 void CGCBTestToolDlg::OnTimerSocketLinkTest()
 {
@@ -401,10 +391,18 @@ void CGCBTestToolDlg::ClearAllData(void)
 {
 	this->communicationCore.ClearQueueData();
 	this->mainPage.ClearAllData();
+}
 
-	for (int nIndex = 0; nIndex < this->nDialogLen; ++nIndex) {
-		this->framePage[nIndex].ClearAllData();
-	}
+//=============================================================================
+
+CTabCtrl* CGCBTestToolDlg::GetTabCtrl(void)
+{
+	return &this->m_FrameTabCtrl;
+}
+
+CommunicateCore* CGCBTestToolDlg::GetCommunicateCore(void)
+{
+	return &this->communicationCore;
 }
 
 void CGCBTestToolDlg::ShowMessage(PROGRAM_STATE_CODE stateCode, PROGRAM_STATE_TYPE stateType)
@@ -424,57 +422,42 @@ void CGCBTestToolDlg::ShowMessage(PROGRAM_STATE_CODE stateCode, PROGRAM_STATE_TY
 	}
 }
 
-bool CGCBTestToolDlg::AddNewFrameTab(const int nIndex)
+bool CGCBTestToolDlg::AddNewFrameTab(CString strLabel)
 {
-	int newTabIndex = -1;
+	this->m_FrameTabCtrl.InsertItem(this->nDialogLen + 1, strLabel);
+	return true;
+}
 
-	FRAME_CMD_TYPE cmdType = CommunicateCore::GetCMDIdFromIndex(nIndex);
-	for (int nJndex = 0; nJndex < this->nDialogLen; ++nJndex) {
-		if (this->framePage[nJndex].GetFrameType() == cmdType) {
-			newTabIndex = nJndex + 1;
-			break;
-		}
-	}
-
-	if (newTabIndex < 0) {
-		this->m_FrameTabCtrl.InsertItem(this->nDialogLen + 1, GetLabel(nIndex));
-		this->framePage[this->nDialogLen].SetFrameType(nIndex);             // 设置页面窗口的属性
-		this->framePage[this->nDialogLen].Create(IDD_DETAIL_DIALOG, &this->m_FrameTabCtrl);
-
-		// 设定在Tab内显示的范围
-		CRect cRect;
-		this->m_FrameTabCtrl.GetClientRect(cRect);
-		cRect.bottom = cRect.bottom - TOPBAR_SIZE;
-		this->framePage[this->nDialogLen].MoveWindow(&cRect);
-
-		this->pDialog[this->nDialogLen + 1] = &this->framePage[this->nDialogLen];
-		newTabIndex = this->nDialogLen + 1;
-		this->nDialogLen++;
-	}
+bool CGCBTestToolDlg::AddNewFrameTab(const GCBDetailFrameDlg *tabPage)
+{
+	this->nDialogLen++;
+	this->pDialog[this->nDialogLen] = (CDialog*)tabPage;
 
 	// Tab Control设置当前显示为新页面
-	this->m_FrameTabCtrl.SetCurSel(newTabIndex);
-	this->pDialog[this->nCurSelTab]->ShowWindow(SW_HIDE);
-	this->nCurSelTab = newTabIndex;
-	this->pDialog[this->nCurSelTab]->ShowWindow(SW_SHOW);
+	this->ChangeTabCtrl(this->nDialogLen);
 
 	// 设置滚动条位置
 	this->m_DlgScrollBar.SetScrollPos(0);
 	return true;
 }
 
-
-GCBDetailFrameDlg *CGCBTestToolDlg::GetFramePage(FRAME_CMD_TYPE cmdType)
+bool CGCBTestToolDlg::ChangeTabCtrl(const int newIndex)
 {
-	for (int nIndex = 0; nIndex < this->nDialogLen; ++nIndex) {
-		if (this->framePage[nIndex].GetFrameType() == cmdType) {
-			return &this->framePage[nIndex];
+	this->m_FrameTabCtrl.SetCurSel(newIndex);
+	this->pDialog[this->nCurSelTab]->ShowWindow(SW_HIDE);
+	this->nCurSelTab = newIndex;
+	this->pDialog[this->nCurSelTab]->ShowWindow(SW_SHOW);
+	return true;
+}
+
+bool CGCBTestToolDlg::ChangeTabCtrl(const GCBDetailFrameDlg *tabPage)
+{
+	for (int nIndex = 0; nIndex <= this->nDialogLen; ++nIndex) {
+		if (this->pDialog[nIndex]->GetSafeHwnd() == tabPage->GetSafeHwnd()) {
+			this->ChangeTabCtrl(nIndex);
+			break;
 		}
 	}
-	return NULL;
+	return true;
 }
 
-CommunicateCore* CGCBTestToolDlg::GetCommunicateCore(void)
-{
-	return &this->communicationCore;
-}

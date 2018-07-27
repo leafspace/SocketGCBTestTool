@@ -16,7 +16,8 @@
         "xlocale": "cpp",
         "initializer_list": "cpp",
         "exception": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "*.rh": "cpp"
     },
     "todohighlight.include": [
         "**/*.js",

@@ -36,6 +36,8 @@ BOOL GCBMainDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
+	this->nDialogLen = 0;
+
 	const int nTableHeadNum = 5;
 	const CString strTableHeadLable[] = {
 		LABLE_INK_BOX,
@@ -84,15 +86,40 @@ void GCBMainDlg::OnTimer(UINT_PTR nIDEvent)
 	}
 }
 
+//=============================================================================
+
 void GCBMainDlg::OnButtonClick(UINT nID)
 {
 	int nIndex = nID - IDC_DETAIL_BUTTON1;
+	CGCBTestToolDlg *pMainDlg = (CGCBTestToolDlg*)(AfxGetApp()->GetMainWnd());
 
-	HWND hWnd = AfxGetMainWnd()->GetSafeHwnd();
-	CGCBTestToolDlg* mainDlg = (CGCBTestToolDlg*)CGCBTestToolDlg::FromHandle(hWnd);
+	int newTabIndex = -1;
 
-	// 添加一个页面
-	mainDlg->AddNewFrameTab(nIndex);
+	FRAME_CMD_TYPE cmdType = CommunicateCore::GetCMDIdFromIndex(nIndex);
+	for (int nJndex = 0; nJndex < this->nDialogLen; ++nJndex) {
+		if (this->framePage[nJndex].GetFrameType() == cmdType) {
+			newTabIndex = nJndex;
+			break;
+		}
+	}
+
+	if (newTabIndex < 0) {
+		// 添加一个页面
+		pMainDlg->AddNewFrameTab(GetLabel(nIndex));
+		this->framePage[this->nDialogLen].SetFrameType(nIndex);             // 设置页面窗口的属性
+		this->framePage[this->nDialogLen].Create(IDD_DETAIL_DIALOG, pMainDlg->GetTabCtrl());
+
+		// 设定在Tab内显示的范围
+		CRect cRect;
+		pMainDlg->GetTabCtrl()->GetClientRect(cRect);
+		cRect.bottom = cRect.bottom - TOPBAR_SIZE;
+		this->framePage[this->nDialogLen].MoveWindow(&cRect);
+
+		pMainDlg->AddNewFrameTab(&this->framePage[this->nDialogLen]);
+		this->nDialogLen++;
+	} else {
+		pMainDlg->ChangeTabCtrl(&this->framePage[newTabIndex]);
+	}
 }
 
 void GCBMainDlg::StartDraw(int ControlID)
@@ -165,6 +192,18 @@ void GCBMainDlg::StartDraw(int ControlID)
 	CDialog::OnPaint();
 }
 
+//=============================================================================
+
+GCBDetailFrameDlg *GCBMainDlg::GetFramePage(FRAME_CMD_TYPE cmdType)
+{
+	for (int nIndex = 0; nIndex < this->nDialogLen; ++nIndex) {
+		if (this->framePage[nIndex].GetFrameType() == cmdType) {
+			return &this->framePage[nIndex];
+		}
+	}
+	return NULL;
+}
+
 void GCBMainDlg::RefreshPage(CommunicateCore* communicationCore)
 {
 	// 刷新页面数据
@@ -207,8 +246,7 @@ void GCBMainDlg::RefreshPage(CommunicateCore* communicationCore)
 		}
 
 		// 将数据存入详细页面
-		CGCBTestToolDlg *pDlg = (CGCBTestToolDlg*)(AfxGetApp()->GetMainWnd());
-		GCBDetailFrameDlg *framePage = pDlg->GetFramePage(beanMessage.GetCMDType());
+		GCBDetailFrameDlg *framePage = this->GetFramePage(beanMessage.GetCMDType());
 		if (framePage != NULL) {
 			framePage->AddMessageBean(beanMessage);
 		}
@@ -225,10 +263,19 @@ void GCBMainDlg::DeleteTimer(TIMER_TYPE timer)
 	KillTimer(timer);
 }
 
+void GCBMainDlg::ShowSettingDialog(void)
+{
+	this->gcbSettingPage.DoModal();
+}
+
 void GCBMainDlg::ClearAllData(void)
 {
 	this->showValueLst.clear();
 	for (int nIndex = 0; nIndex < LIST_NUM; ++nIndex) {
 		this->m_List[nIndex].DeleteAllItems();
+	}
+
+	for (int nIndex = 0; nIndex < nDialogLen; ++nIndex) {
+		this->framePage[nIndex].ClearAllData();
 	}
 }

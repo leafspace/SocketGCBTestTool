@@ -65,10 +65,13 @@ protected:
 	afx_msg void OnBnClickedButtonLink();                                   // 点击连接按钮
 	afx_msg void OnBnClickedButtonGcbSetting();                             // 点击上行按钮
 	afx_msg void OnBnClickedButtonSystemSetting();                          // 点击系统设置按钮
+	afx_msg void OnBnClickedButtonCleardata();                              // 点击清除数据按钮
 	DECLARE_MESSAGE_MAP()
 
 
 private:
+	bool socketISLinking;                                                   // 当前是否处在持续连接中
+
 	CTabCtrl m_FrameTabCtrl;                                                // Tab Control 控制对象
 	CScrollBar m_DlgScrollBar;                                              // Scroll Bar 控制对象
 
@@ -77,23 +80,21 @@ private:
 	CDialog* pDialog[GCB_NUM * (LIST_NUM + 1)];                             // 用来保存对话框对象指针
 
 	GCBMainDlg mainPage;                                                    // 概览页面，临时为1个
-	GCBDetailFrameDlg framePage[LIST_NUM];                                  // 详情页面
-	GCBSettingDlg gcbSettingPage;                                           // 板卡设置页面
 	SystemSettingDlg systemSettingPage;                                     // 系统设置页面
 	CommunicateCore communicationCore;                                      // 用户Main页面通讯的通讯核心，临时为1个
-
-	bool socketISLinking;                                                   // 当前是否处在持续连接中
 
 	void OnTimerSocketLinkTest(void);                                       // 处理测试连接后的循环事件
 	void OnTimerSocketLink(void);                                           // 处理连接按钮后的循环事件
 
-	void ClearAllData(void);
+	void ClearAllData(void);                                                // 清理页面中的所有数据
 public:
+	CTabCtrl* GetTabCtrl(void);                                             // 获取TabCtrl指针
+	CommunicateCore* GetCommunicateCore(void);                              // 获取通讯核心
 
 	void ShowMessage(PROGRAM_STATE_CODE stateCode, PROGRAM_STATE_TYPE stateType);     // 跳出提示框
-	bool AddNewFrameTab(const int nIndex);                                  // Tab Control 添加一个页面
+	bool AddNewFrameTab(CString strLable);                                  // Tab Control 添加一个页面1
+	bool AddNewFrameTab(const GCBDetailFrameDlg *tabPage);                  // Tab Control 添加一个页面2
 
-	GCBDetailFrameDlg *GetFramePage(FRAME_CMD_TYPE cmdType);
-
-	CommunicateCore* GetCommunicateCore(void);
+	bool ChangeTabCtrl(const int newIndex);                                 // 更改Tab Control显示的页面
+	bool ChangeTabCtrl(const GCBDetailFrameDlg *tabPage);                   // 更改Tab Control显示的页面
 };
