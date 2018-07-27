@@ -5,11 +5,9 @@
 class SystemSettingDlg : public CDialog
 {
 	DECLARE_DYNAMIC(SystemSettingDlg)
-
 public:
 	SystemSettingDlg(CWnd* pParent = NULL);
 	virtual ~SystemSettingDlg();
-
 	enum { IDD = IDD_SYSTEM_SETTING_DIALOG };
 
 protected:
@@ -20,6 +18,7 @@ protected:
 
 private:
 	bool isCheckAll;
+
 public:
 
 };

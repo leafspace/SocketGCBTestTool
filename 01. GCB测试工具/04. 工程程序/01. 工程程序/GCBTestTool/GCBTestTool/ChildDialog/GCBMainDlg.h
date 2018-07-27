@@ -9,17 +9,14 @@
 #include "../CommunicationCore/CommunicationCore.h"
 #include "../SocketLink/MessageQueue/MessageQueue.h"
 
-#define PICTRUE_SHOW_SIZE	450
+#define PICTRUE_SHOW_SIZE	450                                             // 图片绘图的宽度
 
 class GCBMainDlg : public CDialog
 {
 	DECLARE_DYNAMIC(GCBMainDlg)
-
 public:
 	GCBMainDlg(CWnd* pParent = NULL);
 	virtual ~GCBMainDlg();
-
-	// 对话框数据
 	enum { IDD = IDD_MAIN_DIALOG };
 
 protected:
@@ -33,13 +30,12 @@ protected:
 private:
 	list<float> showValueLst;
 	void StartDraw(int ControlID);
-	CListCtrl* JudgeMessageCMDCtrl(MessageBean beanMessage);
 public:
 
 	CListCtrl m_List[LIST_NUM];
-	void RefreshPage(CommunicateCore* communicationCore);
-	void CreateTimer(TIMER_TYPE timer);
-	void DeleteTimer(TIMER_TYPE timer);
+	void RefreshPage(CommunicateCore* communicationCore);                   // 处理一次接收到的消息
+	void CreateTimer(TIMER_TYPE timer, int timeGap);                        // 创建绘图定时器
+	void DeleteTimer(TIMER_TYPE timer);                                     // 删除绘图定时器
 
 	void ClearAllData(void);
 };

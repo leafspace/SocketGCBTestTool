@@ -17,5 +17,19 @@
         "initializer_list": "cpp",
         "exception": "cpp",
         "iomanip": "cpp"
-    }
+    },
+    "todohighlight.include": [
+        "**/*.js",
+        "**/*.jsx",
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.html",
+        "**/*.php",
+        "**/*.css",
+        "**/*.scss",
+        "**/*.h",
+        "**/*.c",
+        "**/*.cpp",
+        "**/*.hpp"
+      ],
 }

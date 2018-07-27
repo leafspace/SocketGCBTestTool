@@ -38,13 +38,13 @@ BOOL GCBDetailFrameDlg::OnInitDialog()
 
 	const int nTableHeadNum = 4;
 
-	this->m_List.InsertColumn(0, _T("接收时间"), LVCFMT_CENTER,
+	this->m_List.InsertColumn(0, LABLE_ACCEP_TIME, LVCFMT_CENTER,
 		120, 0);
-	this->m_List.InsertColumn(1, _T("指令类型"), LVCFMT_CENTER,
+	this->m_List.InsertColumn(1, LABLE_ORDER_TYPE, LVCFMT_CENTER,
 		60, 1);
-	this->m_List.InsertColumn(2, _T("参数大小"), LVCFMT_CENTER,
+	this->m_List.InsertColumn(2, LABLE_PARAT_SIZE, LVCFMT_CENTER,
 		60, 2);
-	this->m_List.InsertColumn(3, _T("指令数据"), LVCFMT_CENTER,
+	this->m_List.InsertColumn(3, LABLE_ORDER_DATA, LVCFMT_CENTER,
 		(rect.Width() - 260), 3);
 
 	return TRUE;

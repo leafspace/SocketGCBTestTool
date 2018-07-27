@@ -4,12 +4,6 @@
 #include "../SocketLink.h"
 #include "../../CommonType.h"
 
-typedef signed short int16_t;
-typedef unsigned short uint16_t;
-
-typedef signed int int32_t;
-typedef unsigned int uint32_t;
-
 class MessageBean
 {
 private:
@@ -23,7 +17,7 @@ private:
 	int FindPackgeTailPosition(const int nBeIndex);                         // 找到包尾的位置
 public:
 	MessageBean() {}
-	MessageBean(const BYTE *bMessageLst, const uint16_t uMessageSize);
+	MessageBean(const BYTE *bMessageLst, const uint16_t uMessageSize);      // 构造函数
 
 	static uint16_t MakeUINT16Value(list<BYTE>::iterator iter, list<BYTE>::iterator iterEnd);                       // 将BYTE流制作一个16bit数据
 	static uint32_t MakeUINT32Value(list<BYTE>::iterator iter, list<BYTE>::iterator iterEnd);                       // 将BYTE流制作一个32bit数据
@@ -43,7 +37,7 @@ public:
 	list<BYTE> GetParameterList(void);                                      // 获取参数流
 
 	PROGRAM_STATE_CODE AnalysisOrginDataLst();                              // 解析原始的数据流
-	PROGRAM_STATE_CODE AnalysisOrginDataLst(const BYTE *bMessageLst, const uint16_t uMessageSize);
+	PROGRAM_STATE_CODE AnalysisOrginDataLst(const BYTE *bMessageLst, const uint16_t uMessageSize);                  // 解析原始的数据流
 
-	MessageBean operator=(const MessageBean &messageBean);
+	MessageBean operator=(const MessageBean &messageBean);                  // 提供互拷机制
 };

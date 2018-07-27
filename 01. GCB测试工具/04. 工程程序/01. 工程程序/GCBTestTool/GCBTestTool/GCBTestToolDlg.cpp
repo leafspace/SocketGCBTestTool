@@ -107,13 +107,10 @@ BOOL CGCBTestToolDlg::OnInitDialog()
 	this->nCurSelTab = 0;
 	this->nDialogLen = 0;
 
-	this->strServerIP = _T("172.16.5.30");
-	this->strServerPort = _T("10000");
-
 	this->socketISLinking = false;
 
 	// Tab Control 添加主页面
-	this->m_FrameTabCtrl.InsertItem(0, _T("概览"));
+	this->m_FrameTabCtrl.InsertItem(0, LABLE_PREVIEW);
 
 	this->mainPage.Create(IDD_MAIN_DIALOG, &this->m_FrameTabCtrl);
 	// 设定页面在Tab内显示的范围
@@ -129,8 +126,8 @@ BOOL CGCBTestToolDlg::OnInitDialog()
 	this->m_DlgScrollBar.SetScrollRange(SCROLLBAR_MIN, SCROLLBAR_MAX);
 
 	// 设置输入框的默认参数
-	SetDlgItemText(IDC_GCB_EDIT_IPADDRESS, this->strServerIP);
-	SetDlgItemText(IDC_GCB_EDIT_PORT, this->strServerPort);
+	SetDlgItemText(IDC_GCB_EDIT_IPADDRESS, GCB_IP_ADDRESS);
+	SetDlgItemText(IDC_GCB_EDIT_PORT, GCB_PORT);
 	return TRUE;
 }
 
@@ -167,16 +164,23 @@ void CGCBTestToolDlg::OnTimer(UINT_PTR nIDEvent)
 	switch (nIDEvent)
 	{
 	case TIMER_SOCKET_LINK_CONN:                                            // 检测Socket的连接状态是否成功
+	{
 		this->OnTimerSocketLinkTest();
-		break;
+	}
+	break;
 	case TIMER_SOCKET_LINK_RECV:                                            // 处理接收到的数据并显示在页面上
+	{
 		this->mainPage.RefreshPage(&this->communicationCore);
-		break;
+	}
+	break;
 	case TIMER_SOCKET_LINK_SEND:                                            // 向GCB请求一次数据
+	{
 		this->communicationCore.SendRequestMessage();
-		break;
+	}
+	break;
 	default:                                                                // 异常处理
 		KillTimer(nIDEvent);
+		break;
 	}
 }
 
@@ -230,10 +234,15 @@ void CGCBTestToolDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 	switch (this->nCurSelTab)
 	{
 	case 0:
+	{
 		this->mainPage.MoveWindow(&cRect);
-		break;
+	}
+	break;
 	default:
+	{
 		this->framePage[this->nCurSelTab - 1].MoveWindow(&cRect);
+	}
+	break;
 	}
 
 	CDialog::OnVScroll(nSBCode, nPos, pScrollBar);
@@ -261,14 +270,16 @@ void CGCBTestToolDlg::OnBnClickedButtonLinktest()
 	bool bIsSuccess = true;
 
 	// 获取连接的测试IP与端口号
-	GetDlgItemText(IDC_GCB_EDIT_IPADDRESS, this->strServerIP);
-	GetDlgItemText(IDC_GCB_EDIT_PORT, this->strServerPort);
+	CString strServerIP;
+	CString strServerPort;
+	GetDlgItemText(IDC_GCB_EDIT_IPADDRESS, strServerIP);
+	GetDlgItemText(IDC_GCB_EDIT_PORT, strServerPort);
 
 	GetDlgItem(IDC_BUTTON_LINKTEST)->EnableWindow(false);
 
 	do {
 		// 初始化Socket
-		bIsSuccess = this->communicationCore.InisSocketLink(this->strServerIP, _ttoi(this->strServerPort));
+		bIsSuccess = this->communicationCore.InisSocketLink(strServerIP, _ttoi(strServerPort));
 		if (bIsSuccess == false) {
 			break;
 		}
@@ -292,7 +303,7 @@ void CGCBTestToolDlg::OnBnClickedButtonLink()
 {
 	if (this->socketISLinking) {                                            // 如果当前处于正在连接的状态
 		this->socketISLinking = false;
-		SetDlgItemText(IDC_BUTTON_LINK, _T("连接"));
+		SetDlgItemText(IDC_BUTTON_LINK, LABLE_LINK);
 		KillTimer(TIMER_SOCKET_LINK_CONN);
 		KillTimer(TIMER_SOCKET_LINK_RECV);
 		KillTimer(TIMER_SOCKET_LINK_SEND);
@@ -302,9 +313,9 @@ void CGCBTestToolDlg::OnBnClickedButtonLink()
 	}
 	else {
 		this->socketISLinking = true;
-		SetDlgItemText(IDC_BUTTON_LINK, _T("停止连接"));
+		SetDlgItemText(IDC_BUTTON_LINK, LABLE_STOPLINK);
 		this->ClearAllData();
-		this->mainPage.CreateTimer(TIMER_DIALOG_DRAW);
+		this->mainPage.CreateTimer(TIMER_DIALOG_DRAW, DRAW_GAP);
 		this->OnBnClickedButtonLinktest();
 	}
 }
@@ -357,6 +368,7 @@ void CGCBTestToolDlg::OnTimerSocketLinkTest()
 		this->ShowMessage(PROGRAM_CANT_LINK_SERVER, PROGRAM_STATE_ERROR);
 		if (this->socketISLinking) {                                        // 不能接通，且这个检测是由“连接”按钮触发的
 			GetDlgItem(IDC_BUTTON_LINK)->EnableWindow(true);
+			SetDlgItemText(IDC_BUTTON_LINK, LABLE_LINK);
 			this->socketISLinking = false;
 		}
 	}
@@ -385,30 +397,6 @@ void CGCBTestToolDlg::OnTimerSocketLink()
 	SetTimer(TIMER_SOCKET_LINK_RECV, TIMER_GAP, 0);
 }
 
-int CGCBTestToolDlg::GetFrameTabIndex(const int nIndex)
-{
-	FRAME_CMD_TYPE cmdType = NOZZLE_CARTRIDGE_LEVEL;
-	switch (nIndex)
-	{
-	case 0: cmdType = NOZZLE_CARTRIDGE_LEVEL; break;
-	case 1: cmdType = MODE_LOCKED_SOLENOID_VALVE_WORKING; break;
-	case 2: cmdType = POSITIVE_NEGATIVE_PRESSURE_SOLENOID_VALVE_WORKING; break;
-	case 3: cmdType = INK_SUPPLY_PUMP_WORKING_CONDITION; break;
-	case 4: cmdType = NOZZLE_CABINET_TEMPERATURE; break;
-	case 5: cmdType = AIR_NEGATIVE_PRESSURE_VALUE; break;
-	case 6: cmdType = AIR_POSITIVE_PRESSURE_VALUE; break;
-	default: cmdType = NOZZLE_CARTRIDGE_LEVEL; break;
-	}
-
-	for (int nIndex = 0; nIndex < this->nDialogLen; ++nIndex) {
-		if (this->framePage[nIndex].GetFrameType() == cmdType) {
-			return nIndex + 1;
-		}
-	}
-
-	return -1;
-}
-
 void CGCBTestToolDlg::ClearAllData(void)
 {
 	this->communicationCore.ClearQueueData();
@@ -425,21 +413,30 @@ void CGCBTestToolDlg::ShowMessage(PROGRAM_STATE_CODE stateCode, PROGRAM_STATE_TY
 	switch (stateType)
 	{
 	case PROGRAM_STATE_ERROR:
-		MessageBox(strStateMessage, _T("错误"), MB_ICONERROR | MB_OK);
+		MessageBox(strStateMessage, LABLE_ERROR, MB_ICONERROR | MB_OK);
 		break;
 	case PROGRAM_STATE_WARNING:
-		MessageBox(strStateMessage, _T("警告"), MB_ICONQUESTION | MB_OK);
+		MessageBox(strStateMessage, LABLE_WARNING, MB_ICONQUESTION | MB_OK);
 		break;
 	case PROGRAM_STATE_TIP:
-		MessageBox(strStateMessage, _T("消息"), MB_ICONINFORMATION | MB_OK);
+		MessageBox(strStateMessage, LABLE_TIP, MB_ICONINFORMATION | MB_OK);
 		break;
 	}
 }
 
 bool CGCBTestToolDlg::AddNewFrameTab(const int nIndex)
 {
-	int newTabIndex = 0;
-	if ((newTabIndex = this->GetFrameTabIndex(nIndex)) < 0) {
+	int newTabIndex = -1;
+
+	FRAME_CMD_TYPE cmdType = CommunicateCore::GetCMDIdFromIndex(nIndex);
+	for (int nJndex = 0; nJndex < this->nDialogLen; ++nJndex) {
+		if (this->framePage[nJndex].GetFrameType() == cmdType) {
+			newTabIndex = nJndex + 1;
+			break;
+		}
+	}
+
+	if (newTabIndex < 0) {
 		this->m_FrameTabCtrl.InsertItem(this->nDialogLen + 1, GetLabel(nIndex));
 		this->framePage[this->nDialogLen].SetFrameType(nIndex);             // 设置页面窗口的属性
 		this->framePage[this->nDialogLen].Create(IDD_DETAIL_DIALOG, &this->m_FrameTabCtrl);

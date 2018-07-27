@@ -1,5 +1,11 @@
 ﻿#pragma once
 
+typedef signed short int16_t;
+typedef unsigned short uint16_t;
+
+typedef signed int int32_t;
+typedef unsigned int uint32_t;
+
 enum FRAME_CMD_TYPE
 {
 	NOZZLE_CARTRIDGE_LEVEL = 0x20,
@@ -34,6 +40,8 @@ enum PROGRAM_STATE_CODE
 	PROGRAM_CANT_ANALYSIS,									            	// 无法解析原始命令码
 	PROGRAM_ANALYSIS_ORGIN_DATA,							            	// 解析原始命令码成功
 	PROGRAM_UNLIKING,                                                       // 当前未连接服务器
+	PROGRAM_WRITE_QUEUE,                                                    // 成功写入消息
+	PROGRAM_CANT_WRITE_QUEUE,                                               // 未成功写入消息
 };
 
 enum PROGRAM_STATE_TYPE                                                     // MessageBox的三种状态

@@ -7,7 +7,6 @@ IMPLEMENT_DYNAMIC(GCBSettingDlg, CDialog)
 GCBSettingDlg::GCBSettingDlg(CWnd* pParent)
 	: CDialog(GCBSettingDlg::IDD, pParent)
 {
-
 }
 
 GCBSettingDlg::~GCBSettingDlg()
@@ -108,10 +107,10 @@ void GCBSettingDlg::OnBnClickedOk()
 
 
 	if (bSuccessFlag) {
-		MessageBox(_T("成功写入消息队列"), _T("消息"), MB_ICONINFORMATION | MB_OK);
+		MessageBox(GetStateCodeMessage(PROGRAM_WRITE_QUEUE), LABLE_TIP, MB_ICONINFORMATION | MB_OK);
 	}
 	else {
-		MessageBox(_T("未成功写入消息"), _T("错误"), MB_ICONERROR | MB_OK);
+		MessageBox(GetStateCodeMessage(PROGRAM_CANT_WRITE_QUEUE), LABLE_ERROR, MB_ICONERROR | MB_OK);
 	}
 
 	OnOK();

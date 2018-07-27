@@ -14,7 +14,6 @@ const CString strLabel[] = {
 	_T("模式压喷头墨水"),
 	_T("开启循环电机工作状态"),
 	_T("手动开启锁墨电磁阀状态"),
-
 };
 
 const CString strStateCodeMessage[] = {
@@ -24,6 +23,8 @@ const CString strStateCodeMessage[] = {
 	_T("无法解析原始指令包"),
 	_T("指令包解析成功"),
 	_T("未连接服务器"),
+	_T("成功写入消息队列"),
+	_T("未成功写入消息"),
 };
 
 

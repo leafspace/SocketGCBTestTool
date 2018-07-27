@@ -38,13 +38,13 @@ BOOL GCBMainDlg::OnInitDialog()
 
 	const int nTableHeadNum = 5;
 	const CString strTableHeadLable[] = {
-		_T("墨盒"),
-		_T("继电器"),
-		_T("继电器"),
-		_T("供墨泵"),
-		_T("数据"),
-		_T("数据"),
-		_T("数据")
+		LABLE_INK_BOX,
+		LABLE_RELAY,
+		LABLE_RELAY,
+		LABLE_INK_PUMP,
+		LABLE_DATA,
+		LABLE_DATA,
+		LABLE_DATA
 	};
 	for (int nIndex = 0; nIndex < LIST_NUM; ++nIndex) {
 		CRect rect;
@@ -52,7 +52,7 @@ BOOL GCBMainDlg::OnInitDialog()
 		this->m_List[nIndex].SetExtendedStyle(this->m_List[nIndex].GetExtendedStyle() |
 			LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 
-		this->m_List[nIndex].InsertColumn(0, _T("时间"), LVCFMT_CENTER,
+		this->m_List[nIndex].InsertColumn(0, LABLE_TIME, LVCFMT_CENTER,
 			rect.Width() / nTableHeadNum + 10, 0);
 
 		// 插入表头标题		
@@ -93,29 +93,6 @@ void GCBMainDlg::OnButtonClick(UINT nID)
 
 	// 添加一个页面
 	mainDlg->AddNewFrameTab(nIndex);
-}
-
-CListCtrl* GCBMainDlg::JudgeMessageCMDCtrl(MessageBean beanMessage)
-{
-	switch (beanMessage.GetCMDType())
-	{
-	case NOZZLE_CARTRIDGE_LEVEL:
-		return &this->m_List[0];
-	case MODE_LOCKED_SOLENOID_VALVE_WORKING:
-		return &this->m_List[1];
-	case POSITIVE_NEGATIVE_PRESSURE_SOLENOID_VALVE_WORKING:
-		return &this->m_List[2];
-	case INK_SUPPLY_PUMP_WORKING_CONDITION:
-		return &this->m_List[3];
-	case NOZZLE_CABINET_TEMPERATURE:
-		return &this->m_List[4];
-	case AIR_NEGATIVE_PRESSURE_VALUE:
-		return &this->m_List[5];
-	case AIR_POSITIVE_PRESSURE_VALUE:
-		return &this->m_List[6];
-	default:
-		return NULL;
-	}
 }
 
 void GCBMainDlg::StartDraw(int ControlID)
@@ -203,7 +180,7 @@ void GCBMainDlg::RefreshPage(CommunicateCore* communicationCore)
 		outfile.close();
 
 		// 判断这个Message属于哪个组的命令
-		CListCtrl *beanList = this->JudgeMessageCMDCtrl(beanMessage);
+		CListCtrl *beanList = &this->m_List[CommunicateCore::GetIndexFromCMDId(beanMessage.GetCMDType())];
 		if (beanList == NULL) {
 			continue;
 		}
@@ -238,9 +215,9 @@ void GCBMainDlg::RefreshPage(CommunicateCore* communicationCore)
 	}
 }
 
-void GCBMainDlg::CreateTimer(TIMER_TYPE timer)
+void GCBMainDlg::CreateTimer(TIMER_TYPE timer, int timeGap)
 {
-	SetTimer(timer, DRAW_GAP, 0);
+	SetTimer(timer, timeGap, 0);
 }
 
 void GCBMainDlg::DeleteTimer(TIMER_TYPE timer)
