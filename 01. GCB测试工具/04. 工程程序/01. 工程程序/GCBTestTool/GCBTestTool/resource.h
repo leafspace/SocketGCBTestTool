@@ -66,23 +66,30 @@
 #define IDC_RADIO2                      1053
 #define IDC_RADIO3                      1054
 #define IDC_RADIO4                      1055
-#define IDC_EDIT_NUM1                   1056
-#define IDC_EDIT_NUM2                   1057
-#define IDC_EDIT_NUM3                   1058
-#define IDC_EDIT_NUM4                   1059
-#define IDC_EDIT_NUM5                   1060
-#define IDC_EDIT_NUM6                   1061
-#define IDC_EDIT_NUM7                   1062
-#define IDC_CHECK_ALL                   1063
-#define IDC_CHECK1                      1064
-#define IDC_CHECK2                      1065
-#define IDC_CHECK3                      1066
-#define IDC_CHECK4                      1067
-#define IDC_CHECK5                      1068
-#define IDC_CHECK6                      1069
-#define IDC_CHECK7                      1070
-#define IDC_EDIT_TIMEGAP                1071
-#define IDC_EDIT_DRAWGAP                1072
+#define IDC_EDIT_ADDRESS1               1056
+#define IDC_EDIT_ADDRESS2               1057
+#define IDC_EDIT_ADDRESS3               1058
+#define IDC_EDIT_ADDRESS4               1059
+#define IDC_EDIT_ADDRESS5               1060
+#define IDC_EDIT_ADDRESS6               1061
+#define IDC_EDIT_ADDRESS7               1062
+#define IDC_EDIT_NUM1                   1063
+#define IDC_EDIT_NUM2                   1064
+#define IDC_EDIT_NUM3                   1065
+#define IDC_EDIT_NUM4                   1066
+#define IDC_EDIT_NUM5                   1067
+#define IDC_EDIT_NUM6                   1068
+#define IDC_EDIT_NUM7                   1069
+#define IDC_CHECK_ALL                   1070
+#define IDC_CHECK1                      1071
+#define IDC_CHECK2                      1072
+#define IDC_CHECK3                      1073
+#define IDC_CHECK4                      1074
+#define IDC_CHECK5                      1075
+#define IDC_CHECK6                      1076
+#define IDC_CHECK7                      1077
+#define IDC_EDIT_TIMEGAP                1078
+#define IDC_EDIT_DRAWGAP                1079
 
 // Next default values for new objects
 // 

@@ -37,33 +37,8 @@ BOOL GCBMainDlg::OnInitDialog()
 	CDialog::OnInitDialog();
 
 	this->nDialogLen = 0;
-
-	const int nTableHeadNum = 5;
-	const CString strTableHeadLable[] = {
-		LABLE_INK_BOX,
-		LABLE_RELAY,
-		LABLE_RELAY,
-		LABLE_INK_PUMP,
-		LABLE_DATA,
-		LABLE_DATA,
-		LABLE_DATA
-	};
 	for (int nIndex = 0; nIndex < LIST_NUM; ++nIndex) {
-		CRect rect;
-		this->m_List[nIndex].GetClientRect(&rect); //获得当前listcontrol的宽度
-		this->m_List[nIndex].SetExtendedStyle(this->m_List[nIndex].GetExtendedStyle() |
-			LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
-
-		this->m_List[nIndex].InsertColumn(0, LABLE_TIME, LVCFMT_CENTER,
-			rect.Width() / nTableHeadNum + 10, 0);
-
-		// 插入表头标题		
-		for (int nJIndex = 1; nJIndex < nTableHeadNum; ++nJIndex) {
-			CString labelStr = strTableHeadLable[nIndex];
-			labelStr.Format(_T("%s%d"), labelStr, nJIndex);
-			this->m_List[nIndex].InsertColumn(nJIndex, labelStr, LVCFMT_CENTER,
-				(rect.Width() - 40) / nTableHeadNum, nJIndex);
-		}
+		this->SetListHeadNum(nIndex, 4);
 	}
 
 	// 设置表标题文言
@@ -192,6 +167,19 @@ void GCBMainDlg::StartDraw(int ControlID)
 	CDialog::OnPaint();
 }
 
+void GCBMainDlg::ClearListHead(int nIndex)
+{
+	CHeaderCtrl* pHeaderCtrl = this->m_List[nIndex].GetHeaderCtrl();
+	if (pHeaderCtrl != NULL)
+	{
+		int nColumnCount = pHeaderCtrl->GetItemCount();
+		for (int i=0; i<nColumnCount; i++)
+		{
+			this->m_List[nIndex].DeleteColumn(0);
+		}
+	}
+}
+
 //=============================================================================
 
 GCBDetailFrameDlg *GCBMainDlg::GetFramePage(FRAME_CMD_TYPE cmdType)
@@ -266,6 +254,37 @@ void GCBMainDlg::DeleteTimer(TIMER_TYPE timer)
 void GCBMainDlg::ShowSettingDialog(void)
 {
 	this->gcbSettingPage.DoModal();
+}
+
+void GCBMainDlg::SetListHeadNum(int nIndex, int nNum)
+{
+	const CString strTableHeadLable[] = {
+		LABLE_INK_BOX,
+		LABLE_RELAY,
+		LABLE_RELAY,
+		LABLE_INK_PUMP,
+		LABLE_DATA,
+		LABLE_DATA,
+		LABLE_DATA
+	};
+	int nTableHeadNum = nNum + 1;
+	CRect rect;
+	this->m_List[nIndex].DeleteAllItems();
+	this->ClearListHead(nIndex);
+	this->m_List[nIndex].GetClientRect(&rect); //获得当前listcontrol的宽度
+	this->m_List[nIndex].SetExtendedStyle(this->m_List[nIndex].GetExtendedStyle() |
+		LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
+
+	this->m_List[nIndex].InsertColumn(0, LABLE_TIME, LVCFMT_CENTER,
+		rect.Width() / nTableHeadNum + 10, 0);
+
+	// 插入表头标题		
+	for (int nJIndex = 1; nJIndex < nTableHeadNum; ++nJIndex) {
+		CString labelStr = strTableHeadLable[nIndex];
+		labelStr.Format(_T("%s%d"), labelStr, nJIndex);
+		this->m_List[nIndex].InsertColumn(nJIndex, labelStr, LVCFMT_CENTER,
+			(rect.Width() - 40) / nTableHeadNum, nJIndex);
+	}
 }
 
 void GCBMainDlg::ClearAllData(void)

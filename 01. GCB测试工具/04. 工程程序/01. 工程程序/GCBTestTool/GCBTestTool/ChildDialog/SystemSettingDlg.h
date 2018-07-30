@@ -12,13 +12,16 @@ public:
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
-	virtual BOOL OnInitDialog();
-	afx_msg void OnBnClickedCheckAll();
+	virtual BOOL OnInitDialog(void);
+	afx_msg void OnBnClickedCheckAll(void);
+	afx_msg void OnBnClickedOk(void);
 	DECLARE_MESSAGE_MAP()
 
 private:
 	bool isCheckAll;
 
-public:
-
+	bool SetRequestCheckFlag(void);
+	bool SetRequestBeginAddress(void);
+	bool SetRequestDriveNums(void);
+	bool SetTimerGap(void);
 };

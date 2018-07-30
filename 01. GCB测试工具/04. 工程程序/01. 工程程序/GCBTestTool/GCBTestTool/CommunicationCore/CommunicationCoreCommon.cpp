@@ -179,3 +179,34 @@ int CommunicateCore::GetIndexFromCMDId(const FRAME_CMD_TYPE cmdType)
 
 	return retValue;
 }
+
+bool CommunicateCore::SetRequestBeginAddress(int nIndex, uint16_t uAddress)
+{
+	if (nIndex >= LIST_NUM) {
+		return false;
+	}
+	
+	CommunicateCore::uRequestBeginAddress[nIndex] = uAddress;
+	return true;
+}
+
+bool CommunicateCore::SetRequestDriveNums(int nIndex, uint16_t uDriveNums)
+{
+	if (nIndex >= LIST_NUM) {
+		return false;
+	}
+
+	CommunicateCore::uRequestDriveNums[nIndex] = uDriveNums;
+	return true;
+
+}
+
+bool CommunicateCore::SetRequestFlag(int nIndex, bool bFlag)
+{
+	if (nIndex >= LIST_NUM) {
+		return false;
+	}
+	
+	CommunicateCore::bRequestFlag[nIndex] = bFlag;
+	return true;
+}

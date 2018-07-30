@@ -19,20 +19,20 @@ bool CommunicateCore::InisSocketLink(CString ipAddress, int port)
 
 bool CommunicateCore::SendRequestMessage()
 {
-	list<BYTE> sendMsgLst[LIST_NUM];
-	const uint16_t beginAddress[] = { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 };
-	const uint16_t driveNums[] = { 2, 2, 2, 2, 2, 2, 1 };
-
 	// 全部类型发送一遍请求数据
 	// 临时设置为7个数(下行)
 
 	bool bIsSuccess = true;
 	for (int nIndex = 0; nIndex < LIST_NUM; ++nIndex) {
+		if (CommunicateCore::bRequestFlag[nIndex] == false) {
+			continue;
+		}
+
 		list<BYTE> sendMsg;
 		MessageBean beanMessage;
 
 		sendMsg = CommunicateCore::CreateMessage(CommunicateCore::GetCMDIdFromIndex(nIndex),
-			beginAddress[nIndex], driveNums[nIndex]);
+			CommunicateCore::uRequestBeginAddress[nIndex], CommunicateCore::uRequestDriveNums[nIndex]);
 
 		beanMessage.SetOrginDataList(sendMsg);
 		beanMessage.AnalysisOrginDataLst();

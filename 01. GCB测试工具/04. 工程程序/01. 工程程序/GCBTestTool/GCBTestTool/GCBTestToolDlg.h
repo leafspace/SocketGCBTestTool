@@ -1,10 +1,10 @@
 ﻿#pragma once
 
-#define LIST_NUM			7                                               // 一个GCB板需要监控的表格个数
 #define GCB_NUM				50                                              // 做多能控制多少个GCB板子
 #define TOPBAR_SIZE			20                                              // 顶端标签到边缘的大小
 #define SCROLLBAR_MIN		0                                               // Scroll Bar最小值
-#define SCROLLBAR_MAX		530                                             // Scroll Bar最大值
+#define SCROLLBAR_MAX_MAIN	620                                             // Scroll Bar最大值
+#define SCROLLBAR_MAX_DETA	0                                               // Scroll Bar最大值
 #define TIMER_OUT			3000                                            // 超时
 #define TIMER_GAP			1000                                            // 时间间隔
 #define DRAW_GAP			3000                                            // 绘画的时间间隔
@@ -97,4 +97,6 @@ public:
 
 	bool ChangeTabCtrl(const int newIndex);                                 // 更改Tab Control显示的页面
 	bool ChangeTabCtrl(const GCBDetailFrameDlg *tabPage);                   // 更改Tab Control显示的页面
+
+	void SetMainPageListHeadNum(int nIndex, int nNum);
 };

@@ -1,6 +1,10 @@
 ﻿#include "stdafx.h"
 #include "CommunicationCore.h"
 
+uint16_t CommunicateCore::uRequestBeginAddress[LIST_NUM] = { 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 };
+uint16_t CommunicateCore::uRequestDriveNums[LIST_NUM] = { 2, 2, 2, 2, 2, 2, 1 };
+bool CommunicateCore::bRequestFlag[LIST_NUM] = { true, true, true, true, true, true, true };
+
 CommunicateCore::CommunicateCore()
 {
 	this->InitCoreData();

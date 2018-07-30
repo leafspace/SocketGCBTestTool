@@ -37,6 +37,7 @@ private:
 	GCBSettingDlg gcbSettingPage;                                           // 板卡设置页面
 	
 	void StartDraw(int ControlID);                                          // 开启一次绘画
+	void ClearListHead(int nIndex);
 public:
 	GCBDetailFrameDlg *GetFramePage(FRAME_CMD_TYPE cmdType);                // 按照类型获取详细页面指针
 
@@ -45,5 +46,7 @@ public:
 	void DeleteTimer(TIMER_TYPE timer);                                     // 删除绘图定时器
 
 	void ShowSettingDialog(void);                                           // 弹出设置页面
+
+	void SetListHeadNum(int nIndex, int nNum);
 	void ClearAllData(void);                                                // 清除所有数据
 };

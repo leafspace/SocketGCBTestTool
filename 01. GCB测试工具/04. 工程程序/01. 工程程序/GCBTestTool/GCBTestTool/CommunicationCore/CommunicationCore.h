@@ -5,6 +5,8 @@
 #define BYTE2(dwTemp)       (*((char *)(&dwTemp) + 2))                      // 获取某个数的第三个字节 从最低位开始
 #define BYTE3(dwTemp)       (*((char *)(&dwTemp) + 3))                      // 获取某个数的第四个字节 从最低位开始
 
+#define LIST_NUM			7                                               // 一个GCB板需要监控的表格个数
+
 #include "../SocketLink/SocketLink.h"
 #include "../StateTable/StateTable.h"
 #include "../SocketLink/MessageQueue/MessageQueue.h"
@@ -21,6 +23,10 @@ private:
 	StateTable threadStateTable;                                            // 线程运行状态表
 	MessageQueue recvMessageQueue;                                          // 该Socket连接接收到的消息队列
 	MessageQueue sendMessageQueue;                                          // 该Socket连接未发送的消息队列
+
+	static uint16_t uRequestBeginAddress[LIST_NUM];
+	static uint16_t uRequestDriveNums[LIST_NUM];
+	static bool bRequestFlag[LIST_NUM];
 public:
 	CommunicateCore(void);
 	~CommunicateCore(void);
@@ -34,6 +40,10 @@ public:
 
 	static FRAME_CMD_TYPE GetCMDIdFromIndex(const int nIndex);
 	static int GetIndexFromCMDId(const FRAME_CMD_TYPE cmdType);
+
+	static bool SetRequestBeginAddress(int nIndex, uint16_t uAddress);
+	static bool SetRequestDriveNums(int nIndex, uint16_t uDriveNums);
+	static bool SetRequestFlag(int nIndex, bool bFlag);
 
 	void InitCoreData(void);                                                // 初始化核心数据
 	void ClearCoreData(void);                                               // 清除核心数据

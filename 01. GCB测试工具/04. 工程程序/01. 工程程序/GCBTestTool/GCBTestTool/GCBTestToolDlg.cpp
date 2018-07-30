@@ -122,7 +122,7 @@ BOOL CGCBTestToolDlg::OnInitDialog()
 	this->pDialog[0]->ShowWindow(SW_SHOW);
 
 	// 滑块移动的位置为0——1000
-	this->m_DlgScrollBar.SetScrollRange(SCROLLBAR_MIN, SCROLLBAR_MAX);
+	this->m_DlgScrollBar.SetScrollRange(SCROLLBAR_MIN, SCROLLBAR_MAX_MAIN);
 
 	// 设置输入框的默认参数
 	SetDlgItemText(IDC_GCB_EDIT_IPADDRESS, GCB_IP_ADDRESS);
@@ -213,8 +213,9 @@ void CGCBTestToolDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 	}
 
 	// 滑轮滚动超过最大值
-	if (nCurpos > SCROLLBAR_MAX) {
-		nCurpos = SCROLLBAR_MAX;
+	int nScrollBarMax = this->nCurSelTab == 0 ? SCROLLBAR_MAX_MAIN : SCROLLBAR_MAX_DETA;
+	if (nCurpos > nScrollBarMax) {
+		nCurpos = nScrollBarMax;
 	}
 	else if (nCurpos < SCROLLBAR_MIN) {
 		nCurpos = SCROLLBAR_MIN;
@@ -447,6 +448,9 @@ bool CGCBTestToolDlg::ChangeTabCtrl(const int newIndex)
 	this->pDialog[this->nCurSelTab]->ShowWindow(SW_HIDE);
 	this->nCurSelTab = newIndex;
 	this->pDialog[this->nCurSelTab]->ShowWindow(SW_SHOW);
+
+	int nScrollBarMax = this->nCurSelTab == 0 ? SCROLLBAR_MAX_MAIN : SCROLLBAR_MAX_DETA;
+	this->m_DlgScrollBar.SetScrollRange(SCROLLBAR_MIN, nScrollBarMax);
 	return true;
 }
 
@@ -461,3 +465,7 @@ bool CGCBTestToolDlg::ChangeTabCtrl(const GCBDetailFrameDlg *tabPage)
 	return true;
 }
 
+void CGCBTestToolDlg::SetMainPageListHeadNum(int nIndex, int nNum)
+{
+	this->mainPage.SetListHeadNum(nIndex, nNum);
+}

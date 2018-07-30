@@ -17,7 +17,8 @@
         "initializer_list": "cpp",
         "exception": "cpp",
         "iomanip": "cpp",
-        "*.rh": "cpp"
+        "*.rh": "cpp",
+        "fstream": "cpp"
     },
     "todohighlight.include": [
         "**/*.js",
