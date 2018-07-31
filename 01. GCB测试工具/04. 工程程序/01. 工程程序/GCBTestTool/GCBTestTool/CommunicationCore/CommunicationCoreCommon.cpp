@@ -49,10 +49,10 @@ list<BYTE> CommunicateCore::CreateMessage(const BYTE cmdID, const uint16_t uRegi
 	retLst.push_back(BYTE0(uRegisterAddress));
 	retLst.push_back(BYTE1(uRegisterAddress));
 
-	retLst.push_back(BYTE0(uReadNum));
-	retLst.push_back(BYTE1(uReadNum));
-	retLst.push_back(BYTE2(uReadNum));
 	retLst.push_back(BYTE3(uReadNum));
+	retLst.push_back(BYTE2(uReadNum));
+	retLst.push_back(BYTE1(uReadNum));
+	retLst.push_back(BYTE0(uReadNum));
 
 	// Tail
 	retLst.push_back(0xEC);

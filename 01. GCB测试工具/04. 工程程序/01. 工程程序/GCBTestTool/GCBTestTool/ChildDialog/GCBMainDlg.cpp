@@ -209,7 +209,7 @@ void GCBMainDlg::RefreshPage(CommunicateCore* communicationCore)
 		// 判断这个Message属于哪个组的命令
 		int nCMDID = CommunicateCore::GetIndexFromCMDId(beanMessage.GetCMDType());
 		CListCtrl *beanList = &this->m_List[nCMDID];
-		if (beanList == NULL || nCMDID >= 7) {
+		if (beanList == NULL) {
 			continue;
 		}
 

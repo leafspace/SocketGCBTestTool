@@ -72,12 +72,15 @@ DWORD WINAPI ThreadSocketLinkRecv(LPVOID lpParamter)
 				if (rOrders[nIndex] == 0xEC) {
 					nEnIndex = nIndex;
 
-					// 将原始指令数据封装成对象
-					MessageBean recvedMessageBean;
-					recvedMessageBean.SetOrginDataList(&rOrders[nBeIndex], nEnIndex - nBeIndex + 1);
-					PROGRAM_STATE_CODE retStateCode = recvedMessageBean.AnalysisOrginDataLst();
-					if (retStateCode == PROGRAM_ANALYSIS_ORGIN_DATA) {
-						communicationCore->GetRecvMessageQueue()->Push_back(recvedMessageBean);
+					// 能够接收的消息
+					if (rOrders[nBeIndex + 2] < NEGATIVE_PRESSURE_OUTPUT_VALUE_NOZZLE) {
+						// 将原始指令数据封装成对象
+						MessageBean recvedMessageBean;
+						recvedMessageBean.SetOrginDataList(&rOrders[nBeIndex], nEnIndex - nBeIndex + 1);
+						PROGRAM_STATE_CODE retStateCode = recvedMessageBean.AnalysisOrginDataLst();
+						if (retStateCode == PROGRAM_ANALYSIS_ORGIN_DATA) {
+							communicationCore->GetRecvMessageQueue()->Push_back(recvedMessageBean);
+						}
 					}
 
 					nBeIndex = 0;
