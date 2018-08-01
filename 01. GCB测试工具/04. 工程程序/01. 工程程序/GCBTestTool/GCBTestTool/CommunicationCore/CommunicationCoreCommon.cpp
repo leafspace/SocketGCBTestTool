@@ -216,7 +216,7 @@ void CommunicateCore::GetTimeStr(CString *timeStr)
 {
 	SYSTEMTIME sys;
 	GetLocalTime(&sys);
-	timeStr->Format(_T("%4d-%02d-%02d %02d:%02d:%02d "), sys.wYear, sys.wMonth, sys.wDay, sys.wHour, sys.wMinute, sys.wSecond);
+	timeStr->Format(_T("%4d-%02d-%02d \t %02d:%02d:%02d "), sys.wYear, sys.wMonth, sys.wDay, sys.wHour, sys.wMinute, sys.wSecond);
 }
 
 void CommunicateCore::WriteTimeStr(ofstream &outfile)

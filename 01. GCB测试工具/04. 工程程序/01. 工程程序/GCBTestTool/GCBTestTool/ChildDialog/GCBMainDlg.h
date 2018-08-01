@@ -25,7 +25,8 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 	virtual BOOL OnInitDialog();
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
-	afx_msg void OnButtonClick(UINT nID);
+	afx_msg void OnButtonClickExport(UINT nID);
+	afx_msg void OnButtonClickDetail(UINT nID);
 	DECLARE_MESSAGE_MAP()
 
 private:

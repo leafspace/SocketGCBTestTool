@@ -26,7 +26,8 @@ void GCBMainDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(GCBMainDlg, CDialog)
 	ON_WM_TIMER()
-	ON_CONTROL_RANGE(BN_CLICKED, IDC_DETAIL_BUTTON1, IDC_DETAIL_BUTTON12, OnButtonClick)
+	ON_CONTROL_RANGE(BN_CLICKED, IDC_EXPORT_BUTTON1, IDC_EXPORT_BUTTON7, OnButtonClickExport)
+	ON_CONTROL_RANGE(BN_CLICKED, IDC_DETAIL_BUTTON1, IDC_DETAIL_BUTTON7, OnButtonClickDetail)
 END_MESSAGE_MAP()
 
 
@@ -62,8 +63,37 @@ void GCBMainDlg::OnTimer(UINT_PTR nIDEvent)
 }
 
 //=============================================================================
+void GCBMainDlg::OnButtonClickExport(UINT nID)
+{
+	int nIndex = nID - IDC_EXPORT_BUTTON1;
+	CString filePath;
 
-void GCBMainDlg::OnButtonClick(UINT nID)
+	CFileDialog fileDlg(FALSE, _T("csv"), _T("output"), OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, 
+		_T("Excel File(*.csv)|*.csv|ALL File(*.*)|*.*||"), this);
+	int chooseID = fileDlg.DoModal();                                       // 开始弹窗
+	if (chooseID == IDOK) {
+		filePath = fileDlg.GetPathName();
+	}
+	else if (chooseID == IDCANCEL) {
+		return;
+	}
+
+	CString itemStr;
+	ofstream outfile(filePath);
+	for (int nRows = 0; nRows < this->m_List[nIndex].GetItemCount(); ++nRows) {
+		for (int nCols = 0; nCols < this->m_List[nIndex].GetHeaderCtrl()->GetItemCount(); ++nCols) {
+			itemStr = this->m_List[nIndex].GetItemText(nRows, nCols);
+			CT2CA ta(itemStr);
+			outfile << ta.m_psz << ",";
+		}
+		outfile << endl;
+	}
+
+	outfile.close();
+	
+}
+
+void GCBMainDlg::OnButtonClickDetail(UINT nID)
 {
 	int nIndex = nID - IDC_DETAIL_BUTTON1;
 	CGCBTestToolDlg *pMainDlg = (CGCBTestToolDlg*)(AfxGetApp()->GetMainWnd());
