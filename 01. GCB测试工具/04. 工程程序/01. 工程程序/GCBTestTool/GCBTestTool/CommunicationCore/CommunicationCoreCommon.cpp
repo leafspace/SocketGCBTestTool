@@ -230,4 +230,5 @@ void CommunicateCore::WriteTimeStr(ofstream &outfile)
 	outfile << setw(2) << setfill('0') << sys.wHour << ":";
 	outfile << setw(2) << setfill('0') << sys.wMinute << ":";
 	outfile << setw(2) << setfill('0') << sys.wSecond << " ";
+	outfile << "\t";
 }

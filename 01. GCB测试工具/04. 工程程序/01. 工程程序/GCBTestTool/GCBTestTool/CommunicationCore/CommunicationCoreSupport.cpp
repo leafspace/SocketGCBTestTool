@@ -89,7 +89,6 @@ bool CommunicateCore::WriteLog(ofstream &outfile, MessageBean beanMessage, CStri
 	CommunicateCore::GetTimeStr(timeStr);
 	CommunicateCore::WriteTimeStr(outfile);
 
-	outfile << "\t";
 	outfile << "0x" << hex << beanMessage.GetCMDType() << "\t:\t";
 
 	short formatSize = this->GetFormatSize(beanMessage.GetCMDType());
