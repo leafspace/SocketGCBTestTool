@@ -86,17 +86,8 @@ bool CommunicateCore::WriteLog(ofstream &outfile, MessageBean beanMessage, CStri
 		return false;
 	}
 
-	SYSTEMTIME sys;
-	GetLocalTime(&sys);
-
-	timeStr->Format(_T("%4d-%02d-%02d %02d:%02d:%02d "), sys.wYear, sys.wMonth, sys.wDay, sys.wHour, sys.wMinute, sys.wSecond);
-
-	outfile << setw(4) << setfill('0') << sys.wYear << "-";
-	outfile << setw(2) << setfill('0') << sys.wMonth << "-";
-	outfile << setw(2) << setfill('0') << sys.wDay << " ";
-	outfile << setw(2) << setfill('0') << sys.wHour << ":";
-	outfile << setw(2) << setfill('0') << sys.wMinute << ":";
-	outfile << setw(2) << setfill('0') << sys.wSecond << " ";
+	CommunicateCore::GetTimeStr(timeStr);
+	CommunicateCore::WriteTimeStr(outfile);
 
 	outfile << "\t";
 	outfile << "0x" << hex << beanMessage.GetCMDType() << "\t:\t";

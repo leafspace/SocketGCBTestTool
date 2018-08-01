@@ -56,6 +56,7 @@ DWORD WINAPI ThreadSocketLinkRecv(LPVOID lpParamter)
 
 			// 将接收到的原始数据写入log
 			ofstream outfile("orgin.log", ios::app);
+			
 			for (int nIndex = 0; nIndex < nLen; ++nIndex) {
 				outfile << "0x" << hex << setw(2) << setfill('0') << (int)rOrders[nIndex] << " ";
 			}

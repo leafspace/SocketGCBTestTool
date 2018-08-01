@@ -45,6 +45,9 @@ public:
 	static bool SetRequestDriveNums(int nIndex, uint16_t uDriveNums);
 	static bool SetRequestFlag(int nIndex, bool bFlag);
 
+	static void GetTimeStr(CString *timeStr);
+	static void WriteTimeStr(ofstream &outfile);
+
 	void InitCoreData(void);                                                // 初始化核心数据
 	void ClearCoreData(void);                                               // 清除核心数据
 

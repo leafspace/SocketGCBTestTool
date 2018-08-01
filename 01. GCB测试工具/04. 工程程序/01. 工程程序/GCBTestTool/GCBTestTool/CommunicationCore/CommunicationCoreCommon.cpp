@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "CommunicationCore.h"
+#include "../GCBTestToolDlg.h"
 
 list<BYTE> CommunicateCore::CreateMessage(const BYTE cmdID, const uint16_t uRegisterAddress, const uint16_t uReadNum)
 {
@@ -209,4 +210,24 @@ bool CommunicateCore::SetRequestFlag(int nIndex, bool bFlag)
 	
 	CommunicateCore::bRequestFlag[nIndex] = bFlag;
 	return true;
+}
+
+void CommunicateCore::GetTimeStr(CString *timeStr)
+{
+	SYSTEMTIME sys;
+	GetLocalTime(&sys);
+	timeStr->Format(_T("%4d-%02d-%02d %02d:%02d:%02d "), sys.wYear, sys.wMonth, sys.wDay, sys.wHour, sys.wMinute, sys.wSecond);
+}
+
+void CommunicateCore::WriteTimeStr(ofstream &outfile)
+{
+	SYSTEMTIME sys;
+	GetLocalTime(&sys);
+
+	outfile << setw(4) << setfill('0') << sys.wYear << "-";
+	outfile << setw(2) << setfill('0') << sys.wMonth << "-";
+	outfile << setw(2) << setfill('0') << sys.wDay << "\t";
+	outfile << setw(2) << setfill('0') << sys.wHour << ":";
+	outfile << setw(2) << setfill('0') << sys.wMinute << ":";
+	outfile << setw(2) << setfill('0') << sys.wSecond << " ";
 }

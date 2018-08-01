@@ -79,12 +79,9 @@ void GCBDetailFrameDlg::AddMessageBean(MessageBean beanMessage)
 	this->histroyLst.push_back(beanMessage);
 
 	CString tempStr;
-
+	CommunicateCore::GetTimeStr(&tempStr);
+	
 	this->m_List.InsertItem(0, tempStr);                                    // 插入一行数据
-
-	SYSTEMTIME sys;
-	GetLocalTime(&sys);
-	tempStr.Format(_T("%4d-%02d-%02d %02d:%02d:%02d "), sys.wYear, sys.wMonth, sys.wDay, sys.wHour, sys.wMinute, sys.wSecond);
 	this->m_List.SetItemText(0, 0, tempStr);
 
 	tempStr.Format(_T("0x%x"), beanMessage.GetCMDType());

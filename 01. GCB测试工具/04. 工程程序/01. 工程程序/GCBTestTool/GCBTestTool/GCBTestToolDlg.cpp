@@ -294,6 +294,7 @@ void CGCBTestToolDlg::OnBnClickedButtonLink()
 		this->communicationCore.CloseAllThread();
 		this->communicationCore.CloseSocketLink();
 		this->mainPage.DeleteTimer(TIMER_DIALOG_DRAW);
+		GetDlgItem(IDC_BUTTON_LINKTEST)->EnableWindow(true);
 	}
 	else {
 		this->socketISLinking = true;
@@ -358,19 +359,17 @@ void CGCBTestToolDlg::OnTimerSocketLinkTest()
 	else {
 		this->ShowMessage(PROGRAM_CANT_LINK_SERVER, PROGRAM_STATE_ERROR);
 		if (this->socketISLinking) {                                        // 不能接通，且这个检测是由“连接”按钮触发的
-			GetDlgItem(IDC_BUTTON_LINK)->EnableWindow(true);
 			SetDlgItemText(IDC_BUTTON_LINK, LABLE_LINK);
 			this->socketISLinking = false;
 		}
 	}
 
-	// 如果结束了就设置按钮可以使用且输出状态
-	GetDlgItem(IDC_BUTTON_LINKTEST)->EnableWindow(true);
-
 	if (bIsSuccess && this->socketISLinking) {
 		this->OnTimerSocketLink();
 	}
 	else {
+		// 如果结束了就设置按钮可以使用且输出状态
+		GetDlgItem(IDC_BUTTON_LINKTEST)->EnableWindow(true);
 		this->communicationCore.CloseSocketLink();
 	}
 }
