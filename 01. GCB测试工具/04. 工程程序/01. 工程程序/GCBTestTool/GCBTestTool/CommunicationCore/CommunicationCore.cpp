@@ -78,3 +78,8 @@ MessageQueue* CommunicateCore::GetSendMessageQueue(void)
 {
 	return &this->sendMessageQueue;
 }
+
+MessageQueue* CommunicateCore::GetRecvSetMessageQueue(void)
+{
+	return &this->recvSetMessageQueue;
+}

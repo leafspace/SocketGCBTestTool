@@ -23,6 +23,7 @@ private:
 	StateTable threadStateTable;                                            // 线程运行状态表
 	MessageQueue recvMessageQueue;                                          // 该Socket连接接收到的消息队列
 	MessageQueue sendMessageQueue;                                          // 该Socket连接未发送的消息队列
+	MessageQueue recvSetMessageQueue;                                       // 该Socket连接接收到的关于设置的返回消息
 
 	static uint16_t uRequestBeginAddress[LIST_NUM];
 	static uint16_t uRequestDriveNums[LIST_NUM];
@@ -63,6 +64,7 @@ public:
 	StateTable* GetStateTable(void);                                        // 获取状态表对象
 	MessageQueue* GetRecvMessageQueue(void);                                // 获取消息队列对象
 	MessageQueue* GetSendMessageQueue(void);                                // 获取消息队列对象
+	MessageQueue* GetRecvSetMessageQueue(void);                             // 获取设置消息队列对象
 
 	bool InisSocketLink(string ipAddress, int port);
 	bool InisSocketLink(CString ipAddress, int port);

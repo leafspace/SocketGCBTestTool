@@ -48,7 +48,7 @@ bool CommunicateCore::SendRequestMessage(const MessageBean beanMessage)
 
 bool CommunicateCore::RecvResponseMessage(MessageBean *beanMessage)
 {
-	return  this->recvMessageQueue.Pop_front(beanMessage);
+	return this->recvMessageQueue.Pop_front(beanMessage);
 }
 
 bool CommunicateCore::HaveRecvMessageResidual(void)
@@ -95,8 +95,8 @@ bool CommunicateCore::WriteLog(ofstream &outfile, MessageBean beanMessage, CStri
 	list<BYTE> beanPLst = beanMessage.GetParameterList();
 	list<BYTE>::iterator iterP = beanPLst.begin();
 
-	iterP++;
-	iterP++;
+	iterP++;                                                                // 忽略寄存器地址
+	iterP++;                                                                // 忽略寄存器地址
 
 	for (int nIndex = 0; nIndex < (beanMessage.GetParameterSize() - 2) / formatSize; ++nIndex) {
 

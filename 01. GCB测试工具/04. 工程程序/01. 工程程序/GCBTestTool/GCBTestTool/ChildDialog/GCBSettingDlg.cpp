@@ -7,6 +7,7 @@ IMPLEMENT_DYNAMIC(GCBSettingDlg, CDialog)
 GCBSettingDlg::GCBSettingDlg(CWnd* pParent)
 	: CDialog(GCBSettingDlg::IDD, pParent)
 {
+	this->sendOrderNums = 0;
 }
 
 GCBSettingDlg::~GCBSettingDlg()
@@ -16,13 +17,26 @@ GCBSettingDlg::~GCBSettingDlg()
 void GCBSettingDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_PROGRESS_SET, mProCtrl);
 }
 
 
 BEGIN_MESSAGE_MAP(GCBSettingDlg, CDialog)
+	ON_WM_TIMER()
 	ON_BN_CLICKED(IDOK, &GCBSettingDlg::OnBnClickedOk)
 END_MESSAGE_MAP()
 
+void GCBSettingDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	switch (nIDEvent)
+	{
+	case TIMER_DIALOG_SET:
+		this->CheckRecv();
+		break;
+	default:
+		KillTimer(nIDEvent);
+	}
+}
 
 void GCBSettingDlg::OnBnClickedOk()
 {
@@ -63,6 +77,7 @@ void GCBSettingDlg::OnBnClickedOk()
 		tempMessageBean.AnalysisOrginDataLst();
 		bool isSuccess = communicationCore->SendRequestMessage(tempMessageBean);
 		bSuccessFlag = bSuccessFlag & isSuccess;
+		this->sendOrderNums++;
 	}
 
 	int nCheckID = 0;
@@ -82,6 +97,7 @@ void GCBSettingDlg::OnBnClickedOk()
 		tempMessageBean.AnalysisOrginDataLst();
 		bool isSuccess = communicationCore->SendRequestMessage(tempMessageBean);
 		bSuccessFlag = bSuccessFlag & isSuccess;
+		this->sendOrderNums++;
 	}
 
 	if ((nCheckID = GetCheckedRadioButton(IDC_RADIO3, IDC_RADIO4)) != 0) {
@@ -103,16 +119,67 @@ void GCBSettingDlg::OnBnClickedOk()
 		tempMessageBean.AnalysisOrginDataLst();
 		bool isSuccess = communicationCore->SendRequestMessage(tempMessageBean);
 		bSuccessFlag = bSuccessFlag & isSuccess;
+		this->sendOrderNums++;
 	}
 
-
+	this->mProCtrl.SetRange(0, 100);
 	if (bSuccessFlag) {
 		MessageBox(GetStateCodeMessage(PROGRAM_WRITE_QUEUE), LABLE_TIP, MB_ICONINFORMATION | MB_OK);
+		SetDlgItemText(IDC_EDIT_LOG, GetStateCodeMessage(PROGRAM_WRITE_QUEUE) + _T("\r\n"));
+
+		CString tempStr;
+		this->proStep = (int)(100 / (1 + this->sendOrderNums));
+		tempStr.Format(_T("%2d%%"), this->proStep);
+		SetDlgItemText(IDC_STATIC_PERCENT, tempStr);
+
+		SetTimer(TIMER_DIALOG_SET, TIMER_GAP, 0);
+		this->mProCtrl.SetStep(this->proStep);
+		this->mProCtrl.StepIt();
 	}
 	else {
 		MessageBox(GetStateCodeMessage(PROGRAM_CANT_WRITE_QUEUE), LABLE_ERROR, MB_ICONERROR | MB_OK);
+		OnOK();
 	}
-
-	OnOK();
 }
 
+void GCBSettingDlg::CheckRecv(void)
+{
+	if (this->sendOrderNums == 0) {
+		OnOK();
+	}
+
+	CommunicateCore *communicationCore = NULL;
+	CGCBTestToolDlg *pMainDlg = (CGCBTestToolDlg*)(AfxGetApp()->GetMainWnd());
+	if (pMainDlg) {
+		communicationCore = pMainDlg->GetCommunicateCore();
+	}
+	if (communicationCore == NULL) {
+		return;
+	}
+
+	MessageQueue* messageQueue = communicationCore->GetRecvSetMessageQueue();
+	while (!messageQueue->IsEmpty() && this->sendOrderNums != 0) {
+		MessageBean messageBean;
+		messageQueue->Pop_front(&messageBean);
+
+		CString orginStr, tempStr;
+		GetDlgItemText(IDC_EDIT_LOG, orginStr);
+
+		list<BYTE> dataList = messageBean.GetOrginDataList();
+		for (list<BYTE>::iterator iter = dataList.begin(); iter != dataList.end(); ++iter) {
+			tempStr.Format(_T("0x%x "), *iter);
+			orginStr = orginStr + tempStr;
+		}
+		orginStr = orginStr + _T("\r\n");
+		SetDlgItemText(IDC_EDIT_LOG, orginStr);
+		CEdit *mLogEdit = (CEdit *)GetDlgItem(IDC_EDIT_LOG);
+		mLogEdit->SetSel(-1);
+
+		this->sendOrderNums--;
+
+		tempStr.Format(_T("%2d%%"), (int)(100 / (1 + this->sendOrderNums)));
+		SetDlgItemText(IDC_STATIC_PERCENT, tempStr);
+		this->mProCtrl.SetStep(this->proStep);
+		this->mProCtrl.StepIt();
+	}
+}
