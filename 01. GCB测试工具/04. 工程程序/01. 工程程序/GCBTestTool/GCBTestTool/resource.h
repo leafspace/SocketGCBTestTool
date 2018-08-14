@@ -56,10 +56,15 @@
 #define IDC_DETAIL_BUTTON9              1043
 #define IDC_STATIC_PERCENT              1043
 #define IDC_DETAIL_BUTTON10             1044
+#define IDC_EDIT4                       1044
 #define IDC_DETAIL_BUTTON11             1045
+#define IDC_EDIT5                       1045
 #define IDC_DETAIL_BUTTON12             1046
+#define IDC_EDIT6                       1046
 #define IDC_DETAIL_BUTTON13             1047
+#define IDC_EDIT7                       1047
 #define IDC_DETAIL_BUTTON14             1048
+#define IDC_EDIT8                       1048
 #define IDC_EXPORT_BUTTON1              1049
 #define IDC_EXPORT_BUTTON2              1050
 #define IDC_EXPORT_BUTTON3              1051
@@ -109,7 +114,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        133
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1044
+#define _APS_NEXT_CONTROL_VALUE         1049
 #define _APS_NEXT_SYMED_VALUE           105
 #endif
 #endif

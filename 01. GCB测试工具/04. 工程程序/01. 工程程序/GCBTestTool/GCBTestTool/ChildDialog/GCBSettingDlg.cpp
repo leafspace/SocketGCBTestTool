@@ -40,7 +40,7 @@ void GCBSettingDlg::OnTimer(UINT_PTR nIDEvent)
 
 void GCBSettingDlg::OnBnClickedOk()
 {
-	CString inputStr;
+	CString reAddress, inputStr;
 	list<BYTE> retLsg;
 	bool bSuccessFlag = true;
 	CommunicateCore *communicationCore = NULL;
@@ -53,6 +53,7 @@ void GCBSettingDlg::OnBnClickedOk()
 	}
 
 	for (int nIndexID = IDC_EDIT1; nIndexID <= IDC_EDIT3; ++nIndexID) {
+		GetDlgItemText(nIndexID + (IDC_EDIT4 - IDC_EDIT1), reAddress);
 		GetDlgItemText(nIndexID, inputStr);
 		if (inputStr.GetLength() == 0) {
 			continue;
@@ -61,13 +62,13 @@ void GCBSettingDlg::OnBnClickedOk()
 		switch (nIndexID)
 		{
 		case IDC_EDIT1:
-			retLsg = CommunicateCore::CreateMessage(NEGATIVE_PRESSURE_OUTPUT_VALUE_NOZZLE, 0x0000, (float)_tstof(inputStr));
+			retLsg = CommunicateCore::CreateMessage(NEGATIVE_PRESSURE_OUTPUT_VALUE_NOZZLE, (uint16_t)(_tstoi(reAddress) - 1), (float)_tstof(inputStr));
 			break;
 		case IDC_EDIT2:
-			retLsg = CommunicateCore::CreateMessage(INK_MOTOR_DELAY_TIME, 0x0000, (float)(_tstof(inputStr) * 10));
+			retLsg = CommunicateCore::CreateMessage(INK_MOTOR_DELAY_TIME, (uint16_t)(_tstoi(reAddress) - 1), (float)(_tstof(inputStr) * 10));
 			break;
 		case IDC_EDIT3:
-			retLsg = CommunicateCore::CreateMessage(MODE_PRESSURE_NOZZLE_INK, 0x0000, (uint16_t)(_tstoi(inputStr) - 1));
+			retLsg = CommunicateCore::CreateMessage(MODE_PRESSURE_NOZZLE_INK, (uint16_t)(_tstoi(reAddress) - 1), (uint16_t)(_tstoi(inputStr) - 1));
 			break;
 		default: break;
 		}
@@ -84,7 +85,8 @@ void GCBSettingDlg::OnBnClickedOk()
 	uint16_t uAddress, uValue;
 
 	if ((nCheckID = GetCheckedRadioButton(IDC_RADIO1, IDC_RADIO2)) != 0) {
-		uAddress = 0x0000;
+		GetDlgItemText(IDC_EDIT7, reAddress);
+		uAddress = (uint16_t)(_tstoi(reAddress) - 1);
 		if (nCheckID == IDC_RADIO1) {
 			uValue = 0x0000;
 		}
@@ -105,10 +107,11 @@ void GCBSettingDlg::OnBnClickedOk()
 			uAddress = 0xffff;
 		}
 		else {
+			GetDlgItemText(IDC_EDIT8, reAddress);
 			uAddress = 0x0000;
 		}
 		if (nCheckID == IDC_RADIO3) {
-			uValue = 0x0000;
+			uValue = (uint16_t)(_tstoi(reAddress) - 1);
 		}
 		else {
 			uValue = 0xffff;
