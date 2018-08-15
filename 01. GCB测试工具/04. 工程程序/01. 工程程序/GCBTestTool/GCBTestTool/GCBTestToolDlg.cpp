@@ -56,6 +56,7 @@ BEGIN_MESSAGE_MAP(CGCBTestToolDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_GCB_SETTING, &CGCBTestToolDlg::OnBnClickedButtonGcbSetting)
 	ON_BN_CLICKED(IDC_BUTTON_SYSTEM_SETTING, &CGCBTestToolDlg::OnBnClickedButtonSystemSetting)
 	ON_BN_CLICKED(IDC_BUTTON_CLEARDATA, &CGCBTestToolDlg::OnBnClickedButtonCleardata)
+	ON_BN_CLICKED(IDC_BUTTON_HISTORY, &CGCBTestToolDlg::OnBnClickedButtonHistory)
 END_MESSAGE_MAP()
 
 void CGCBTestToolDlg::OnSysCommand(UINT nID, LPARAM lParam)
@@ -250,6 +251,12 @@ void CGCBTestToolDlg::OnTcnSelchangeFrametab(NMHDR *pNMHDR, LRESULT *pResult)
 	*pResult = 0;
 }
 
+void CGCBTestToolDlg::OnBnClickedButtonHistory()
+{
+	this->linkHistoryPage.DoModal();
+}
+
+
 void CGCBTestToolDlg::OnBnClickedButtonLinktest()
 {
 	bool bIsSuccess = true;
@@ -259,6 +266,11 @@ void CGCBTestToolDlg::OnBnClickedButtonLinktest()
 	CString strServerPort;
 	GetDlgItemText(IDC_GCB_EDIT_IPADDRESS, strServerIP);
 	GetDlgItemText(IDC_GCB_EDIT_PORT, strServerPort);
+
+	ofstream outfile("history.log", ios::app);
+	CT2CA ta(strServerIP);
+	outfile << ta.m_psz << "\n";
+	outfile.close();
 
 	GetDlgItem(IDC_BUTTON_LINKTEST)->EnableWindow(false);
 
@@ -462,6 +474,11 @@ bool CGCBTestToolDlg::ChangeTabCtrl(const GCBDetailFrameDlg *tabPage)
 		}
 	}
 	return true;
+}
+
+void CGCBTestToolDlg::SetIpAddress(CString ipAddress)
+{
+	SetDlgItemText(IDC_GCB_EDIT_IPADDRESS, ipAddress);
 }
 
 void CGCBTestToolDlg::SetMainPageListHeadNum(int nIndex, int nNum)

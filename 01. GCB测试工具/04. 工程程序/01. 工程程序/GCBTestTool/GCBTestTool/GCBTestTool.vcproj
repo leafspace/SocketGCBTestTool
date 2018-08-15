@@ -225,6 +225,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ChildDialog\GCBLinkHistoryDlg.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\ChildDialog\GCBMainDlg.cpp"
 					>
 				</File>
@@ -328,6 +332,10 @@
 				>
 				<File
 					RelativePath=".\ChildDialog\GCBDetailFrameDlg.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ChildDialog\GCBLinkHistoryDlg.h"
 					>
 				</File>
 				<File

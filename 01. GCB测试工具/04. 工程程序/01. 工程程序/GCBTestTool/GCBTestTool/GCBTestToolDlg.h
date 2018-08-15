@@ -39,6 +39,7 @@
 #include "ChildDialog/GCBSettingDlg.h"
 #include "ChildDialog/SystemSettingDlg.h"
 #include "ChildDialog/GCBDetailFrameDlg.h"
+#include "ChildDialog/GCBLinkHistoryDlg.h"
 #include "CommunicationCore/CommunicationCore.h"
 
 // 主页面 对话框
@@ -61,6 +62,7 @@ protected:
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);        // 检测滑轮的位置
 	afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);// 滑轮移动的动作
 	afx_msg void OnTcnSelchangeFrametab(NMHDR *pNMHDR, LRESULT *pResult);   // 切换Control Tab的页面
+	afx_msg void OnBnClickedButtonHistory();                                // 点击历史按钮
 	afx_msg void OnBnClickedButtonLinktest();                               // 点击测试连接按钮
 	afx_msg void OnBnClickedButtonLink();                                   // 点击连接按钮
 	afx_msg void OnBnClickedButtonGcbSetting();                             // 点击上行按钮
@@ -81,6 +83,7 @@ private:
 
 	GCBMainDlg mainPage;                                                    // 概览页面，临时为1个
 	SystemSettingDlg systemSettingPage;                                     // 系统设置页面
+	GCBLinkHistoryDlg linkHistoryPage;                                      // 连接的历史记录页
 	CommunicateCore communicationCore;                                      // 用户Main页面通讯的通讯核心，临时为1个
 
 	void OnTimerSocketLinkTest(void);                                       // 处理测试连接后的循环事件
@@ -98,5 +101,6 @@ public:
 	bool ChangeTabCtrl(const int newIndex);                                 // 更改Tab Control显示的页面
 	bool ChangeTabCtrl(const GCBDetailFrameDlg *tabPage);                   // 更改Tab Control显示的页面
 
+	void SetIpAddress(CString ipAddress);
 	void SetMainPageListHeadNum(int nIndex, int nNum);
 };

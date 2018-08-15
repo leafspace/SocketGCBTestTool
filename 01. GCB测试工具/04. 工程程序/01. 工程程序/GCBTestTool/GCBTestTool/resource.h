@@ -12,6 +12,7 @@
 #define IDD_DETAIL_DIALOG               130
 #define IDD_GCB_SETTING_DIALOG          131
 #define IDD_SYSTEM_SETTING_DIALOG       132
+#define IDD_HISTORY_DIALOG              133
 #define IDC_FRAMETAB                    1000
 #define IDC_GCB_EDIT_IPADDRESS          1001
 #define IDC_GCB_EDIT_PORT               1002
@@ -66,6 +67,8 @@
 #define IDC_DETAIL_BUTTON14             1048
 #define IDC_EDIT8                       1048
 #define IDC_EXPORT_BUTTON1              1049
+#define IDC_BUTTON1                     1049
+#define IDC_BUTTON_HISTORY              1049
 #define IDC_EXPORT_BUTTON2              1050
 #define IDC_EXPORT_BUTTON3              1051
 #define IDC_EXPORT_BUTTON4              1052
@@ -112,9 +115,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        133
+#define _APS_NEXT_RESOURCE_VALUE        134
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1049
+#define _APS_NEXT_CONTROL_VALUE         1050
 #define _APS_NEXT_SYMED_VALUE           105
 #endif
 #endif
