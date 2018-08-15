@@ -67,9 +67,9 @@
 #define IDC_DETAIL_BUTTON14             1048
 #define IDC_EDIT8                       1048
 #define IDC_EXPORT_BUTTON1              1049
-#define IDC_BUTTON1                     1049
 #define IDC_BUTTON_HISTORY              1049
 #define IDC_EXPORT_BUTTON2              1050
+#define IDC_CHECK_CLOSE                 1050
 #define IDC_EXPORT_BUTTON3              1051
 #define IDC_EXPORT_BUTTON4              1052
 #define IDC_EXPORT_BUTTON5              1053
@@ -117,7 +117,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        134
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1050
+#define _APS_NEXT_CONTROL_VALUE         1051
 #define _APS_NEXT_SYMED_VALUE           105
 #endif
 #endif

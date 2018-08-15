@@ -13,6 +13,7 @@ public:
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
+	virtual BOOL OnInitDialog(void);
 	afx_msg void OnBnClickedOk();                                           // 点击了设置按钮
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	DECLARE_MESSAGE_MAP()

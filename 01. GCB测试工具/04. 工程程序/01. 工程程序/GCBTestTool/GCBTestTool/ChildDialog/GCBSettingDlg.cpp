@@ -7,7 +7,6 @@ IMPLEMENT_DYNAMIC(GCBSettingDlg, CDialog)
 GCBSettingDlg::GCBSettingDlg(CWnd* pParent)
 	: CDialog(GCBSettingDlg::IDD, pParent)
 {
-	this->sendOrderNums = 0;
 }
 
 GCBSettingDlg::~GCBSettingDlg()
@@ -20,6 +19,15 @@ void GCBSettingDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_PROGRESS_SET, mProCtrl);
 }
 
+BOOL GCBSettingDlg::OnInitDialog(void)
+{
+	CDialog::OnInitDialog();
+
+	this->sendOrderNums = 0;
+	((CButton*)GetDlgItem(IDC_CHECK_CLOSE))->SetCheck(true);
+
+	return TRUE;
+}
 
 BEGIN_MESSAGE_MAP(GCBSettingDlg, CDialog)
 	ON_WM_TIMER()
@@ -148,7 +156,10 @@ void GCBSettingDlg::OnBnClickedOk()
 void GCBSettingDlg::CheckRecv(void)
 {
 	if (this->sendOrderNums == 0) {
-		OnOK();
+		KillTimer(TIMER_DIALOG_SET);
+		if (((CButton*)GetDlgItem(IDC_CHECK_CLOSE))->GetCheck()) {
+			OnOK();
+		}
 	}
 
 	CommunicateCore *communicationCore = NULL;
