@@ -9,6 +9,7 @@
                 "${workspaceFolder}/02. 步进电机新曲线/04. 工程程序/01. 工程程序/001. 原始代码/RB_ComTest/RB_ComTest/Include",
                 "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include",
                 "C:/Program Files (x86)/Microsoft Visual Studio 9.0/VC/include",
+                "C:/Program Files (x86)/Microsoft Visual Studio 9.0/VC/lib",
                 "C:/Program Files (x86)/Windows Kits/10/Include/10.0.10150.0/ucrt/"
             ],
             "defines": [
