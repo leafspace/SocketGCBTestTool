@@ -13,7 +13,7 @@ public:
 	CRasBoardDlg(CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~CRasBoardDlg();
 
-// 对话框数据
+	// 对话框数据
 	enum { IDD = IDD_DIALOG_RASBOARD };
 
 protected:
@@ -45,7 +45,7 @@ public:
 
 	float m_fIOSpace;	//IO间距
 	float m_fIOBaseGridNum;	//IO间刻度数
-	
+
 	//参数
 	int m_nYDir;
 	int m_nPrintWay;
@@ -65,7 +65,7 @@ public:
 	float m_fYDist;
 	int m_nPurgeFreq;
 	PositionPara m_positionPara;
-	
+
 	int MM2Pulse_X(float fMM);
 	int MM2Pulse_Y(float fMM);
 	float Pulse2MM_X(int nPulse);
@@ -73,9 +73,9 @@ public:
 	int MM2GridNum(float fMM);
 	BOOL GetPrintParameter();
 	BOOL MBPrintStart();
-	BOOL MBPrintLine(int nThousandth,int nPrintHeight,BOOL bFlag);
+	BOOL MBPrintLine(int nThousandth, int nPrintHeight, BOOL bFlag);
 	BOOL MBPrintEnd();
-	
+
 	CWinThread* m_pThreadPrint;
 	BOOL m_isStopPrint;
 	BOOL m_isPausePrint;

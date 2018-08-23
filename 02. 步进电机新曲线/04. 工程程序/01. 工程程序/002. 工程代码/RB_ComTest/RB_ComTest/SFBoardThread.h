@@ -15,7 +15,7 @@ public:
 public:
 	virtual BOOL InitInstance();
 	virtual int ExitInstance();
-	
+
 	float* m_pfReducer_x;				//X减速机
 	float* m_pfDollyPerimeter;			//小车周长
 	float* m_pfPulsesPerRevolution_x;	//X每圈脉冲
@@ -32,7 +32,7 @@ public:
 
 	CCommunicationPort* m_pComPort;
 	CSFBoardDlg	**m_ppDlg;
-	
+
 	BOOL m_bThreeAxisServo;	//三轴伺服板
 	BOOL bIsNewCurve;
 

@@ -84,8 +84,8 @@
 // 数据帧格式	0xE0，0xE1，cmd，cmdSize，[data]，[data1]，[data2]，[…]，0xFC，CRC位
 enum PROTOCOL_DATAFRAME_INDEX
 {
-	pt_data_start0	= 0,			//0xE0
-	pt_data_start1	= 1,			//0xE1
+	pt_data_start0 = 0,			//0xE0
+	pt_data_start1 = 1,			//0xE1
 	pt_data_add_src,				//src
 	pt_data_add_dst,				//dst
 	pt_data_cmd,					//cmd
@@ -95,7 +95,7 @@ enum PROTOCOL_DATAFRAME_INDEX
 	pt_data_startfixcount,			//数据帧起始段固定参数个数
 	pt_data_endfixcount = 2,		//数据帧结束段固定参数个数
 
-	pt_data_len_min	= pt_data_startfixcount+pt_data_endfixcount,			//数据帧最小长度（cmdSize=0，不包括单字节指令）
+	pt_data_len_min = pt_data_startfixcount + pt_data_endfixcount,			//数据帧最小长度（cmdSize=0，不包括单字节指令）
 	pt_data_len_max = pt_data_len_min + 0xFF,			//数据帧最大长度（cmdSize=0xFF）
 };
 #define protocol_dataframe_start1				0xE0		//数据帧起始标识1

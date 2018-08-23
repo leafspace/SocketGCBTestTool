@@ -358,6 +358,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\NewSLineDataTableDlg.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\OfflineTimeTableDlg.cpp"
 				>
 			</File>
@@ -433,6 +437,10 @@
 			</File>
 			<File
 				RelativePath=".\GridParameterDlg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NewSLineDataTableDlg.h"
 				>
 			</File>
 			<File

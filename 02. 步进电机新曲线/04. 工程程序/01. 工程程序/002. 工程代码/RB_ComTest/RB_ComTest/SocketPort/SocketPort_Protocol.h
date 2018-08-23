@@ -55,8 +55,8 @@
 // 数据帧格式	0xF0,0xF1,cmd,cmdSize,[data],[data1],[data2],[…],0xEC
 enum GCB_PROTOCOL_DATAFRAME_INDEX
 {
-	gcb_pt_data_start1	= 0,			//0xF0
-	gcb_pt_data_start2	= 1,			//0xF1
+	gcb_pt_data_start1 = 0,			//0xF0
+	gcb_pt_data_start2 = 1,			//0xF1
 	gcb_pt_data_cmd,					//cmd
 	gcb_pt_data_cmdsize1,				//cmdSize = (cmdsize2<<8) | cmdsize1
 	gcb_pt_data_cmdsize2,				//
@@ -64,7 +64,7 @@ enum GCB_PROTOCOL_DATAFRAME_INDEX
 	gcb_pt_data_startfixcount,			//数据帧起始段固定参数个数
 	gcb_pt_data_endfixcount = 1,		//数据帧结束段固定参数个数
 
-	gcb_pt_data_len_min	= gcb_pt_data_startfixcount+gcb_pt_data_endfixcount,			//数据帧最小长度（cmdSize=0，不包括单字节指令）
+	gcb_pt_data_len_min = gcb_pt_data_startfixcount + gcb_pt_data_endfixcount,			//数据帧最小长度（cmdSize=0，不包括单字节指令）
 	gcb_pt_data_len_max = gcb_pt_data_len_min + 0xFFFF,			//数据帧最大长度（cmdSize=0xFFFF）
 };
 #define gcb_protocol_dataframe_start1				0xF0		//数据帧起始标识1

@@ -19,7 +19,7 @@ public:
 	COnlineTimeTableDlg(CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~COnlineTimeTableDlg();
 
-// 对话框数据
+	// 对话框数据
 	enum { IDD = IDD_DIALOG_SFONLINE_TIMETABLE };
 
 protected:
@@ -41,7 +41,7 @@ public:
 	int m_nAecNum;
 	int m_nDecNum;
 	int m_nTimeUnit;
-	
+
 	BOOL GetTimeTableParameter();
 	void SetTimeTableParameter();
 
@@ -59,7 +59,7 @@ public:
 	CPoint m_ptCurveDecEnd;
 	CPOINTArray m_DecControlPoints;
 	CPOINTArray m_DecCurvePoints;
-	
+
 	int m_nOperationCurve;
 	int m_nMoveIndex;
 	CPoint m_ptMoveLast;
@@ -72,7 +72,7 @@ public:
 	void DrawCurveDec(CDC* pDC);
 	void DrawAxis(CDC* pDC);
 	void DrawCross(RECT rect, POINT point, COLORREF rgbColor, int extent, HDC hDC);
-	void DrawCurve(const POINT *point,int count, COLORREF rgbColor,HDC hdc);
+	void DrawCurve(const POINT *point, int count, COLORREF rgbColor, HDC hdc);
 	BOOL MoveCurve();
 
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
@@ -81,8 +81,8 @@ public:
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 	afx_msg void OnRButtonDblClk(UINT nFlags, CPoint point);
 	afx_msg void OnPaint();
-	
-	void CalculateTime(WORD& wAecTime,WORD& wDecTime);
+
+	void CalculateTime(WORD& wAecTime, WORD& wDecTime);
 	afx_msg void OnBnClickedButtonSfonlineCalculatetime();
 	CProgressCtrl m_pgsDownload;
 
@@ -92,7 +92,7 @@ public:
 	TIME_TABLE_ONLINE m_timeTableOnline;
 	TIME_TABLE_ONLINE_PAMARATER m_parameterOnline;
 	void InitTimeTable();
-	BOOL CreateTimeTable(BYTE bSpeedLevel,BOOL bRemind);
+	BOOL CreateTimeTable(BYTE bSpeedLevel, BOOL bRemind);
 	BYTE m_bSpeedLevel;
 	BYTE m_bMotoWay;		//SF_MOTOR_WAY
 

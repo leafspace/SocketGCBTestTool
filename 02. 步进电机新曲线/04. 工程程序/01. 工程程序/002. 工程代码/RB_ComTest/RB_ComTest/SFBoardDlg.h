@@ -6,7 +6,7 @@
 
 enum SFBOARD_BOARDTYPE
 {
-	sf_boardtype_motor_x	= 0,	//单轴-X
+	sf_boardtype_motor_x = 0,	//单轴-X
 	sf_boardtype_motor_y_dd,		//单轴-Y-导带
 	sf_boardtype_motor_y_sg,		//单轴-Y-丝杆
 
@@ -14,7 +14,7 @@ enum SFBOARD_BOARDTYPE
 };
 enum SFBOARD_BOARDTYPE_3AXIS
 {
-	sf_boardtype_motor_3axis_x		= 0,//三轴-X
+	sf_boardtype_motor_3axis_x = 0,//三轴-X
 	sf_boardtype_motor_3axis_y_dd,		//三轴-Y-导带
 	sf_boardtype_motor_3axis_y_sg,		//三轴-Y-丝杆
 
@@ -34,7 +34,7 @@ public:
 	CSFBoardDlg(CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~CSFBoardDlg();
 
-// 对话框数据
+	// 对话框数据
 	enum { IDD = IDD_DIALOG_SFBOARD };
 
 protected:
@@ -58,7 +58,7 @@ public:
 	float* m_pfPulsesPerRevolution_z;	//Z每圈脉冲
 	float* m_pfDeferentPerimeter_z;		//Z导带周长
 	float* m_pfDeferentPitch_z;			//Z丝杆螺距
-	
+
 	CWinThread *m_pParentThread;
 
 	int MM2Pulse(float fMM);

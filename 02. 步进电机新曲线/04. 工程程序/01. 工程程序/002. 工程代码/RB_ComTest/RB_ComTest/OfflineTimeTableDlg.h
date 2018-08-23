@@ -20,7 +20,7 @@ public:
 	COfflineTimeTableDlg(CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~COfflineTimeTableDlg();
 
-// 对话框数据
+	// 对话框数据
 	enum { IDD = IDD_DIALOG_SFOFFLINE_TIMETABLE };
 
 protected:
@@ -48,7 +48,7 @@ public:
 
 	BOOL GetTimeTableParameter();
 	void SetTimeTableParameter();
-	
+
 	//曲线
 	CRect m_rcView;
 
@@ -86,7 +86,7 @@ public:
 	void DrawCurveSlow2Stop(CDC* pDC);
 	void DrawAxis(CDC* pDC);
 	void DrawCross(RECT rect, POINT point, COLORREF rgbColor, int extent, HDC hDC);
-	void DrawCurve(const POINT *point,int count, COLORREF rgbColor,HDC hdc);
+	void DrawCurve(const POINT *point, int count, COLORREF rgbColor, HDC hdc);
 	BOOL MoveCurve();
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
@@ -101,9 +101,9 @@ public:
 
 	//建时间表
 	TIME_TABLE_OFFLINE m_timeTableOffline;
-	TIME_TABLE_OFFLINE_PAMARATER m_parameterOffline;	
+	TIME_TABLE_OFFLINE_PAMARATER m_parameterOffline;
 	void InitTimeTable();
-	BOOL CreateTimeTable(BYTE bSpeedLevel,BOOL bRemind);
+	BOOL CreateTimeTable(BYTE bSpeedLevel, BOOL bRemind);
 	BYTE m_bSpeedLevel;
 	BYTE m_bMotoWay;		//SF_MOTOR_WAY
 

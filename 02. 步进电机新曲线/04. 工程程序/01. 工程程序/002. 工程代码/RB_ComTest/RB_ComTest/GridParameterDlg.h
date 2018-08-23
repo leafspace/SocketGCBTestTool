@@ -11,7 +11,7 @@ public:
 	CGridParameterDlg(CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~CGridParameterDlg();
 
-// 对话框数据
+	// 对话框数据
 	enum { IDD = IDD_DIALOG_GRIDPARAMETER };
 
 protected:

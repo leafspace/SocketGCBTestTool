@@ -17,7 +17,7 @@ protected:
 public:
 	virtual BOOL InitInstance();
 	virtual int ExitInstance();
-	
+
 	CCommunicationPort* m_pComPort;
 
 	CLDBoardDlg	**m_ppDlg;

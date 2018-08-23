@@ -8,19 +8,19 @@
 #pragma once
 
 #ifdef RP_EXT_CLASS
-	#undef RP_EXT_CLASS
-	#undef RP_EXT_API
-	#undef RP_EXT_DATA
+#undef RP_EXT_CLASS
+#undef RP_EXT_API
+#undef RP_EXT_DATA
 #endif
 
 #ifdef APP_RPBASE
-	#define RP_EXT_CLASS       AFX_CLASS_EXPORT
-	#define RP_EXT_API         AFX_API_EXPORT
-	#define RP_EXT_DATA        AFX_DATA_EXPORT
+#define RP_EXT_CLASS       AFX_CLASS_EXPORT
+#define RP_EXT_API         AFX_API_EXPORT
+#define RP_EXT_DATA        AFX_DATA_EXPORT
 #else
-	#define RP_EXT_CLASS       AFX_CLASS_IMPORT
-	#define RP_EXT_API         AFX_API_IMPORT
-	#define RP_EXT_DATA        AFX_DATA_IMPORT
+#define RP_EXT_CLASS       AFX_CLASS_IMPORT
+#define RP_EXT_API         AFX_API_IMPORT
+#define RP_EXT_DATA        AFX_DATA_IMPORT
 #endif
 
 
@@ -176,7 +176,7 @@ struct HSLVALUE
 struct CMYKVALUE
 {
 	double Cyan;			// 0.0 ~ 1.0 --> [0, 255]
-	double Magenta;	
+	double Magenta;
 	double Yellow;
 	double Black;
 };
@@ -242,44 +242,44 @@ enum INKCLRINDEX
 	inkIndex_g,
 
 	inkIndex_count
-};	
+};
 
 
 //预定义颜料类型
 enum ky_printer_color
 {
-	kypc_nocolor		= 0,				//初始化状态（无效颜料类型）
-	kypc_c				= 0x00000001,		// C，	青（Cyan）
-	kypc_m				= 0x00000002,		// M，	品（Magenta），又名洋红
-	kypc_y				= 0x00000004,		// Y，	黄（Yellow）
-	kypc_k				= 0x00000008,		// K，	黑（blacK）
-	
-	kypc_lc				= 0x00000010,		// lc， 浅青（Light Cyan），	lc = C * 1/n 
-	kypc_lm				= 0x00000020,		// lm， 浅品（Light Magenta），	lm = M * 1/n
-	kypc_ly				= 0x00000040,		// ly， 浅黄（Ligth Yellow），	ly = Y * 1/n
-	kypc_lk				= 0x00000080,		// lk， 浅黑（Light Black），又名深灰（dark gray），lk = K * 1/n
-	
-	kypc_red			= 0x00010000,		// R，	红（Red），又名大红，	R = M + Y
-	kypc_green			= 0x00020000,		// Gr，	绿（Green），			G = C + Y
-	kypc_blue			= 0x00040000,		// B，	蓝（Blue），又名宝蓝，	B = C + M
-	kypc_orange			= 0x00080000,		// Or，	橙（Orange），又名桔色，Or= Y + R
-	
+	kypc_nocolor = 0,				//初始化状态（无效颜料类型）
+	kypc_c = 0x00000001,		// C，	青（Cyan）
+	kypc_m = 0x00000002,		// M，	品（Magenta），又名洋红
+	kypc_y = 0x00000004,		// Y，	黄（Yellow）
+	kypc_k = 0x00000008,		// K，	黑（blacK）
+
+	kypc_lc = 0x00000010,		// lc， 浅青（Light Cyan），	lc = C * 1/n 
+	kypc_lm = 0x00000020,		// lm， 浅品（Light Magenta），	lm = M * 1/n
+	kypc_ly = 0x00000040,		// ly， 浅黄（Ligth Yellow），	ly = Y * 1/n
+	kypc_lk = 0x00000080,		// lk， 浅黑（Light Black），又名深灰（dark gray），lk = K * 1/n
+
+	kypc_red = 0x00010000,		// R，	红（Red），又名大红，	R = M + Y
+	kypc_green = 0x00020000,		// Gr，	绿（Green），			G = C + Y
+	kypc_blue = 0x00040000,		// B，	蓝（Blue），又名宝蓝，	B = C + M
+	kypc_orange = 0x00080000,		// Or，	橙（Orange），又名桔色，Or= Y + R
+
 	//kypc_white			= 0x01000000,		// W，	白（White），W = C + M + Y
-	
-	kypc_spotcolor		= 0x80000000,		// Spot Color，专色（不参与混色）
-	
+
+	kypc_spotcolor = 0x80000000,		// Spot Color，专色（不参与混色）
+
 	//以下预定义部分颜料类型掩码
-	kypc_lightcolor_mask= 0x00000FF0,		//浅色颜料掩码
+	kypc_lightcolor_mask = 0x00000FF0,		//浅色颜料掩码
 	kypc_basecolor_mask = 0x0000FFFF,		//基色颜料掩码
-	
+
 	//以下预定义部分颜色组合模式
-	kypc_cmyk			= kypc_c | kypc_m | kypc_y | kypc_k,	//CMYK
-	kypc_cmyklclm		= kypc_cmyk | kypc_lc| kypc_lm,			//CMYKLcLm
-	kypc_cmykog			= kypc_cmyk | kypc_orange | kypc_green,	//CMYKOG
-	kypc_cmykrb			= kypc_cmyk | kypc_red | kypc_blue,		//CMYKRB
-	kypc_cmykob			= kypc_cmyk | kypc_orange | kypc_blue,	//CMYKOB
-	
-	kypc_unknown		= 0xFFFFFFFF		//未知色
+	kypc_cmyk = kypc_c | kypc_m | kypc_y | kypc_k,	//CMYK
+	kypc_cmyklclm = kypc_cmyk | kypc_lc | kypc_lm,			//CMYKLcLm
+	kypc_cmykog = kypc_cmyk | kypc_orange | kypc_green,	//CMYKOG
+	kypc_cmykrb = kypc_cmyk | kypc_red | kypc_blue,		//CMYKRB
+	kypc_cmykob = kypc_cmyk | kypc_orange | kypc_blue,	//CMYKOB
+
+	kypc_unknown = 0xFFFFFFFF		//未知色
 };
 
 //扩展调色板
@@ -307,10 +307,10 @@ enum ORDER_INKCOLOR
 
 	//------------ ligth color ---------------
 	orderink_light_start = ORDERINK_BASECOLOR_MAX,						//浅色墨水-起始
-	orderink_light_lc	= orderink_light_start + inkIndex_c,			//	kypc_lc
-	orderink_light_lm	= orderink_light_start + inkIndex_m,			//	kypc_lm
-	orderink_light_ly	= orderink_light_start + inkIndex_y,			//	kypc_ly
-	orderink_light_lk	= orderink_light_start + inkIndex_k,			//	kypc_lk
+	orderink_light_lc = orderink_light_start + inkIndex_c,			//	kypc_lc
+	orderink_light_lm = orderink_light_start + inkIndex_m,			//	kypc_lm
+	orderink_light_ly = orderink_light_start + inkIndex_y,			//	kypc_ly
+	orderink_light_lk = orderink_light_start + inkIndex_k,			//	kypc_lk
 
 	//orderink_light_llk,									//	kypc_llk
 
@@ -321,16 +321,16 @@ enum ORDER_INKCOLOR
 	orderink_spot_start = 200,											//专色墨水-起始
 	orderink_spot_0 = orderink_spot_start + 0,							//	kypc_spotcolor
 	orderink_spot_1 = orderink_spot_start + 1,
-	
+
 	//orderink_spot_n = orderink_spot_start + n,
 
 	orderink_spot_count = ORDERINK_BASECOLOR_MAX,						//专色墨水总数
-	
-	orderink_spot_end	= orderink_spot_start + orderink_spot_count,	//专色墨水-结束（不包含）
 
-	orderink_inkcount	= 0xFE,											//最大墨水类型数
+	orderink_spot_end = orderink_spot_start + orderink_spot_count,	//专色墨水-结束（不包含）
 
-	orderink_unknown	= 0xFF
+	orderink_inkcount = 0xFE,											//最大墨水类型数
+
+	orderink_unknown = 0xFF
 };
 #define orderink_base_id(i)			(orderink_base_start+(i))
 #define orderink_base_index(id)		((id)-orderink_base_start)
@@ -351,30 +351,30 @@ enum ORDER_INKCOLOR
 //注：当有新的颜色模式时仅能添加到最后（INKMODE_MAX 前）
 enum INKMODE
 {
-	INK_NONE			= 0,
+	INK_NONE = 0,
 
-	INK_CMYK			= 1,
-	INK_CMYKLcLm		= 2,
-	INK_CMYKLcLmLyLk	= 3,
+	INK_CMYK = 1,
+	INK_CMYKLcLm = 2,
+	INK_CMYKLcLmLyLk = 3,
 
-	INK_CMYK_N1CLR		= 4,
-	INK_CMYK_N2CLR		= 5,
-	INK_CMYK_N3CLR		= 6,
-	INK_CMYK_N4CLR		= 7,
+	INK_CMYK_N1CLR = 4,
+	INK_CMYK_N2CLR = 5,
+	INK_CMYK_N3CLR = 6,
+	INK_CMYK_N4CLR = 7,
 
-	INK_CMYKLcLm_N1CLR	= 8,
-	INK_CMYKLcLm_N2CLR	= 9,
+	INK_CMYKLcLm_N1CLR = 8,
+	INK_CMYKLcLm_N2CLR = 9,
 
-	INK_CMYKLcLmLk		= 10,
-	INK_CMYKLcLmLk_N1CLR= 11,
+	INK_CMYKLcLmLk = 10,
+	INK_CMYKLcLmLk_N1CLR = 11,
 
 	//insert new mode here
-	INK_MONO			= 12,	//单色，单色以“专色”标识
+	INK_MONO = 12,	//单色，单色以“专色”标识
 
-	INK_CMYKOB			= 13,
-	INK_CMYKLcLmLkB		= 14,
-	INK_CMYKLcLmOB		= 15,
-	INK_CMYKRBOG		= 16,
+	INK_CMYKOB = 13,
+	INK_CMYKLcLmLkB = 14,
+	INK_CMYKLcLmOB = 15,
+	INK_CMYKRBOG = 16,
 
 	INKMODE_MAX,
 };
@@ -400,7 +400,7 @@ struct RP_EXT_CLASS KY_EXPANDPALETTE
 
 public:
 	BOOL LoadFile(CFile* pFile);
-	
+
 	//存档时所需空间
 	static DWORD StoreFileSize();
 
@@ -418,21 +418,21 @@ public:
 	//		then call CreateGrayPalette((COLORREF)dwNumPalEntries)
 	// else if (nBitCount==24) 
 	//		then call CreateRGBPalette();
-	static CPalette* InitPalette(WORD nBitCount, DWORD dwNumPalEntries=0, AImageType imgType=imgClrType);
+	static CPalette* InitPalette(WORD nBitCount, DWORD dwNumPalEntries = 0, AImageType imgType = imgClrType);
 	//	If pPalette is null, call InitPalette(8,10,imgClrType)
 	static CPalette* CopyPalette(const CPalette* pPalette);
 
-	static int CreateMonoPalette(COLORREF rgb,PALETTEENTRY* pPalette, int palLength);
-	static CPalette* CreateMonoPalette(COLORREF rgb=0);	//	rgb=0: Black color
+	static int CreateMonoPalette(COLORREF rgb, PALETTEENTRY* pPalette, int palLength);
+	static CPalette* CreateMonoPalette(COLORREF rgb = 0);	//	rgb=0: Black color
 	//	Default(pRgb=MULL): call InitPalette(8, wNumPalEntries, imgClrType)
-	static CPalette* CreatePalette(WORD wNumPalEntries, const RGBQUAD* pRgb=NULL);
+	static CPalette* CreatePalette(WORD wNumPalEntries, const RGBQUAD* pRgb = NULL);
 	static int CreateGrayPalette(COLORREF rgb, PALETTEENTRY* pPalette, int palLength);
-	static CPalette* CreateGrayPalette(COLORREF rgb=0); //	rgb=0: Black color
+	static CPalette* CreateGrayPalette(COLORREF rgb = 0); //	rgb=0: Black color
 	static CPalette* CreateRGBPalette();
 	static int CreateRGBPalette(PALETTEENTRY* pPalette, int palLength);
-	static COLORREF GetScreenColor(CWnd* pWnd, const LPPOINT pPoint); 
+	static COLORREF GetScreenColor(CWnd* pWnd, const LPPOINT pPoint);
 
-	static void TransformPalette(const RGBQUAD* pRGB, int nNumUsed,PALETTEENTRY* pPalette);
+	static void TransformPalette(const RGBQUAD* pRGB, int nNumUsed, PALETTEENTRY* pPalette);
 	static void TransformPalette(const PALETTEENTRY* pPalette, int nNumUsed, RGBQUAD* pRGB);
 
 	static void HSLToRGB(const HSLVALUE& hsl, RGBVALUE& rgb);
@@ -455,8 +455,8 @@ public:
 public:
 	//根据颜料类型得相应的颜料名称
 	//	inkOrder	:[in]ORDER_INKCOLOR
-    //  bFullName   :[in]是否返回全称
-	static CString ColorName(BYTE inkOrder, BOOL bFullName=FALSE);
+	//  bFullName   :[in]是否返回全称
+	static CString ColorName(BYTE inkOrder, BOOL bFullName = FALSE);
 	//根据颜料类型得默认的RGB颜色参数
 	//	inkOrder	:[in]ORDER_INKCOLOR
 	//返回：默认RGB值，当参数无效时返回NULLCOLOR
@@ -513,9 +513,9 @@ public:
 	//返回：修正后颜色个数，正常情况下应该为256
 	static int CMYK_N_CorrectGrayPalette(KY_EXPANDPALETTE& expandPalette);
 
-    //当前多通道颜色参数是否有效
+	//当前多通道颜色参数是否有效
 	static BOOL CMYK_IsValid(BYTE bInkCount, const BYTE *pInkOrder);
-    static BOOL CMYK_IsValid(const KY_EXPANDPALETTE* pExpandPalette);
+	static BOOL CMYK_IsValid(const KY_EXPANDPALETTE* pExpandPalette);
 
 public:
 	// Lab <--> RGB
@@ -578,17 +578,17 @@ public:
 	//转换意图，仅用于 RGB<-->CMYK
 	enum ICC_INTENT
 	{
-		icc_intent_perceptual	= 0,		//可感知（perceptual rendering intent）
-		icc_intent_relative		= 1,		//相对色度 (media-relative colorimetric rendering intent)
+		icc_intent_perceptual = 0,		//可感知（perceptual rendering intent）
+		icc_intent_relative = 1,		//相对色度 (media-relative colorimetric rendering intent)
 		icc_intent_saturation,				//饱和度 (saturation rendering intent) 
 		icc_intent_absolute,				//绝对色度 (ICC-absolute colorimetric rendering intent )
 
 		icc_intent_count
 	};
-	static BOOL InitRGBtoCMYK(ARGBToCMYK &rgb2cmyk, 
-							const char *pszInProfile,		// RGB icc file
-							const char *pszOutProfile,		// CMYK icc file
-							int nIntent);
+	static BOOL InitRGBtoCMYK(ARGBToCMYK &rgb2cmyk,
+		const char *pszInProfile,		// RGB icc file
+		const char *pszOutProfile,		// CMYK icc file
+		int nIntent);
 	static BOOL IsRGBProfile(const char *pszProfile);
 	static BOOL IsCMYKProfile(const char *pszProfile);
 public:
@@ -598,10 +598,10 @@ public:
 	//初始化 RGB <-> CMYK 转换
 	enum ERROR_NO
 	{
-		error_succeed		= 0,	//成功
-		error_format_input	= 1,	//输入文件（RGB）无法读取或格式不对
-		error_format_output	= 2,	//输出文件（CMYK）无法读取或格式不对
-		error_dll			= 3,	//转换库出错
+		error_succeed = 0,	//成功
+		error_format_input = 1,	//输入文件（RGB）无法读取或格式不对
+		error_format_output = 2,	//输出文件（CMYK）无法读取或格式不对
+		error_dll = 3,	//转换库出错
 		error_other					//其它错误
 	};
 	//	pszInputRGB		:[in]RGB色彩校正文件，如 sRGB Color Space Profile.icm

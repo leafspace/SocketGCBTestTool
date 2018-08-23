@@ -43,13 +43,13 @@ BOOL CLDSetPower::OnInitDialog()
 	// TODO:  在此添加额外的初始化
 	CString str;
 
-	str.Format("%.3f",m_fVol);
+	str.Format("%.3f", m_fVol);
 	((CWnd*)GetDlgItem(IDC_STATIC_LD_SET_VOL))->SetWindowText(str);
-	
-	
+
+
 	((CEdit*)GetDlgItem(IDC_EDIT_LD_SET_POWER))->CreateSolidCaret(1, 14);
 	((CEdit*)GetDlgItem(IDC_EDIT_LD_SET_POWER))->ShowCaret();
-	((CEdit*)GetDlgItem(IDC_EDIT_LD_SET_POWER))->SetCaretPos(CPoint(0,0));
+	((CEdit*)GetDlgItem(IDC_EDIT_LD_SET_POWER))->SetCaretPos(CPoint(0, 0));
 	((CEdit*)GetDlgItem(IDC_EDIT_LD_SET_POWER))->SetFocus();
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -60,10 +60,10 @@ void CLDSetPower::OnBnClickedButtonLdAddCheckPower()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	CString str = "";
-		
+
 	((CWnd*)GetDlgItem(IDC_EDIT_LD_SET_POWER))->GetWindowText(str);
-	
-	if (str=="")
+
+	if (str == "")
 	{
 		AfxMessageBox("输入功率值不能为空");
 		return;
@@ -72,7 +72,7 @@ void CLDSetPower::OnBnClickedButtonLdAddCheckPower()
 	{
 		m_nPower = atoi(str);
 	}
-	((CLDBoardDlg*)m_pParentWnd)->LD_Check_Power_Add(m_fVol,m_nPower);
+	((CLDBoardDlg*)m_pParentWnd)->LD_Check_Power_Add(m_fVol, m_nPower);
 }
 
 void CLDSetPower::OnBnClickedButtonLdModifyCheckPower()
@@ -82,7 +82,7 @@ void CLDSetPower::OnBnClickedButtonLdModifyCheckPower()
 
 	((CWnd*)GetDlgItem(IDC_EDIT_LD_SET_POWER))->GetWindowText(str);
 
-	if (str=="")
+	if (str == "")
 	{
 		AfxMessageBox("输入功率值不能为空");
 		return;
@@ -91,7 +91,7 @@ void CLDSetPower::OnBnClickedButtonLdModifyCheckPower()
 	{
 		m_nPower = atoi(str);
 	}
-	((CLDBoardDlg*)m_pParentWnd)->LD_Check_Power_Modify(m_fVol,m_nPower);
+	((CLDBoardDlg*)m_pParentWnd)->LD_Check_Power_Modify(m_fVol, m_nPower);
 }
 
 void CLDSetPower::OnBnClickedButtonLdCloseCheckPower()

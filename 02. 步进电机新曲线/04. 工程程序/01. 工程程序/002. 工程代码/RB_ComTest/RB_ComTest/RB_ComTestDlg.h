@@ -29,14 +29,14 @@ enum FUNCTION_TYPE
 // CRB_ComTestDlg 对话框
 class CRB_ComTestDlg : public CDialog
 {
-// 构造
+	// 构造
 public:
 	CRB_ComTestDlg(CWnd* pParent = NULL);	// 标准构造函数
 
 // 对话框数据
 	enum { IDD = IDD_RB_COMTEST_DIALOG };
 
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 支持
 
 
@@ -60,7 +60,7 @@ public:
 	CComboBox m_cbComNum;
 	CEdit m_edtComRecive;
 	CEdit m_edtComSend;
-	
+
 	float m_fReducer_x;				//X减速机
 	float m_fDollyPerimeter;		//小车周长
 	float m_fPulsesPerRevolution_x;	//X每圈脉冲

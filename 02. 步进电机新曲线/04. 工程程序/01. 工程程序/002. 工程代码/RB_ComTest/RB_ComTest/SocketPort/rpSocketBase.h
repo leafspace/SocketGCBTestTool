@@ -4,9 +4,9 @@
 //网口通讯操作类
 
 #ifdef RP_EXT_CLASS
-	#undef RP_EXT_CLASS
-	#undef RP_EXT_API
-	#undef RP_EXT_DATA
+#undef RP_EXT_CLASS
+#undef RP_EXT_API
+#undef RP_EXT_DATA
 #endif
 
 #define RP_EXT_CLASS       
@@ -28,35 +28,35 @@
 //{
 
 	//指令发送方式
-	enum SENDMSG_LEVEL
-	{
-		sml_crucial		= 0,	//must send ok (send again if all errors: send-err or handshake-err, untill timeout)
-		sml_normal		= 1,	//send again if some errors: send err, untill hadshake-err or timeout
-		sml_onlyone		= 2,	//only Send msg once
+enum SENDMSG_LEVEL
+{
+	sml_crucial = 0,	//must send ok (send again if all errors: send-err or handshake-err, untill timeout)
+	sml_normal = 1,	//send again if some errors: send err, untill hadshake-err or timeout
+	sml_onlyone = 2,	//only Send msg once
 
-		sml_count
-	};
-	//发送操作返回值
-	enum SENDMSG_STATUS
-	{
-		sms_err_send		= 0,	//send error
+	sml_count
+};
+//发送操作返回值
+enum SENDMSG_STATUS
+{
+	sms_err_send = 0,	//send error
 
-		sms_handshake_ok	= 1,	//send ok and handshake return ok
+	sms_handshake_ok = 1,	//send ok and handshake return ok
 
-		sms_err_no_ok_fail	= 2,	//send ok,but no handshake
-		sms_err_fail		= 3,	//send ok but handshake return failed
+	sms_err_no_ok_fail = 2,	//send ok,but no handshake
+	sms_err_fail = 3,	//send ok but handshake return failed
 
-		sms_count
-	};
-	//指令发送状态信息
-	enum Commu_Status_Flags
-	{
-		commu_status_none		= 0,	//未作标记
-		commu_status_succeed	= 1,	//通讯成功
-		commu_status_failed		= 2,	//通讯失败
+	sms_count
+};
+//指令发送状态信息
+enum Commu_Status_Flags
+{
+	commu_status_none = 0,	//未作标记
+	commu_status_succeed = 1,	//通讯成功
+	commu_status_failed = 2,	//通讯失败
 
-		commu_status_count
-	};
+	commu_status_count
+};
 
 
 class RP_EXT_CLASS ABaseThread
@@ -64,7 +64,7 @@ class RP_EXT_CLASS ABaseThread
 public:
 	/*1.构造与系构函数 */
 	ABaseThread();
-	virtual ~ABaseThread();          
+	virtual ~ABaseThread();
 
 	/* 2.创建,结束,复位 */
 	virtual bool Create(void* pThreadData);			//创建线程
@@ -90,7 +90,7 @@ protected:
 
 protected:
 	/*5.执行线程 */
-	virtual void Execute(void)=0;			//线程执行，在处理函数中必须响应 m_IsNeedExit
+	virtual void Execute(void) = 0;			//线程执行，在处理函数中必须响应 m_IsNeedExit
 
 	//初始化派生类自定义参数
 	//	在 Create(...)时被调用
@@ -117,7 +117,7 @@ public:
 	virtual BOOL Close(BOOL bReleaseBuffer);
 
 	virtual BOOL IsOpen() const;
-	
+
 protected:
 	SOCKADDR_IN m_serverSockAddr;
 	SOCKET		m_serverSocket;
@@ -172,8 +172,8 @@ protected:
 	//	bCopy :[in]重新申请缓冲区时是否要保留原有数据
 	BOOL ReAllocBuffer(DWORD dwBufferSize, BOOL bCopy);
 
-	void ReceiveData(const void* pBuf,DWORD InBufferCount);
-	
+	void ReceiveData(const void* pBuf, DWORD InBufferCount);
+
 	//对接收到的数据进行分析
 	//操作对象			： m_pBuffer, m_dwReceiveSize
 	//返回值：已处理的数据个数（<= m_dwReceiveSize），剩余部分留到下一次数据接收后处理
@@ -212,7 +212,7 @@ public:
 public:
 	static BOOL Write_Communication_Info(const char *pszFileName, const BYTE *snd_msg, int msg_len, DWORD sizeLimit, DWORD defaultSize, BOOL bTimeFlag);
 
-public:	
+public:
 	BOOL GetLastErrorInfo(CString &strError) const;
 	void ClearErrorInfo();
 

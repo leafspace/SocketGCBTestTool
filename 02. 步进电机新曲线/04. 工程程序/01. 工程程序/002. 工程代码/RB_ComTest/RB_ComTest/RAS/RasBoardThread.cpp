@@ -38,7 +38,7 @@ BOOL CRasBoardThread::InitInstance()
 	pDlg = *m_ppDlg;
 	if (pDlg == NULL)
 		pDlg = new CRasBoardDlg();
-	if (pDlg==NULL)
+	if (pDlg == NULL)
 	{
 		AfxMessageBox("out of memory!");
 		return FALSE;
@@ -47,14 +47,14 @@ BOOL CRasBoardThread::InitInstance()
 
 	pDlg->m_pParentThread = this;
 
-	pDlg->m_pfReducer_x				= m_pfReducer_x;
-	pDlg->m_pfReducer_y				= m_pfReducer_y;
+	pDlg->m_pfReducer_x = m_pfReducer_x;
+	pDlg->m_pfReducer_y = m_pfReducer_y;
 	pDlg->m_pfPulsesPerRevolution_x = m_pfPulsesPerRevolution_x;
 	pDlg->m_pfPulsesPerRevolution_y = m_pfPulsesPerRevolution_y;
-	pDlg->m_pfDollyPerimeter		= m_pfDollyPerimeter;
-	pDlg->m_pfDeferentPerimeter		= m_pfDeferentPerimeter;
-	pDlg->m_pfDeferentPitch			= m_pfDeferentPitch;
-	pDlg->m_pComPort				= m_pComPort;
+	pDlg->m_pfDollyPerimeter = m_pfDollyPerimeter;
+	pDlg->m_pfDeferentPerimeter = m_pfDeferentPerimeter;
+	pDlg->m_pfDeferentPitch = m_pfDeferentPitch;
+	pDlg->m_pComPort = m_pComPort;
 
 	pDlg->Create(IDD_DIALOG_RASBOARD);
 	pDlg->ShowWindow(SW_SHOW);

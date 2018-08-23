@@ -14,8 +14,8 @@
 
 enum LDVOLTAGELIST
 {
-	ldvoltagelist_ch		= 0,	//通道
-	ldvoltagelist_pc		= 1,	//设置电压
+	ldvoltagelist_ch = 0,	//通道
+	ldvoltagelist_pc = 1,	//设置电压
 	ldvoltagelist_lastPD,			//上次实测电压
 	ldvoltagelist_nowPD,			//当前实测电压
 	ldvoltagelist_lastLD,			//上次电源板电压
@@ -50,7 +50,7 @@ public:
 	CLDBoardDlg(CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~CLDBoardDlg();
 
-// 对话框数据
+	// 对话框数据
 	enum { IDD = IDD_LD_BOARD };
 
 private:
@@ -89,7 +89,7 @@ public:
 
 	afx_msg void OnBnClickedButtonLdCheckPowerDelete();
 	afx_msg void OnBnClickedButtonLdCheckPowerClearall();
-	
+
 	//表值
 	CPOINTArray m_VolPowerControlPoints;
 	CPOINTArray m_VolPowerCurvePoints;
@@ -99,8 +99,8 @@ public:
 	void LDSaveVPCurve(const char *pszProfile);
 	void LDLoadVPCurve(const char *pszProfile);
 
-	void LD_Check_Power_Add(float fVol,int nPower);
-	void LD_Check_Power_Modify(float fVol,int nPower);
+	void LD_Check_Power_Add(float fVol, int nPower);
+	void LD_Check_Power_Modify(float fVol, int nPower);
 	BOOL IsVPTableResonable();
 	void RestrictTableAec();
 

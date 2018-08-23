@@ -73,37 +73,37 @@ void PRINTHEAD::Initialize()
 {
 	BZERO(*this);
 
-	nType				= printhead_Unknown;
+	nType = printhead_Unknown;
 
-	nNozzleSize			= 256;
-	dNozzleDistance		= 0.254;
+	nNozzleSize = 256;
+	dNozzleDistance = 0.254;
 
-	bRowCount			= 1;
+	bRowCount = 1;
 
 	BZERO(dDistance_Hor);
 
-	nColorLevel			= 1;
-	nNozzleDropSizeMin	= 30;
+	nColorLevel = 1;
+	nNozzleDropSizeMin = 30;
 
 }
 
 //读入参数
 bool PRINTHEAD::GetFromProfile(const char *pszSection, const char *pszProfile)
 {
-    CString strSection, strIniFile;
-    TCHAR szReg[100];
-    
+	CString strSection, strIniFile;
+	TCHAR szReg[100];
+
 	Initialize();
 
-    strSection = pszSection;
-    strIniFile = pszProfile;
-    if (strSection.IsEmpty() || strIniFile.IsEmpty())
-        return false;
-    
-    GET_PROFILE_INFO_INT(nType, printhead_none, nType, printhead_Unknown, WORD);
-    
-    GET_PROFILE_INFO_INT(nNozzleSize, 1, nNozzleSize, 100000, WORD);
-    GET_PROFILE_INFO_DOUBLE(dNozzleDistance, 0.0001, dNozzleDistance, 1000);
+	strSection = pszSection;
+	strIniFile = pszProfile;
+	if (strSection.IsEmpty() || strIniFile.IsEmpty())
+		return false;
+
+	GET_PROFILE_INFO_INT(nType, printhead_none, nType, printhead_Unknown, WORD);
+
+	GET_PROFILE_INFO_INT(nNozzleSize, 1, nNozzleSize, 100000, WORD);
+	GET_PROFILE_INFO_DOUBLE(dNozzleDistance, 0.0001, dNozzleDistance, 1000);
 
 	GET_PROFILE_INFO_INT(bRowCount, 1, bRowCount, 0xFF, BYTE);
 	if (bRowCount > _PRINTHEAD_ROW_MAX_)
@@ -113,27 +113,27 @@ bool PRINTHEAD::GetFromProfile(const char *pszSection, const char *pszProfile)
 		GET_PROFILE_INFO_ARRAY_DOUBLE(dDistance_Hor, bRowCount, -1000.0, 0.0, 1000.0);
 	}
 
-    GET_PROFILE_INFO_INT(nColorLevel, 0, nColorLevel, 256, UINT);
-    GET_PROFILE_INFO_INT(nNozzleDropSizeMin, 1, nNozzleDropSizeMin, 1000, UINT);
+	GET_PROFILE_INFO_INT(nColorLevel, 0, nColorLevel, 256, UINT);
+	GET_PROFILE_INFO_INT(nNozzleDropSizeMin, 1, nNozzleDropSizeMin, 1000, UINT);
 
-    return IsValid();
+	return IsValid();
 }
 //写入参数
 bool PRINTHEAD::SetToProfile(const char *pszSection, const char *pszProfile) const
 {
-    CString strSection, strIniFile;
-    CString strReg;
+	CString strSection, strIniFile;
+	CString strReg;
 	int		bCount;
 
-    strSection = pszSection;
-    strIniFile = pszProfile;
-    if (strSection.IsEmpty() || strIniFile.IsEmpty())
-        return false;
-    
-    WRITE_PROFILE_INFO("%d", nType);
-    
-    WRITE_PROFILE_INFO("%d", nNozzleSize);
-    WRITE_PROFILE_INFO("%g", dNozzleDistance);
+	strSection = pszSection;
+	strIniFile = pszProfile;
+	if (strSection.IsEmpty() || strIniFile.IsEmpty())
+		return false;
+
+	WRITE_PROFILE_INFO("%d", nType);
+
+	WRITE_PROFILE_INFO("%d", nNozzleSize);
+	WRITE_PROFILE_INFO("%g", dNozzleDistance);
 
 	WRITE_PROFILE_INFO("%d", bRowCount);
 	bCount = bRowCount;
@@ -144,21 +144,21 @@ bool PRINTHEAD::SetToProfile(const char *pszSection, const char *pszProfile) con
 		WRITE_PROFILE_INFO_ARRAY("%f", dDistance_Hor, bCount);
 	}
 
-    WRITE_PROFILE_INFO("%d", nColorLevel);
-    WRITE_PROFILE_INFO("%d", nNozzleDropSizeMin);
+	WRITE_PROFILE_INFO("%d", nColorLevel);
+	WRITE_PROFILE_INFO("%d", nNozzleDropSizeMin);
 
 	return true;
 }
 //参数是否有效
 bool PRINTHEAD::IsValid() const
 {
-    if (nType <= printhead_none || nType >= printhead_Unknown)
-        return false;
+	if (nType <= printhead_none || nType >= printhead_Unknown)
+		return false;
 
-    if (nNozzleSize <= 0)
-        return false;
-    if (dNozzleDistance <= DOUBLEZERO)
-        return false;
+	if (nNozzleSize <= 0)
+		return false;
+	if (dNozzleDistance <= DOUBLEZERO)
+		return false;
 
 	if (bRowCount > _PRINTHEAD_ROW_MAX_)
 		return false;
@@ -166,15 +166,15 @@ bool PRINTHEAD::IsValid() const
 	{
 		int		i, j;
 		BOOL	bInitZero = FALSE;
-		for (i=0; i<(bRowCount-1); i++)
+		for (i = 0; i < (bRowCount - 1); i++)
 		{
-			for (j=i+1; j<bRowCount; j++)
+			for (j = i + 1; j < bRowCount; j++)
 			{
 				if (EQUDOUBLE(dDistance_Hor[i], dDistance_Hor[j]))
 					return false;	//有至少2行间距相等
 			}
 		}
-		for (i=0; i<bRowCount; i++)
+		for (i = 0; i < bRowCount; i++)
 		{
 			if (EQUZERO(dDistance_Hor[i]))
 			{
@@ -186,10 +186,10 @@ bool PRINTHEAD::IsValid() const
 			return false;		//无起始喷嘴定义
 	}
 
-    if (nColorLevel < 0 || nColorLevel > 256)
-        return false;
+	if (nColorLevel < 0 || nColorLevel > 256)
+		return false;
 
-    return true;
+	return true;
 }
 
 //初始化
@@ -197,11 +197,11 @@ void PRINTHEADGROUP::Initialize()
 {
 	printhead.Initialize();
 
-	nHeadNumber	= 8;
+	nHeadNumber = 8;
 
-	nGroupCount	= 1;
+	nGroupCount = 1;
 
-	bCombineWay	= combineway_normal;
+	bCombineWay = combineway_normal;
 
 	BZERO(nFilterIndex);
 
@@ -216,41 +216,41 @@ void PRINTHEADGROUP::Initialize()
 //注：pFilterIndex 中的每个值不能相同
 bool PRINTHEADGROUP::IsValidFilter(const UINT *pFilterIndex, int nHead)
 {
-    int		i;
-    int		m;
-    UINT	nValue;
+	int		i;
+	int		m;
+	UINT	nValue;
 
-    if (pFilterIndex==NULL)
-        return false;
-    for (i=0; i< nHead; i++)
-    {
+	if (pFilterIndex == NULL)
+		return false;
+	for (i = 0; i < nHead; i++)
+	{
 		nValue = pFilterIndex[i];
-		for (m=i+1; m<nHead; m++)
+		for (m = i + 1; m < nHead; m++)
 		{
-			if (nValue==pFilterIndex[m])
+			if (nValue == pFilterIndex[m])
 			{//存在相同值
 				return false;
 			}
 		}
-    }
-    return true;
+	}
+	return true;
 }
 //每组喷头的颜料信息是否有效
 //  pColorTable :[in]喷头颜料信息
 //  nColor      :[in]颜色数
 //注：喷头颜料信息值不能相同
-bool PRINTHEADGROUP::IsValidColorTable(const DWORD *pColorTable, int nColor) 
+bool PRINTHEADGROUP::IsValidColorTable(const DWORD *pColorTable, int nColor)
 {
-    int i, j;
-    DWORD nValue;
+	int i, j;
+	DWORD nValue;
 
-    if (pColorTable==NULL)
-        return false;
+	if (pColorTable == NULL)
+		return false;
 
-    for (i=0; i< nColor; i++)
-    {
-        nValue = pColorTable[i];
-		switch(nValue)
+	for (i = 0; i < nColor; i++)
+	{
+		nValue = pColorTable[i];
+		switch (nValue)
 		{
 		case kypc_spotcolor:
 		case kypc_nocolor:
@@ -259,13 +259,13 @@ bool PRINTHEADGROUP::IsValidColorTable(const DWORD *pColorTable, int nColor)
 		case kypc_unknown:
 			return false;
 		}
-        for (j=i+1; j< nColor; j++)
-        {
-            if (nValue==pColorTable[j])
-                return false;
-        }
-    }
-    return true;
+		for (j = i + 1; j < nColor; j++)
+		{
+			if (nValue == pColorTable[j])
+				return false;
+		}
+	}
+	return true;
 }
 //喷头对应喷头板通道信息是否有效
 //	pDataFilter	:[in]喷头对应的喷头板通道信息，同 nDataFilter 定义
@@ -276,17 +276,17 @@ bool PRINTHEADGROUP::IsValidDataFilter(const UINT *pDataFilter, int nChannels)
 	int		i, j;
 	UINT	nValue;
 
-	if (pDataFilter==NULL)
+	if (pDataFilter == NULL)
 		return false;
 
-	for (i=0; i< nChannels; i++)
+	for (i = 0; i < nChannels; i++)
 	{
 		nValue = pDataFilter[i];
 		if (nValue >= (UINT)nChannels)
 			return false;
-		for (j=i+1; j< nChannels; j++)
+		for (j = i + 1; j < nChannels; j++)
 		{
-			if (nValue==pDataFilter[j])
+			if (nValue == pDataFilter[j])
 				return false;
 		}
 	}
@@ -299,7 +299,7 @@ bool PRINTHEADGROUP::IsValidDataFilter(const UINT *pDataFilter, int nChannels)
 int PRINTHEADGROUP::GetOverlappingNozzles(BYTE bCombineWay)
 {
 	int nOverlappingNozzles = -1;
-	switch(bCombineWay)
+	switch (bCombineWay)
 	{
 	default:
 		ASSERT(0);
@@ -333,7 +333,7 @@ int PRINTHEADGROUP::GetOverlappingNozzles(BYTE bCombineWay)
 int PRINTHEADGROUP::GetTotalNozzles(int nNozzles, int nGroupCount, BYTE bCombineWay)
 {
 	int nOverlappingNozzles, nTotalNozzles = 0;
-	
+
 	ASSERT(nGroupCount >= 1);
 	ASSERT(nNozzles >= 1);
 
@@ -341,7 +341,7 @@ int PRINTHEADGROUP::GetTotalNozzles(int nNozzles, int nGroupCount, BYTE bCombine
 	if (nOverlappingNozzles < 0)
 		return 0;		//invalid combine way
 
-	nTotalNozzles  = nGroupCount*(nNozzles-nOverlappingNozzles) + nOverlappingNozzles;
+	nTotalNozzles = nGroupCount*(nNozzles - nOverlappingNozzles) + nOverlappingNozzles;
 
 	return nTotalNozzles;
 }
@@ -350,22 +350,22 @@ int PRINTHEADGROUP::GetTotalNozzles(int nNozzles, int nGroupCount, BYTE bCombine
 //喷头组参数是否有效
 bool PRINTHEADGROUP::IsValid() const
 {
-    if (!printhead.IsValid())
-        return false;
+	if (!printhead.IsValid())
+		return false;
 
-    if (nHeadNumber <= 0 || nHeadNumber > KY_MAX_COLORS)
-        return false;
+	if (nHeadNumber <= 0 || nHeadNumber > KY_MAX_COLORS)
+		return false;
 
-    if (nGroupCount <= 0 || (nHeadNumber % nGroupCount) != 0)
-        return false;
+	if (nGroupCount <= 0 || (nHeadNumber % nGroupCount) != 0)
+		return false;
 
-    int nColor;
+	int nColor;
 
-    nColor = (nHeadNumber/nGroupCount);
-    if (!PRINTHEADGROUP::IsValidFilter(nFilterIndex, nHeadNumber))
-        return false;
-    if (!PRINTHEADGROUP::IsValidColorTable(nColorTable, nColor))
-        return false;
+	nColor = (nHeadNumber / nGroupCount);
+	if (!PRINTHEADGROUP::IsValidFilter(nFilterIndex, nHeadNumber))
+		return false;
+	if (!PRINTHEADGROUP::IsValidColorTable(nColorTable, nColor))
+		return false;
 	if (!PRINTHEADGROUP::IsValidDataFilter(nDataFilter, nColor))
 		return false;
 
@@ -374,50 +374,50 @@ bool PRINTHEADGROUP::IsValid() const
 //读入参数
 bool PRINTHEADGROUP::GetFromProfile(const char *pszSection, const char *pszProfile)
 {
-    int nColor;
-    CString strSectionTmp;
-    CString strSection, strIniFile;
+	int nColor;
+	CString strSectionTmp;
+	CString strSection, strIniFile;
 	UINT	nFilter[KY_MAX_CHANNELS][KY_MAX_GROUP];
 	int		i, j;
 
 	Initialize();
 
 	strSection = pszSection;
-    strIniFile = pszProfile;
-    if (strSection.IsEmpty() || strIniFile.IsEmpty())
-        return false;
+	strIniFile = pszProfile;
+	if (strSection.IsEmpty() || strIniFile.IsEmpty())
+		return false;
 
-    strSectionTmp = strSection;
-    strSection = strSectionTmp + "_PRINTHEAD";
-    if (!printhead.GetFromProfile(strSection, strIniFile))
-        return false;
+	strSectionTmp = strSection;
+	strSection = strSectionTmp + "_PRINTHEAD";
+	if (!printhead.GetFromProfile(strSection, strIniFile))
+		return false;
 
-    strSection = strSectionTmp;
+	strSection = strSectionTmp;
 
-    GET_PROFILE_INFO_INT(nHeadNumber, 1, nHeadNumber, KY_MAX_COLORS, UINT);
-    GET_PROFILE_INFO_INT(nGroupCount, 1, nGroupCount, KY_MAX_GROUP, UINT);
+	GET_PROFILE_INFO_INT(nHeadNumber, 1, nHeadNumber, KY_MAX_COLORS, UINT);
+	GET_PROFILE_INFO_INT(nGroupCount, 1, nGroupCount, KY_MAX_GROUP, UINT);
 	GET_PROFILE_INFO_INT(bCombineWay, 0, bCombineWay, 0xFF, BYTE);
 
-    ASSERT((nHeadNumber % nGroupCount)==0);
-    ASSERT(nHeadNumber >= nGroupCount);
-    if (nHeadNumber < nGroupCount)
-        nGroupCount = 1;
-    if ((nHeadNumber % nGroupCount) != 0)
-        nGroupCount = 1;
-    nColor = nHeadNumber / nGroupCount;
+	ASSERT((nHeadNumber % nGroupCount) == 0);
+	ASSERT(nHeadNumber >= nGroupCount);
+	if (nHeadNumber < nGroupCount)
+		nGroupCount = 1;
+	if ((nHeadNumber % nGroupCount) != 0)
+		nGroupCount = 1;
+	nColor = nHeadNumber / nGroupCount;
 
-    strSection = strSectionTmp + "_FILTER";
-    BZERO(nFilter);
-    GET_PROFILE_INFO_ARRAYEX_UINT(nFilter, nColor, nGroupCount, 0, 0, KY_MAX_COLORS, UINT);
-	for (i=0; i<nColor; i++)
+	strSection = strSectionTmp + "_FILTER";
+	BZERO(nFilter);
+	GET_PROFILE_INFO_ARRAYEX_UINT(nFilter, nColor, nGroupCount, 0, 0, KY_MAX_COLORS, UINT);
+	for (i = 0; i < nColor; i++)
 	{
-		for (j=0; j<(int)nGroupCount; j++)
+		for (j = 0; j < (int)nGroupCount; j++)
 		{
-			nFilterIndex[TransToFilterIndex(j,i,nColor)] = nFilter[i][j];
+			nFilterIndex[TransToFilterIndex(j, i, nColor)] = nFilter[i][j];
 		}
 	}
-    strSection = strSectionTmp + "_COLORTABLE";
-    GET_PROFILE_INFO_ARRAY_UINT(nColorTable, nColor, 0x00000000, 0x00000000, 0xFFFFFFFF);
+	strSection = strSectionTmp + "_COLORTABLE";
+	GET_PROFILE_INFO_ARRAY_UINT(nColorTable, nColor, 0x00000000, 0x00000000, 0xFFFFFFFF);
 	strSection = strSectionTmp + "_DATAFILTER";
 	BZERO(nDataFilter);
 	GET_PROFILE_INFO_ARRAY_UINT(nDataFilter, nColor, 0, 0, 0xFFFFFFFF);
@@ -427,166 +427,166 @@ bool PRINTHEADGROUP::GetFromProfile(const char *pszSection, const char *pszProfi
 //写入参数
 bool PRINTHEADGROUP::SetToProfile(const char *pszSection, const char *pszProfile) const
 {
-    int nColor;
-    CString strSectionTmp;
-    CString strSection, strIniFile;
-    CString strReg;
+	int nColor;
+	CString strSectionTmp;
+	CString strSection, strIniFile;
+	CString strReg;
 	UINT	nFilter[KY_MAX_CHANNELS][KY_MAX_GROUP];
 	int		i, j;
 
-    strSection = pszSection;
-    strIniFile = pszProfile;
-    if (strSection.IsEmpty() || strIniFile.IsEmpty())
-        return false;
-    
-    strSectionTmp = strSection;
-    
-    strSection = strSectionTmp;
-    WRITE_PROFILE_INFO("%u", nHeadNumber);
-    WRITE_PROFILE_INFO("%u", nGroupCount);
+	strSection = pszSection;
+	strIniFile = pszProfile;
+	if (strSection.IsEmpty() || strIniFile.IsEmpty())
+		return false;
+
+	strSectionTmp = strSection;
+
+	strSection = strSectionTmp;
+	WRITE_PROFILE_INFO("%u", nHeadNumber);
+	WRITE_PROFILE_INFO("%u", nGroupCount);
 	WRITE_PROFILE_INFO("%d", bCombineWay);
 
-    nColor = nHeadNumber / nGroupCount;
+	nColor = nHeadNumber / nGroupCount;
 
-    strSection = strSectionTmp + "_PRINTHEAD";
-    if (!printhead.SetToProfile(strSection, strIniFile))
-        return false;
+	strSection = strSectionTmp + "_PRINTHEAD";
+	if (!printhead.SetToProfile(strSection, strIniFile))
+		return false;
 
-    strSection = strSectionTmp + "_FILTER";
+	strSection = strSectionTmp + "_FILTER";
 	BZERO(nFilter);
-	for (i=0; i<nColor; i++)
+	for (i = 0; i < nColor; i++)
 	{
-		for (j=0; j<(int)nGroupCount; j++)
+		for (j = 0; j < (int)nGroupCount; j++)
 		{
-			nFilter[i][j] = nFilterIndex[TransToFilterIndex(j,i,nColor)];
+			nFilter[i][j] = nFilterIndex[TransToFilterIndex(j, i, nColor)];
 		}
 	}
-    WRITE_PROFILE_INFO_ARRAYEX("%u", nFilter, nColor, nGroupCount);
-    strSection = strSectionTmp + "_COLORTABLE";
-    WRITE_PROFILE_INFO_ARRAY("%u", nColorTable, nColor);
+	WRITE_PROFILE_INFO_ARRAYEX("%u", nFilter, nColor, nGroupCount);
+	strSection = strSectionTmp + "_COLORTABLE";
+	WRITE_PROFILE_INFO_ARRAY("%u", nColorTable, nColor);
 	strSection = strSectionTmp + "_DATAFILTER";
 	WRITE_PROFILE_INFO_ARRAY("%u", nDataFilter, nColor);
- 
-    return true;
+
+	return true;
 }
 
 //初始化
 void SPRAYPARAM::Initialize()
 {
-	bSprayForIdleEanble		= FALSE;
+	bSprayForIdleEanble = FALSE;
 	bSprayForPrintingEanble = FALSE;
 
-	wSprayFrequencyForIdel	= 0;
-	wSprayPassForPrint		= 0;
+	wSprayFrequencyForIdel = 0;
+	wSprayPassForPrint = 0;
 }
 
 //读入参数
 bool SPRAYPARAM::GetFromProfile(const char *pszSection, const char *pszProfile)
 {
-    CString strSection, strIniFile;
+	CString strSection, strIniFile;
 
 	Initialize();
 
-    strSection = pszSection;
-    strIniFile = pszProfile;
-    if (strSection.IsEmpty() || strIniFile.IsEmpty())
-        return false;
-    
-    GET_PROFILE_INFO_INT(bSprayForIdleEanble, 0, bSprayForIdleEanble, 1, BYTE);
-    GET_PROFILE_INFO_INT(bSprayForPrintingEanble, 0, bSprayForPrintingEanble, 1, BYTE);
+	strSection = pszSection;
+	strIniFile = pszProfile;
+	if (strSection.IsEmpty() || strIniFile.IsEmpty())
+		return false;
 
-    GET_PROFILE_INFO_INT(wSprayFrequencyForIdel, 0, wSprayFrequencyForIdel, 0xFFFF, WORD);
-    GET_PROFILE_INFO_INT(wSprayPassForPrint, 0, wSprayPassForPrint, 0xFFFF, WORD);
+	GET_PROFILE_INFO_INT(bSprayForIdleEanble, 0, bSprayForIdleEanble, 1, BYTE);
+	GET_PROFILE_INFO_INT(bSprayForPrintingEanble, 0, bSprayForPrintingEanble, 1, BYTE);
 
-    return IsValid();
+	GET_PROFILE_INFO_INT(wSprayFrequencyForIdel, 0, wSprayFrequencyForIdel, 0xFFFF, WORD);
+	GET_PROFILE_INFO_INT(wSprayPassForPrint, 0, wSprayPassForPrint, 0xFFFF, WORD);
+
+	return IsValid();
 }
 //写入参数
 bool SPRAYPARAM::SetToProfile(const char *pszSection, const char *pszProfile) const
 {
-    CString strSection, strIniFile;
-    CString strReg;
+	CString strSection, strIniFile;
+	CString strReg;
 
-    strSection = pszSection;
-    strIniFile = pszProfile;
-    if (strSection.IsEmpty() || strIniFile.IsEmpty())
-        return false;
-    
-    WRITE_PROFILE_INFO("%d", bSprayForIdleEanble);
-    WRITE_PROFILE_INFO("%d", bSprayForPrintingEanble);
+	strSection = pszSection;
+	strIniFile = pszProfile;
+	if (strSection.IsEmpty() || strIniFile.IsEmpty())
+		return false;
 
-    WRITE_PROFILE_INFO("%d", wSprayFrequencyForIdel);
-    WRITE_PROFILE_INFO("%d", wSprayPassForPrint);
+	WRITE_PROFILE_INFO("%d", bSprayForIdleEanble);
+	WRITE_PROFILE_INFO("%d", bSprayForPrintingEanble);
+
+	WRITE_PROFILE_INFO("%d", wSprayFrequencyForIdel);
+	WRITE_PROFILE_INFO("%d", wSprayPassForPrint);
 	return true;
 }
 //参数是否有效
 bool SPRAYPARAM::IsValid() const
 {
-    return true;
+	return true;
 }
 
 //初始化
 void CLEANHEADPARAM::Initialize()
 {
-	bEnable		= FALSE;
-	wPass		= 0;
-	wPurgeTime	= 0;
+	bEnable = FALSE;
+	wPass = 0;
+	wPurgeTime = 0;
 	wPurgeDelay = 0;
-	bCleanTime	= 1;
+	bCleanTime = 1;
 }
 
 //读入参数
 bool CLEANHEADPARAM::GetFromProfile(const char *pszSection, const char *pszProfile)
 {
-    CString strSection, strIniFile;
+	CString strSection, strIniFile;
 
 	Initialize();
 
-    strSection = pszSection;
-    strIniFile = pszProfile;
-    if (strSection.IsEmpty() || strIniFile.IsEmpty())
-        return false;
+	strSection = pszSection;
+	strIniFile = pszProfile;
+	if (strSection.IsEmpty() || strIniFile.IsEmpty())
+		return false;
 
-    GET_PROFILE_INFO_INT(bEnable, 0, bEnable, 1, BYTE);
-    GET_PROFILE_INFO_INT(wPass, 0, wPass, 0xFFFF, WORD);
-    GET_PROFILE_INFO_INT(wPurgeTime, 0, wPurgeTime, 0xFFFF, WORD);
-    GET_PROFILE_INFO_INT(wPurgeDelay, 0, wPurgeDelay, 0xFFFF, WORD);
-    GET_PROFILE_INFO_INT(bCleanTime, 0, bCleanTime, 0xFF, BYTE);
+	GET_PROFILE_INFO_INT(bEnable, 0, bEnable, 1, BYTE);
+	GET_PROFILE_INFO_INT(wPass, 0, wPass, 0xFFFF, WORD);
+	GET_PROFILE_INFO_INT(wPurgeTime, 0, wPurgeTime, 0xFFFF, WORD);
+	GET_PROFILE_INFO_INT(wPurgeDelay, 0, wPurgeDelay, 0xFFFF, WORD);
+	GET_PROFILE_INFO_INT(bCleanTime, 0, bCleanTime, 0xFF, BYTE);
 
-    return IsValid();
+	return IsValid();
 }
 //写入参数
 bool CLEANHEADPARAM::SetToProfile(const char *pszSection, const char *pszProfile) const
 {
-    CString strSection, strIniFile;
-    CString strReg;
+	CString strSection, strIniFile;
+	CString strReg;
 
-    strSection = pszSection;
-    strIniFile = pszProfile;
-    if (strSection.IsEmpty() || strIniFile.IsEmpty())
-        return false;
-    
-    WRITE_PROFILE_INFO("%d", bEnable);
-    WRITE_PROFILE_INFO("%d", wPass);
-    WRITE_PROFILE_INFO("%d", wPurgeTime);
-    WRITE_PROFILE_INFO("%d", wPurgeDelay);
-    WRITE_PROFILE_INFO("%d", bCleanTime);
+	strSection = pszSection;
+	strIniFile = pszProfile;
+	if (strSection.IsEmpty() || strIniFile.IsEmpty())
+		return false;
 
-    return true;
+	WRITE_PROFILE_INFO("%d", bEnable);
+	WRITE_PROFILE_INFO("%d", wPass);
+	WRITE_PROFILE_INFO("%d", wPurgeTime);
+	WRITE_PROFILE_INFO("%d", wPurgeDelay);
+	WRITE_PROFILE_INFO("%d", bCleanTime);
+
+	return true;
 }
 //参数是否有效
 bool CLEANHEADPARAM::IsValid() const
 {
-    return true;
+	return true;
 }
 
 
 //初始化
 void MOTOPARAM_GENERAL::Initialize()
 {
-	X_MAX_WIDTH		= 3500;				//x方向最大打印宽度(mm)
-	PRINT_MAX_FREQ	= 40000;			//打印最大频率(Hz)
-	X_MAX_SPEED		= 700;				//x方向最大速度(mm/s)
-	X_COEF			= 1.0f;				//x方向速度较正系数
+	X_MAX_WIDTH = 3500;				//x方向最大打印宽度(mm)
+	PRINT_MAX_FREQ = 40000;			//打印最大频率(Hz)
+	X_MAX_SPEED = 700;				//x方向最大速度(mm/s)
+	X_COEF = 1.0f;				//x方向速度较正系数
 }
 
 //读入参数
@@ -634,7 +634,7 @@ bool MOTOPARAM_GENERAL::IsValid() const
 		return false;
 	if (PRINT_MAX_FREQ == 0)
 		return false;
-	if (X_MAX_SPEED==0)
+	if (X_MAX_SPEED == 0)
 		return false;
 	if (X_COEF < 0.0000001)
 		return false;
@@ -645,14 +645,14 @@ bool MOTOPARAM_GENERAL::IsValid() const
 //初始化
 void MOTOPARAM_X::Initialize()
 {
-	SERVE_PER_PULSE	= 10000;				//电子齿轮比（若加减速机，则为经减速机后的比值）
-	X_P_DIS			= 70;					//x方向打印时走加速距离(mm)
-	X_S_DIS			= 70;					//x方向打印时走减速距离(mm)
-	IO_SPACE		= 50;					//光栅IO间距(mm) IO_SPACE
-	IO_PULSE		= 12500;				//光栅IO间脉冲数 ，IO_PULSE
-	X_DELAY_F		= 15;					//小车快速移动延时时间（us），值越大，小车移动越慢
-	X_DELAY_S		= 30;					//小车慢速移动延时时间（us）,值越大，小车移动越慢
-	SERVE_PER_CYCLE	= 100.0f;				//服电机转一周小车走的距离（mm）
+	SERVE_PER_PULSE = 10000;				//电子齿轮比（若加减速机，则为经减速机后的比值）
+	X_P_DIS = 70;					//x方向打印时走加速距离(mm)
+	X_S_DIS = 70;					//x方向打印时走减速距离(mm)
+	IO_SPACE = 50;					//光栅IO间距(mm) IO_SPACE
+	IO_PULSE = 12500;				//光栅IO间脉冲数 ，IO_PULSE
+	X_DELAY_F = 15;					//小车快速移动延时时间（us），值越大，小车移动越慢
+	X_DELAY_S = 30;					//小车慢速移动延时时间（us）,值越大，小车移动越慢
+	SERVE_PER_CYCLE = 100.0f;				//服电机转一周小车走的距离（mm）
 }
 
 //读入参数
@@ -705,15 +705,15 @@ bool MOTOPARAM_X::SetToProfile(const char *pszSection, const char *pszProfile) c
 //参数是否有效
 bool MOTOPARAM_X::IsValid() const
 {
-	if (SERVE_PER_PULSE==0)
+	if (SERVE_PER_PULSE == 0)
 		return false;
-	if (X_P_DIS==0)
+	if (X_P_DIS == 0)
 		return false;
-	if (X_S_DIS==0)
+	if (X_S_DIS == 0)
 		return false;
-	if (IO_SPACE==0 || IO_PULSE==0)
+	if (IO_SPACE == 0 || IO_PULSE == 0)
 		return false;
-	if (X_DELAY_S==0 || X_DELAY_F==0)
+	if (X_DELAY_S == 0 || X_DELAY_F == 0)
 		return false;
 	if (SERVE_PER_CYCLE < 0.000001)
 		return false;
@@ -724,12 +724,12 @@ bool MOTOPARAM_X::IsValid() const
 //初始化
 void MOTOPARAM_Y::Initialize()
 {
-	Y_PER_PULSE	= 1000;					//Y向电子齿轮比（若加减速机，则为经减速机后的比值）
-	Y_MAX_SPEED	= 500;					//Y方向最大速度（mm/s）
-	Y_DELAY		= 15;					//打印时匀速延时时间（us）
-	Y_DELAY_F	= 50;					//Y向快速移动延时时间(us) 
-	Y_DELAY_S	= 20;					//Y向慢速移动延时时间(us) 
-	Y_WHORL		= 10.0f;				//Y方向螺矩(mm) 
+	Y_PER_PULSE = 1000;					//Y向电子齿轮比（若加减速机，则为经减速机后的比值）
+	Y_MAX_SPEED = 500;					//Y方向最大速度（mm/s）
+	Y_DELAY = 15;					//打印时匀速延时时间（us）
+	Y_DELAY_F = 50;					//Y向快速移动延时时间(us) 
+	Y_DELAY_S = 20;					//Y向慢速移动延时时间(us) 
+	Y_WHORL = 10.0f;				//Y方向螺矩(mm) 
 }
 
 //读入参数
@@ -777,9 +777,9 @@ bool MOTOPARAM_Y::SetToProfile(const char *pszSection, const char *pszProfile) c
 //参数是否有效
 bool MOTOPARAM_Y::IsValid() const
 {
-	if (Y_PER_PULSE==0)
+	if (Y_PER_PULSE == 0)
 		return false;
-	if (Y_MAX_SPEED==0)
+	if (Y_MAX_SPEED == 0)
 		return false;
 
 	return true;
@@ -788,10 +788,10 @@ bool MOTOPARAM_Y::IsValid() const
 //初始化
 void MOTOPARAM_Z::Initialize()
 {
-	Z_DELAY			= 400;					//Z方向移动延时（us）
-	Z_WHORL			= 10.0f;				//Z方向螺矩(mm) 
-	Z_POSITION_MIN	= 1.0f;					//Z方向最小距离(pulse)  
-	Z_POSITION_MAX	= 666.6f;				//Z方向最大距离(pulse) 
+	Z_DELAY = 400;					//Z方向移动延时（us）
+	Z_WHORL = 10.0f;				//Z方向螺矩(mm) 
+	Z_POSITION_MIN = 1.0f;					//Z方向最小距离(pulse)  
+	Z_POSITION_MAX = 666.6f;				//Z方向最大距离(pulse) 
 }
 
 //读入参数
@@ -842,7 +842,7 @@ bool MOTOPARAM_Z::IsValid() const
 		return false;
 	if (Z_POSITION_MAX <= 0.0000001 || Z_POSITION_MAX > 1000.0f)
 		return false;
-	
+
 	return true;
 }
 
@@ -852,20 +852,20 @@ void PRINTER::Initialize()
 {
 	memset(this, 0, sizeof(*this));
 
-	nType	= printer_none;
+	nType = printer_none;
 	strcpy_s(szName, _T("printer_none"));
 
-	dMinStartX	= 0.0;
-	dMinStartY	= 0.0;
+	dMinStartX = 0.0;
+	dMinStartY = 0.0;
 
-	dMaxWidth	= 0.0;
-	dMaxHeight	= 0.0;
+	dMaxWidth = 0.0;
+	dMaxHeight = 0.0;
 
 	printgroup.Initialize();
 
 	BZERO(nInkModeLevel);
-	nInkModeCount	= 0;
-	nInkModeType	= 0;
+	nInkModeCount = 0;
+	nInkModeType = 0;
 
 	BZERO(szSpeedLevel);
 	BZERO(bSpeedValue);
@@ -875,12 +875,12 @@ void PRINTER::Initialize()
 	BZERO(nYPassLevel);
 	BZERO(bYPassWay);
 
-	bSprayEnable	= FALSE;
-	bCleanHeadEnable= FALSE;
+	bSprayEnable = FALSE;
+	bCleanHeadEnable = FALSE;
 
-	nSpeedType	= 0;
-	nXResType	= 0;
-	nYPassType	= 0;
+	nSpeedType = 0;
+	nXResType = 0;
+	nYPassType = 0;
 
 	BZERO(nDistance_Hor);
 	BZERO(nDistance_Hor_Reversed);
@@ -890,70 +890,70 @@ void PRINTER::Initialize()
 
 	BZERO(fade_nLevel);
 
-	bTracelessPrintWay		= tracelessprint_way_none;		//无痕打印处理-效果定义
+	bTracelessPrintWay = tracelessprint_way_none;		//无痕打印处理-效果定义
 	dTracelessPrintDefWidth = TRACELESSPRINT_DEFWIDTH;		//无痕打印处理-最小单元默认宽度，mm
-	dTracelessPrintDefHeight= TRACELESSPRINT_DEFHEIGHT;		//无痕打印处理-最小单元默认高度，mm
+	dTracelessPrintDefHeight = TRACELESSPRINT_DEFHEIGHT;		//无痕打印处理-最小单元默认高度，mm
 
-	nPrintColorLevel		= 1;							//实际打印使用的灰度级别，<= PRINTHEAD::nColorLevel
+	nPrintColorLevel = 1;							//实际打印使用的灰度级别，<= PRINTHEAD::nColorLevel
 
 
 	sprayparam.Initialize();
 	cleanheadparam.Initialize();
 
-	bPrintway	= PRINTER::printway_unidirection;
+	bPrintway = PRINTER::printway_unidirection;
 
-	bJumpWay	= PRINTER::jumpway_all;		//快进（跳白）处理方式
-	dJumpLimit_x= 30;						//X向最小跳白宽度，mm
-	dJumpLimit_y= 100000;						//Y向最大跳白长度，mm
+	bJumpWay = PRINTER::jumpway_all;		//快进（跳白）处理方式
+	dJumpLimit_x = 30;						//X向最小跳白宽度，mm
+	dJumpLimit_y = 100000;						//Y向最大跳白长度，mm
 
-	bPrintToFile			= FALSE;				//输出到PRN文件，为FALSE时直接输出到打印机
+	bPrintToFile = FALSE;				//输出到PRN文件，为FALSE时直接输出到打印机
 
-	bVirtualPrinter			= FALSE;				//是否为虚拟打印机（不连接实际硬件设备）
+	bVirtualPrinter = FALSE;				//是否为虚拟打印机（不连接实际硬件设备）
 
-	bFlatMachine			= FALSE;				//设备类型，默认为导带机型
+	bFlatMachine = FALSE;				//设备类型，默认为导带机型
 
-	bOriginPosition_posXEnable	= FALSE;			//是否支持X向相对定位操作，IO定位控制模式暂不支持，需设置为FALSE
+	bOriginPosition_posXEnable = FALSE;			//是否支持X向相对定位操作，IO定位控制模式暂不支持，需设置为FALSE
 
-	bOriginPosition_start	= origin_pos_zero_xy;	//打印起始前小车位置
-	bOriginPosition_end		= origin_pos_x_zero;	//打印结束时小车位置
+	bOriginPosition_start = origin_pos_zero_xy;	//打印起始前小车位置
+	bOriginPosition_end = origin_pos_x_zero;	//打印结束时小车位置
 
-	bOriginPosition_start	= Check_OriginPosition_Start(bOriginPosition_start, bFlatMachine, bOriginPosition_posXEnable);
-	bOriginPosition_end		= Check_OriginPosition_End(bOriginPosition_end, bFlatMachine, bOriginPosition_posXEnable);
+	bOriginPosition_start = Check_OriginPosition_Start(bOriginPosition_start, bFlatMachine, bOriginPosition_posXEnable);
+	bOriginPosition_end = Check_OriginPosition_End(bOriginPosition_end, bFlatMachine, bOriginPosition_posXEnable);
 
-	bOriginPosition_prompt	= TRUE;					//打印起始位置不是“打印原点”时提示
+	bOriginPosition_prompt = TRUE;					//打印起始位置不是“打印原点”时提示
 
-	bThicknessEnable		= FALSE;				//是否可以自定义布厚参数
+	bThicknessEnable = FALSE;				//是否可以自定义布厚参数
 
-	nPriority				= THREAD_PRIORITY_NORMAL;	//打印处理线程优先级，默认为 THREAD_PRIORITY_NORMAL
+	nPriority = THREAD_PRIORITY_NORMAL;	//打印处理线程优先级，默认为 THREAD_PRIORITY_NORMAL
 
 }
 
 //读入参数
 bool PRINTER::GetFromProfile(const char *pszProfile)
 {
-    int     i, j, k;
-    CString strSectionTmp, strEntry;
-    CString strSection, strIniFile, strReg;
-    CString strTmp;
-    char	szReg[200], *pszTmp;
-    UINT	nTmp;
+	int     i, j, k;
+	CString strSectionTmp, strEntry;
+	CString strSection, strIniFile, strReg;
+	CString strTmp;
+	char	szReg[200], *pszTmp;
+	UINT	nTmp;
 	int		nColor;
 	int		nCount;
 
 	Initialize();
 
-    strSection = "Config";
-    strIniFile = pszProfile;
-    if (strSection.IsEmpty() || strIniFile.IsEmpty())
-        return false;
+	strSection = "Config";
+	strIniFile = pszProfile;
+	if (strSection.IsEmpty() || strIniFile.IsEmpty())
+		return false;
 
-    GET_PROFILE_INFO_INT(nType, printer_none, nType, printer_Unknown, WORD);
-    GET_PROFILE_INFO_STRINGEX(szName);
+	GET_PROFILE_INFO_INT(nType, printer_none, nType, printer_Unknown, WORD);
+	GET_PROFILE_INFO_STRINGEX(szName);
 
 	GET_PROFILE_INFO_DOUBLE(dMinStartX, 0.0, dMinStartX, 2000.0);
 	GET_PROFILE_INFO_DOUBLE(dMinStartY, 0.0, dMinStartY, 2000.0);
 
-    GET_PROFILE_INFO_DOUBLE(dMaxWidth, 0.0, dMaxWidth, 100000.0);
+	GET_PROFILE_INFO_DOUBLE(dMaxWidth, 0.0, dMaxWidth, 100000.0);
 	GET_PROFILE_INFO_DOUBLE(dMaxHeight, INT_MIN, dMaxHeight, INT_MAX);
 
 	GET_PROFILE_INFO_INT(bFlatMachine, 0, bFlatMachine, 1, BOOL);
@@ -969,10 +969,10 @@ bool PRINTER::GetFromProfile(const char *pszProfile)
 		dMinStartY = 0;
 	}
 
-    strSectionTmp = strSection;
-    strSection = "PRINTHEADGROUP";
-    if (!printgroup.GetFromProfile(strSection, strIniFile))
-        return false;
+	strSectionTmp = strSection;
+	strSection = "PRINTHEADGROUP";
+	if (!printgroup.GetFromProfile(strSection, strIniFile))
+		return false;
 
 	nColor = printgroup.nHeadNumber / printgroup.nGroupCount;
 	if (nColor <= 0)
@@ -982,10 +982,10 @@ bool PRINTER::GetFromProfile(const char *pszProfile)
 	BZERO(nInkModeLevel);
 	nCount = nInkModeCount;
 	GET_PROFILE_INFO_INT(nCount, 0, nInkModeCount, INKMODE_MAX, int);
-	for (i=0; i< nCount; i++)
+	for (i = 0; i < nCount; i++)
 	{
 		strEntry.Format("nInkModeLevel[%d]", i);
-		nTmp = (UINT)GetPrivateProfileInt (strSection, strEntry, INK_NONE, strIniFile);
+		nTmp = (UINT)GetPrivateProfileInt(strSection, strEntry, INK_NONE, strIniFile);
 		if (nTmp <= INK_NONE || nTmp >= INKMODE_MAX)
 			break;
 		nInkModeLevel[i] = INKMODE(nTmp);
@@ -998,22 +998,22 @@ bool PRINTER::GetFromProfile(const char *pszProfile)
 		nInkModeCount = INKMODE_MAX;
 	nInkModeLevel[nInkModeCount] = INK_NONE;
 
-    strSection = "SPEEDLEVEL";
-    BZERO(szSpeedLevel);
+	strSection = "SPEEDLEVEL";
+	BZERO(szSpeedLevel);
 	BZERO(bSpeedValue);
 	nCount = nSpeedCount;
 	k = 1;		//级数值
 	GET_PROFILE_INFO_INT(nCount, 0, nSpeedCount, _MAX_SPEED_LEVEL_, int);
-    for (i=0; i< nCount; i++)
-    {
+	for (i = 0; i < nCount; i++)
+	{
 		//	szSpeedLevel[0] = fast speed, 1
-        strEntry.Format("szSpeedLevel[%d]", i);
-        if (!GetPrivateProfileString (strSection, strEntry, NULL, szReg, _countof(szReg), strIniFile))
-            break;
+		strEntry.Format("szSpeedLevel[%d]", i);
+		if (!GetPrivateProfileString(strSection, strEntry, NULL, szReg, _countof(szReg), strIniFile))
+			break;
 		if (strlen(szReg) <= 0)
 			break;
 		pszTmp = strrchr(szReg, ',');
-		if (pszTmp==NULL)
+		if (pszTmp == NULL)
 		{
 			strcpy_s(szSpeedLevel[i], szReg);
 			bSpeedValue[i] = k;
@@ -1022,7 +1022,7 @@ bool PRINTER::GetFromProfile(const char *pszProfile)
 		else
 		{
 			*pszTmp++ = '\0';
-			if (strlen(szReg)<=0)
+			if (strlen(szReg) <= 0)
 				break;
 			strcpy_s(szSpeedLevel[i], szReg);
 			nTmp = atoi(pszTmp);
@@ -1030,9 +1030,9 @@ bool PRINTER::GetFromProfile(const char *pszProfile)
 				nTmp = k;
 			k = nTmp;
 			bSpeedValue[i] = k;
-			k ++;
+			k++;
 		}
-    }
+	}
 	nSpeedCount = i;
 
 	if (nSpeedCount <= 0)
@@ -1040,19 +1040,19 @@ bool PRINTER::GetFromProfile(const char *pszProfile)
 	if (nSpeedCount >= _MAX_SPEED_LEVEL_)
 		nSpeedCount = _MAX_SPEED_LEVEL_;
 	szSpeedLevel[nSpeedCount][0] = '\0';
-	
-    strSection = "XRESLEVEL";
-    BZERO(nXResLevel);
+
+	strSection = "XRESLEVEL";
+	BZERO(nXResLevel);
 	nCount = nXResCount;
-    GET_PROFILE_INFO_INT(nCount, 0, nXResCount, _MAX_XRES_LEVEL_, int);
-    for (i=0; i< nCount; i++)
-    {
-        strEntry.Format("nXResLevel[%d]", i);
-        nTmp = (UINT)GetPrivateProfileInt (strSection, strEntry, 0, strIniFile);
-        if (nTmp <= 0)
-            break;
-        nXResLevel[i] = nTmp;
-    }
+	GET_PROFILE_INFO_INT(nCount, 0, nXResCount, _MAX_XRES_LEVEL_, int);
+	for (i = 0; i < nCount; i++)
+	{
+		strEntry.Format("nXResLevel[%d]", i);
+		nTmp = (UINT)GetPrivateProfileInt(strSection, strEntry, 0, strIniFile);
+		if (nTmp <= 0)
+			break;
+		nXResLevel[i] = nTmp;
+	}
 	nXResCount = i;
 	if (nXResCount <= 0)
 		return false;
@@ -1060,28 +1060,28 @@ bool PRINTER::GetFromProfile(const char *pszProfile)
 		nXResCount = _MAX_XRES_LEVEL_;
 	nXResLevel[nXResCount] = 0;
 
-    strSection = "YPASSLEVEL";
-    BZERO(nYPassLevel);
+	strSection = "YPASSLEVEL";
+	BZERO(nYPassLevel);
 	BZERO(bYPassWay);
 	nCount = nYPassCount;
 	GET_PROFILE_INFO_INT(nCount, 0, nYPassCount, _MAX_YPASS_LEVEL_, int);
-    for (i=0; i< nCount; i++)
-    {
+	for (i = 0; i < nCount; i++)
+	{
 		// nYPassLevel[0] = 1,0
-        strEntry.Format("nYPassLevel[%d]", i);
-		if (!GetPrivateProfileString (strSection, strEntry, NULL, szReg, _countof(szReg), strIniFile))
+		strEntry.Format("nYPassLevel[%d]", i);
+		if (!GetPrivateProfileString(strSection, strEntry, NULL, szReg, _countof(szReg), strIniFile))
 			break;
 		if (strlen(szReg) <= 0)
 			break;
 
 		pszTmp = strrchr(szReg, ',');
-		if (pszTmp==NULL)
+		if (pszTmp == NULL)
 		{
 			nTmp = atoi(szReg);
 			if (nTmp <= 0)
 				break;
-			nYPassLevel[i]	= nTmp;
-			bYPassWay[i]	= passway_normal;
+			nYPassLevel[i] = nTmp;
+			bYPassWay[i] = passway_normal;
 		}
 		else
 		{
@@ -1089,11 +1089,11 @@ bool PRINTER::GetFromProfile(const char *pszProfile)
 			nTmp = atoi(szReg);
 			if (nTmp <= 0)
 				break;
-			nYPassLevel[i]	= nTmp;
+			nYPassLevel[i] = nTmp;
 			nTmp = atoi(pszTmp);
 			if (nTmp < passway_normal || nTmp >= passway_count)
 				nTmp = passway_normal;
-			bYPassWay[i]	= (BYTE)nTmp;
+			bYPassWay[i] = (BYTE)nTmp;
 		}
 	}
 	nYPassCount = i;
@@ -1111,12 +1111,12 @@ bool PRINTER::GetFromProfile(const char *pszProfile)
 	BZERO(fade_nLevel);
 
 	BOOL fade_bValid;
-	nTmp = GetPrivateProfileInt (strSection, "fade_bValid", -1, strIniFile);
-	fade_bValid = (nTmp==1) ? TRUE : FALSE;
+	nTmp = GetPrivateProfileInt(strSection, "fade_bValid", -1, strIniFile);
+	fade_bValid = (nTmp == 1) ? TRUE : FALSE;
 	if (!fade_bValid)
 	{// init
 		BZERO(fade_nLevel);
-		for (i=0; i<nYPassCount; i++)
+		for (i = 0; i < nYPassCount; i++)
 		{
 			pass = nYPassLevel[i];
 			ASSERT(pass > 0);
@@ -1133,7 +1133,7 @@ bool PRINTER::GetFromProfile(const char *pszProfile)
 	{// get from profile
 		GET_PROFILE_INFO_ARRAY_INT(fade_nLevel, nYPassCount, -1, 0, 1000000, int);
 	}
-	for (i=0; i<nYPassCount; i++)
+	for (i = 0; i < nYPassCount; i++)
 	{
 		pass = nYPassLevel[i];
 		ASSERT(pass > 0);
@@ -1148,10 +1148,10 @@ bool PRINTER::GetFromProfile(const char *pszProfile)
 		}
 	}
 
-    strSection = strSectionTmp;		//"Config"
+	strSection = strSectionTmp;		//"Config"
 
-    GET_PROFILE_INFO_INT(bSprayEnable, 0, bSprayEnable, 1, BYTE);
-    GET_PROFILE_INFO_INT(bCleanHeadEnable, 0, bCleanHeadEnable, 1, BYTE);
+	GET_PROFILE_INFO_INT(bSprayEnable, 0, bSprayEnable, 1, BYTE);
+	GET_PROFILE_INFO_INT(bCleanHeadEnable, 0, bCleanHeadEnable, 1, BYTE);
 
 	//无痕打印处理方式
 	GET_PROFILE_INFO_INT(bTracelessPrintWay, tracelessprint_way_none, tracelessprint_way_none, tracelessprint_way_limit, BYTE);
@@ -1164,29 +1164,29 @@ bool PRINTER::GetFromProfile(const char *pszProfile)
 	if (nPrintColorLevel > printgroup.printhead.nColorLevel)
 		nPrintColorLevel = printgroup.printhead.nColorLevel;
 
-    //对于同一款设备（确定机型），以下参数可通过应用程序进行更改（需配合机械）
+	//对于同一款设备（确定机型），以下参数可通过应用程序进行更改（需配合机械）
 	GET_PROFILE_INFO_INT(nSpeedType, 0, nSpeedType, nSpeedCount, UINT);
 	GET_PROFILE_INFO_INT(nInkModeType, 0, nInkModeType, nInkModeCount, UINT);
-    GET_PROFILE_INFO_INT(nXResType, 0, nXResType, nXResCount, UINT);
-    GET_PROFILE_INFO_INT(nYPassType, 0, nYPassType, nYPassCount, UINT);
+	GET_PROFILE_INFO_INT(nXResType, 0, nXResType, nXResCount, UINT);
+	GET_PROFILE_INFO_INT(nYPassType, 0, nYPassType, nYPassCount, UINT);
 
 	//distance x / distance x reversed
-	for(i=0; i<nSpeedCount; i++)
+	for (i = 0; i < nSpeedCount; i++)
 	{
-		for (j=0; j<nXResCount; j++)
+		for (j = 0; j < nXResCount; j++)
 		{
 			strSection.Format("ADJUST_DISTANCE_HOR_%d_%d", i, j);
-			for (k=0; k<(int)printgroup.nHeadNumber; k++)
+			for (k = 0; k < (int)printgroup.nHeadNumber; k++)
 			{
 				strEntry.Format("%2d", k);
-				nTmp = (UINT)GetPrivateProfileInt (strSection, strEntry, 0, strIniFile);
+				nTmp = (UINT)GetPrivateProfileInt(strSection, strEntry, 0, strIniFile);
 				nDistance_Hor[i][j][k] = nTmp;
 			}
 			strSection.Format("ADJUST_DISTANCE_HOR_REVERSED_%d_%d", i, j);
-			for (k=0; k<(int)printgroup.nHeadNumber; k++)
+			for (k = 0; k < (int)printgroup.nHeadNumber; k++)
 			{
 				strEntry.Format("%2d", k);
-				nTmp = (UINT)GetPrivateProfileInt (strSection, strEntry, 0, strIniFile);
+				nTmp = (UINT)GetPrivateProfileInt(strSection, strEntry, 0, strIniFile);
 				nDistance_Hor_Reversed[i][j][k] = nTmp;
 			}
 		}
@@ -1194,22 +1194,22 @@ bool PRINTER::GetFromProfile(const char *pszProfile)
 	strSection = "ADJUST_DISTANCE_VER";
 	GET_PROFILE_INFO_ARRAY_DOUBLE(dDistance_Ver, (int)printgroup.nHeadNumber, INT_MIN, 0, INT_MAX);
 
-    strSection = "ADJUST_BI";
-    GET_PROFILE_INFO_ARRAYEX_INT(nAdjust_bi_directional_compensation, nSpeedCount, nXResCount, -1000000, 0, 1000000, int);
-    strSection = "ADJUST_STEP";
-    GET_PROFILE_INFO_ARRAY_DOUBLE(dAdjust_step_compensation, nYPassCount, -1000000, 0, 1000000);
+	strSection = "ADJUST_BI";
+	GET_PROFILE_INFO_ARRAYEX_INT(nAdjust_bi_directional_compensation, nSpeedCount, nXResCount, -1000000, 0, 1000000, int);
+	strSection = "ADJUST_STEP";
+	GET_PROFILE_INFO_ARRAY_DOUBLE(dAdjust_step_compensation, nYPassCount, -1000000, 0, 1000000);
 
-    strSection = "SPRAYPARAM";
-    if (!sprayparam.GetFromProfile(strSection, strIniFile))
-        return false;
-   
-    strSection = "CLEANPARAM";
-    if (!cleanheadparam.GetFromProfile(strSection, strIniFile))
-        return false;
+	strSection = "SPRAYPARAM";
+	if (!sprayparam.GetFromProfile(strSection, strIniFile))
+		return false;
 
-    strSection = strSectionTmp;		//"Config"
-    GET_PROFILE_INFO_INT(bPrintway, printway_unidirection, bPrintway, (printway_count-1), BYTE);
-    
+	strSection = "CLEANPARAM";
+	if (!cleanheadparam.GetFromProfile(strSection, strIniFile))
+		return false;
+
+	strSection = strSectionTmp;		//"Config"
+	GET_PROFILE_INFO_INT(bPrintway, printway_unidirection, bPrintway, (printway_count - 1), BYTE);
+
 	GET_PROFILE_INFO_INT(bJumpWay, jumpway_normal, bJumpWay, jumpway_all, BYTE);
 	GET_PROFILE_INFO_DOUBLE(dJumpLimit_x, 10, 30, 5000);
 	GET_PROFILE_INFO_DOUBLE(dJumpLimit_y, 100, 2000, 1000000);
@@ -1219,10 +1219,10 @@ bool PRINTER::GetFromProfile(const char *pszProfile)
 
 	GET_PROFILE_INFO_INT(bOriginPosition_posXEnable, 0, bOriginPosition_posXEnable, 1, BOOL);
 	GET_PROFILE_INFO_INT(bOriginPosition_start, 0, bOriginPosition_start, 0xFF, BYTE);
-	bOriginPosition_start	= Check_OriginPosition_Start(bOriginPosition_start, bFlatMachine, bOriginPosition_posXEnable);
+	bOriginPosition_start = Check_OriginPosition_Start(bOriginPosition_start, bFlatMachine, bOriginPosition_posXEnable);
 
 	GET_PROFILE_INFO_INT(bOriginPosition_end, 0, bOriginPosition_end, 0xFF, BYTE);
-	bOriginPosition_end		= Check_OriginPosition_End(bOriginPosition_end, bFlatMachine, bOriginPosition_posXEnable);
+	bOriginPosition_end = Check_OriginPosition_End(bOriginPosition_end, bFlatMachine, bOriginPosition_posXEnable);
 
 	GET_PROFILE_INFO_INT(bOriginPosition_prompt, 0, bOriginPosition_prompt, 1, BOOL);
 
@@ -1230,44 +1230,44 @@ bool PRINTER::GetFromProfile(const char *pszProfile)
 
 	GET_PROFILE_INFO_INT(nPriority, THREAD_PRIORITY_LOWEST, THREAD_PRIORITY_NORMAL, THREAD_PRIORITY_HIGHEST, int);
 
-    return IsValid();
+	return IsValid();
 }
 //写入参数
 bool PRINTER::SetToProfile(const char *pszProfile) const
 {
-    CString strSectionTmp, strEntry;
-    CString strSection, strIniFile;
-    CString strTmp;
-    CString strReg;
-    int     i, j, k;
+	CString strSectionTmp, strEntry;
+	CString strSection, strIniFile;
+	CString strTmp;
+	CString strReg;
+	int     i, j, k;
 	int		nCount, nInkModeCountTmp, nSpeedCountTmp, nXResCountTmp;
-    
-    strSection = "Config";
-    strIniFile = pszProfile;
-    if (strSection.IsEmpty() || strIniFile.IsEmpty())
-        return false;
-    
-    WRITE_PROFILE_INFO("%d", nType);
+
+	strSection = "Config";
+	strIniFile = pszProfile;
+	if (strSection.IsEmpty() || strIniFile.IsEmpty())
+		return false;
+
+	WRITE_PROFILE_INFO("%d", nType);
 	WRITE_PROFILE_INFO("%s", szName);
 
 	WRITE_PROFILE_INFO("%g", dMinStartX);
 	WRITE_PROFILE_INFO("%g", dMinStartY);
 
-    WRITE_PROFILE_INFO("%g", dMaxWidth);
+	WRITE_PROFILE_INFO("%g", dMaxWidth);
 	WRITE_PROFILE_INFO("%g", dMaxHeight);
-    
+
 	WRITE_PROFILE_INFO("%d", bFlatMachine);
 
-    strSectionTmp = strSection;
-    strSection = "PRINTHEADGROUP";
-    if (!printgroup.SetToProfile(strSection, strIniFile))
-        return false;
+	strSectionTmp = strSection;
+	strSection = "PRINTHEADGROUP";
+	if (!printgroup.SetToProfile(strSection, strIniFile))
+		return false;
 
 	strSection = "INKMODE";
 	nCount = nInkModeCount;
-	for (i=0; i< nCount; i++)
+	for (i = 0; i < nCount; i++)
 	{
-		if (nInkModeLevel[i]<=INK_NONE || nInkModeLevel[i] >= INKMODE_MAX)
+		if (nInkModeLevel[i] <= INK_NONE || nInkModeLevel[i] >= INKMODE_MAX)
 		{
 			nCount = i;
 			break;
@@ -1279,17 +1279,17 @@ bool PRINTER::SetToProfile(const char *pszProfile) const
 
 	strSection = "SPEEDLEVEL";
 	nCount = nSpeedCount;
-    for (i=0; i< nCount; i++)
-    {
-        if (szSpeedLevel[i][0]=='\0')
+	for (i = 0; i < nCount; i++)
+	{
+		if (szSpeedLevel[i][0] == '\0')
 		{
 			nCount = i;
-            break;
+			break;
 		}
-    }
+	}
 	nSpeedCountTmp = nCount;
 	WRITE_PROFILE_INFO("%d", nCount);
-	for (i=0; i< nCount; i++)
+	for (i = 0; i < nCount; i++)
 	{
 		//	szSpeedLevel[0] = fast speed, 1
 		strEntry.Format("szSpeedLevel[%d]", i);
@@ -1299,30 +1299,30 @@ bool PRINTER::SetToProfile(const char *pszProfile) const
 
 	strSection = "XRESLEVEL";
 	nCount = nXResCount;
-    for (i=0; i< nCount; i++)
-    {
-        if (nXResLevel[i] <= 0)
+	for (i = 0; i < nCount; i++)
+	{
+		if (nXResLevel[i] <= 0)
 		{
 			nCount = i;
-            break;
+			break;
 		}
-    }
+	}
 	nXResCountTmp = nCount;
 	WRITE_PROFILE_INFO("%d", nCount);
-    WRITE_PROFILE_INFO_ARRAY("%d", nXResLevel, nCount);
-    
+	WRITE_PROFILE_INFO_ARRAY("%d", nXResLevel, nCount);
+
 	strSection = "YPASSLEVEL";
 	nCount = nYPassCount;
-    for (i=0; i< nCount; i++)
-    {
-        if (nYPassLevel[i] <= 0)
+	for (i = 0; i < nCount; i++)
+	{
+		if (nYPassLevel[i] <= 0)
 		{
 			nCount = i;
-            break;
+			break;
 		}
-    }
+	}
 	WRITE_PROFILE_INFO("%d", nCount);
-	for (i=0; i< nCount; i++)
+	for (i = 0; i < nCount; i++)
 	{
 		// nYPassLevel[0] = 1,0
 		strEntry.Format("nYPassLevel[%d]", i);
@@ -1333,10 +1333,10 @@ bool PRINTER::SetToProfile(const char *pszProfile) const
 	strSection = "YFADELEVEL";
 	WRITE_PROFILE_INFO_ARRAY("%d", fade_nLevel, nCount);
 
-    strSection = strSectionTmp;
-    WRITE_PROFILE_INFO("%d", bSprayEnable);
-    WRITE_PROFILE_INFO("%d", bCleanHeadEnable);
-    
+	strSection = strSectionTmp;
+	WRITE_PROFILE_INFO("%d", bSprayEnable);
+	WRITE_PROFILE_INFO("%d", bCleanHeadEnable);
+
 	//无痕打印处理方式
 	WRITE_PROFILE_INFO("%d", bTracelessPrintWay);
 	WRITE_PROFILE_INFO("%f", dTracelessPrintDefWidth);
@@ -1345,26 +1345,26 @@ bool PRINTER::SetToProfile(const char *pszProfile) const
 	//实际打印时的灰度级别
 	WRITE_PROFILE_INFO("%d", nPrintColorLevel);
 
-    //对于同一款设备（确定机型），以下参数可通过应用程序进行更改（需配合机械）
-    WRITE_PROFILE_INFO("%d", nInkModeType);
+	//对于同一款设备（确定机型），以下参数可通过应用程序进行更改（需配合机械）
+	WRITE_PROFILE_INFO("%d", nInkModeType);
 	WRITE_PROFILE_INFO("%d", nSpeedType);
-    WRITE_PROFILE_INFO("%d", nXResType);
-    WRITE_PROFILE_INFO("%d", nYPassType);
-    
+	WRITE_PROFILE_INFO("%d", nXResType);
+	WRITE_PROFILE_INFO("%d", nYPassType);
+
 	//distance x / distance x reversed
-	for(i=0; i<nSpeedCountTmp; i++)
+	for (i = 0; i < nSpeedCountTmp; i++)
 	{
-		for (j=0; j<nXResCountTmp; j++)
+		for (j = 0; j < nXResCountTmp; j++)
 		{
 			strSection.Format("ADJUST_DISTANCE_HOR_%d_%d", i, j);
-			for (k=0; k<(int)printgroup.nHeadNumber; k++)
+			for (k = 0; k < (int)printgroup.nHeadNumber; k++)
 			{
 				strEntry.Format("%2d", k);
 				strTmp.Format("%d", nDistance_Hor[i][j][k]);
 				WritePrivateProfileString(strSection, strEntry, strTmp, strIniFile);
 			}
 			strSection.Format("ADJUST_DISTANCE_HOR_REVERSED_%d_%d", i, j);
-			for (k=0; k<(int)printgroup.nHeadNumber; k++)
+			for (k = 0; k < (int)printgroup.nHeadNumber; k++)
 			{
 				strEntry.Format("%2d", k);
 				strTmp.Format("%d", nDistance_Hor_Reversed[i][j][k]);
@@ -1376,25 +1376,25 @@ bool PRINTER::SetToProfile(const char *pszProfile) const
 	WRITE_PROFILE_INFO_ARRAY("%g", dDistance_Ver, printgroup.nHeadNumber);
 
 	strSection = "ADJUST_BI";
-    WRITE_PROFILE_INFO_ARRAYEX("%d", nAdjust_bi_directional_compensation, nSpeedCount, nXResCount);
-    strSection = "ADJUST_STEP";
-    WRITE_PROFILE_INFO_ARRAY("%g", dAdjust_step_compensation, nYPassCount);
-    
-    strSection = "SPRAYPARAM";
-    if (!sprayparam.SetToProfile(strSection, strIniFile))
-        return false;
-    
-    strSection = "CLEANPARAM";
-    if (!cleanheadparam.SetToProfile(strSection, strIniFile))
-        return false;
-    
-    strSection = strSectionTmp;
-    WRITE_PROFILE_INFO("%d", bPrintway);
+	WRITE_PROFILE_INFO_ARRAYEX("%d", nAdjust_bi_directional_compensation, nSpeedCount, nXResCount);
+	strSection = "ADJUST_STEP";
+	WRITE_PROFILE_INFO_ARRAY("%g", dAdjust_step_compensation, nYPassCount);
+
+	strSection = "SPRAYPARAM";
+	if (!sprayparam.SetToProfile(strSection, strIniFile))
+		return false;
+
+	strSection = "CLEANPARAM";
+	if (!cleanheadparam.SetToProfile(strSection, strIniFile))
+		return false;
+
+	strSection = strSectionTmp;
+	WRITE_PROFILE_INFO("%d", bPrintway);
 
 	WRITE_PROFILE_INFO("%d", bJumpWay);
 	WRITE_PROFILE_INFO("%f", dJumpLimit_x);
 	WRITE_PROFILE_INFO("%f", dJumpLimit_y);
-    
+
 	WRITE_PROFILE_INFO("%d", bPrintToFile);
 
 	WRITE_PROFILE_INFO("%d", bVirtualPrinter);
@@ -1414,14 +1414,14 @@ bool PRINTER::SetToProfile(const char *pszProfile) const
 //参数是否有效
 bool PRINTER::IsValid() const
 {
-    int		i;
+	int		i;
 	BYTE	bOriginPosition;
 
-    if (nType == printer_none || nType == printer_Unknown)
-        return false;
+	if (nType == printer_none || nType == printer_Unknown)
+		return false;
 
-    if (strlen(szName) <= 0)
-        return false;
+	if (strlen(szName) <= 0)
+		return false;
 
 	if (dMinStartX < 0.0
 		|| dMinStartY < 0.0)
@@ -1429,8 +1429,8 @@ bool PRINTER::IsValid() const
 		return false;
 	}
 
-    if (dMaxWidth <= 1)
-        return false;
+	if (dMaxWidth <= 1)
+		return false;
 
 	if (bFlatMachine)
 	{//平板机型，需限制 Y向高度
@@ -1438,55 +1438,55 @@ bool PRINTER::IsValid() const
 			return false;
 	}
 
-    if (!printgroup.IsValid())
-        return false;
+	if (!printgroup.IsValid())
+		return false;
 
 	if (nPrintColorLevel < 0 || nPrintColorLevel > printgroup.printhead.nColorLevel)
 		return false;
 
 	if (nInkModeCount <= 0)
 		return false;
-	for (i=0; i<nInkModeCount; i++)
+	for (i = 0; i < nInkModeCount; i++)
 	{
 		if (nInkModeLevel[i] <= INK_NONE || nInkModeLevel[i] >= INKMODE_MAX)
 			break;
 	}
-	if (i==0)
+	if (i == 0)
 		return false;
 
 	if (nSpeedCount <= 0)
 		return false;
-	
+
 	if (nXResCount <= 0)
 		return false;
 	ASSERT(nXResCount <= _MAX_XRES_LEVEL_);
-    for (i=0; i<nXResCount; i++)
-    {
-        if (nXResLevel[i]==0)
-            break;
-    }
-    if (i==0)
-        return false;
+	for (i = 0; i < nXResCount; i++)
+	{
+		if (nXResLevel[i] == 0)
+			break;
+	}
+	if (i == 0)
+		return false;
 
 	if (nYPassCount <= 0)
 		return false;
 	ASSERT(nYPassCount <= _MAX_YPASS_LEVEL_);
-    for (i=0; i<(_MAX_YPASS_LEVEL_+1); i++)
-    {
-        if (nYPassLevel[i]==0)
-            break;
-    }
-    if (i==0)
-        return false;
-    
-    if (!sprayparam.IsValid())
-        return false;
+	for (i = 0; i < (_MAX_YPASS_LEVEL_ + 1); i++)
+	{
+		if (nYPassLevel[i] == 0)
+			break;
+	}
+	if (i == 0)
+		return false;
 
-    if (!cleanheadparam.IsValid())
-        return false;
+	if (!sprayparam.IsValid())
+		return false;
 
-    if (bPrintway < printway_unidirection || bPrintway >= printway_count)
-        return false;
+	if (!cleanheadparam.IsValid())
+		return false;
+
+	if (bPrintway < printway_unidirection || bPrintway >= printway_count)
+		return false;
 
 	if (bJumpWay < jumpway_normal || bJumpWay > jumpway_all)
 		return false;
@@ -1494,15 +1494,15 @@ bool PRINTER::IsValid() const
 	bOriginPosition = Check_OriginPosition_Start(bOriginPosition_start, bFlatMachine, bOriginPosition_posXEnable);
 	if ((bOriginPosition & origin_pos_mask_x) == PRINTER::origin_pos_unknown)
 	{
-//		return false;
+		//		return false;
 	}
 	bOriginPosition = Check_OriginPosition_End(bOriginPosition_end, bFlatMachine, bOriginPosition_posXEnable);
 	if ((bOriginPosition & origin_pos_mask_y) == PRINTER::origin_pos_unknown)
 	{
-//		return false;
+		//		return false;
 	}
 
-    return true;
+	return true;
 }
 
 //修正打印起始前小车位置参数
@@ -1515,7 +1515,7 @@ BYTE PRINTER::Check_OriginPosition_Start(BYTE bOriginPosition, BOOL IsFlatMachin
 	if (IsFlatMachine)
 	{//平板机型
 		bMask = bOriginPosition & origin_pos_mask_x;
-		switch(bMask)
+		switch (bMask)
 		{
 		case PRINTER::origin_pos_x_zero:
 			bResult |= bMask;
@@ -1533,7 +1533,7 @@ BYTE PRINTER::Check_OriginPosition_Start(BYTE bOriginPosition, BOOL IsFlatMachin
 			break;
 		}
 		bMask = bOriginPosition & origin_pos_mask_y;
-		switch(bMask)
+		switch (bMask)
 		{
 		case PRINTER::origin_pos_y_zero:
 		case PRINTER::origin_pos_y_current:
@@ -1549,7 +1549,7 @@ BYTE PRINTER::Check_OriginPosition_Start(BYTE bOriginPosition, BOOL IsFlatMachin
 	else
 	{//导带机型
 		bMask = bOriginPosition & origin_pos_mask_x;
-		switch(bMask)
+		switch (bMask)
 		{
 		case PRINTER::origin_pos_x_zero:
 			bResult |= bMask;
@@ -1568,7 +1568,7 @@ BYTE PRINTER::Check_OriginPosition_Start(BYTE bOriginPosition, BOOL IsFlatMachin
 		}
 		//导带机无Y向定位要求
 		bMask = bOriginPosition & origin_pos_mask_y;
-		switch(bMask)
+		switch (bMask)
 		{
 		case PRINTER::origin_pos_y_zero:
 		case PRINTER::origin_pos_y_current:
@@ -1590,7 +1590,7 @@ BYTE PRINTER::Check_OriginPosition_End(BYTE bOriginPosition, BOOL IsFlatMachine,
 	if (IsFlatMachine)
 	{//平板机型
 		bMask = bOriginPosition & origin_pos_mask_x;
-		switch(bMask)
+		switch (bMask)
 		{
 		case PRINTER::origin_pos_x_zero:
 		case PRINTER::origin_pos_x_max:
@@ -1608,7 +1608,7 @@ BYTE PRINTER::Check_OriginPosition_End(BYTE bOriginPosition, BOOL IsFlatMachine,
 			break;
 		}
 		bMask = bOriginPosition & origin_pos_mask_y;
-		switch(bMask)
+		switch (bMask)
 		{
 		case PRINTER::origin_pos_y_zero:
 		case PRINTER::origin_pos_y_max:
@@ -1624,7 +1624,7 @@ BYTE PRINTER::Check_OriginPosition_End(BYTE bOriginPosition, BOOL IsFlatMachine,
 	else
 	{//导带机型
 		bMask = bOriginPosition & origin_pos_mask_x;
-		switch(bMask)
+		switch (bMask)
 		{
 		case PRINTER::origin_pos_x_zero:
 		case PRINTER::origin_pos_x_max:
@@ -1643,7 +1643,7 @@ BYTE PRINTER::Check_OriginPosition_End(BYTE bOriginPosition, BOOL IsFlatMachine,
 		}
 		//导带机无Y向定位要求
 		bMask = bOriginPosition & origin_pos_mask_y;
-		switch(bMask)
+		switch (bMask)
 		{
 		case PRINTER::origin_pos_y_zero:
 		case PRINTER::origin_pos_y_current:
@@ -1664,7 +1664,7 @@ BYTE PRINTER::Check_OriginPosition_End(BYTE bOriginPosition, BOOL IsFlatMachine,
 //	IsPosXEnable	:[in]是否支持X向相对定位操作，IO定位控制模式暂不支持，需设置为FALSE
 void PRINTER::InitOriginPositionList(CComboBox *pList, BOOL IsFlatMachine, BOOL bStart, BOOL IsPosXEnable)
 {
-	if (pList==NULL)
+	if (pList == NULL)
 		return;
 
 	pList->ResetContent();
@@ -1715,7 +1715,7 @@ BYTE PRINTER::TransIndexToOriginPosition(int nIndex, BOOL IsFlatMachine, BOOL bS
 	{//平板机型
 		if (bStart)
 		{
-			switch(nIndex)
+			switch (nIndex)
 			{
 			case 0:
 				//打印原点
@@ -1748,7 +1748,7 @@ BYTE PRINTER::TransIndexToOriginPosition(int nIndex, BOOL IsFlatMachine, BOOL bS
 		}
 		else
 		{
-			switch(nIndex)
+			switch (nIndex)
 			{
 			case 0:
 				//平板机待机位
@@ -1778,7 +1778,7 @@ BYTE PRINTER::TransIndexToOriginPosition(int nIndex, BOOL IsFlatMachine, BOOL bS
 	{//导带机型
 		if (bStart)
 		{
-			switch(nIndex)
+			switch (nIndex)
 			{
 			case 0:
 				//打印原点
@@ -1800,7 +1800,7 @@ BYTE PRINTER::TransIndexToOriginPosition(int nIndex, BOOL IsFlatMachine, BOOL bS
 		}
 		else
 		{
-			switch(nIndex)
+			switch (nIndex)
 			{
 			case 0:
 				//导带机待机位，即散喷位
@@ -1836,7 +1836,7 @@ int PRINTER::TransOriginPositionToIndex(BYTE bOriginPosition, BOOL IsFlatMachine
 	{//平板机型
 		if (bStart)
 		{
-			switch(bOriginPosition)
+			switch (bOriginPosition)
 			{
 			case PRINTER::origin_pos_zero_xy:
 				//打印原点
@@ -1869,7 +1869,7 @@ int PRINTER::TransOriginPositionToIndex(BYTE bOriginPosition, BOOL IsFlatMachine
 		}
 		else
 		{
-			switch(bOriginPosition)
+			switch (bOriginPosition)
 			{
 			case PRINTER::origin_pos_max_xy:
 				//默认状态：平板机待机位
@@ -1899,7 +1899,7 @@ int PRINTER::TransOriginPositionToIndex(BYTE bOriginPosition, BOOL IsFlatMachine
 	{//导带机型
 		if (bStart)
 		{
-			switch(bOriginPosition)
+			switch (bOriginPosition)
 			{
 			case PRINTER::origin_pos_zero_x_current_y:
 				//打印原点
@@ -1921,7 +1921,7 @@ int PRINTER::TransOriginPositionToIndex(BYTE bOriginPosition, BOOL IsFlatMachine
 		}
 		else
 		{
-			switch(bOriginPosition)
+			switch (bOriginPosition)
 			{
 			case PRINTER::origin_pos_max_x_current_y:
 				//导带机待机位，即散喷位
@@ -1954,11 +1954,11 @@ int PRINTER::step_calcleapnum(DWORD *pLeapNum, int nozzlesize, int pass, int nFa
 	ASSERT(pLeapNum != NULL);
 	ASSERT(nozzlesize >= 2);
 	ASSERT(pass >= 1);
-	if (pLeapNum==NULL || nozzlesize < 2 || pass < 1)
+	if (pLeapNum == NULL || nozzlesize < 2 || pass < 1)
 		return 0;
 	if (nFadeLevel <= 0)
 		nFadeLevel = nozzlesize;
-		
+
 	int		i, residual;
 
 	if (pass <= 1)
@@ -1967,55 +1967,55 @@ int PRINTER::step_calcleapnum(DWORD *pLeapNum, int nozzlesize, int pass, int nFa
 		return pLeapNum[0];
 	}
 	int s, supp;
-	s = (nozzlesize - nFadeLevel * pass)/(pass - 1);
+	s = (nozzlesize - nFadeLevel * pass) / (pass - 1);
 	//初始化 Pass 步进距离，Pixel
 	pLeapNum[0] = (nozzlesize - 1) / pass * pass + 1;
 	ASSERT(pLeapNum[0] <= (DWORD)nozzlesize);
-	if (nFadeLevel < nozzlesize/pass)
+	if (nFadeLevel < nozzlesize / pass)
 	{
-		for (i=1; i< pass; i++)
+		for (i = 1; i < pass; i++)
 		{
 			pLeapNum[i] = pLeapNum[0] /*- nFadeLevel/pass*pass*pass*/;
-			supp = s + nFadeLevel - pLeapNum[i]/pass;
+			supp = s + nFadeLevel - pLeapNum[i] / pass;
 			pLeapNum[i] += supp*pass;
 		}
 
-		residual = nozzlesize - nFadeLevel - pLeapNum[1]/pass*(pass-1);
-		if (residual> 0)
+		residual = nozzlesize - nFadeLevel - pLeapNum[1] / pass*(pass - 1);
+		if (residual > 0)
 		{//每Pass步进距离补偿（不同）
-			for (i = (pass-1); i>= 0; i--)
+			for (i = (pass - 1); i >= 0; i--)
 			{
 				pLeapNum[i] += pass;
-				residual--; 
+				residual--;
 				if (residual == 0)
 					break;
 			}
 		}
 		//pLeapNum[0] -= nFadeLevel/pass*pass*pass;
-		supp = s + nFadeLevel - pLeapNum[0]/pass;
+		supp = s + nFadeLevel - pLeapNum[0] / pass;
 		pLeapNum[0] += supp*pass;
 	}
 	else
 	{
-		for (i=1; i< pass; i++)
+		for (i = 1; i < pass; i++)
 		{
 			pLeapNum[i] = pLeapNum[0];
 		}
 
 		residual = nozzlesize - pLeapNum[0];
-		if (residual> 0)
+		if (residual > 0)
 		{//每Pass步进距离补偿（不同）
-			for (i = (pass-1); i>= 0; i--)
+			for (i = (pass - 1); i >= 0; i--)
 			{
 				pLeapNum[i] += pass;
-				residual--; 
+				residual--;
 				if (residual == 0)
 					break;
 			}
 		}
 	}
 
-	return pLeapNum[pass-1];
+	return pLeapNum[pass - 1];
 }
 
 //淡入淡出处理-得淡入参数值
@@ -2034,19 +2034,19 @@ int PRINTER::fade_calclimit(int nozzlesize, int pass, bool blimit)
 		return 0;
 
 	BZERO(leapnum);
-	
-	leapLimit	= PRINTER::step_calcleapnum(leapnum, nozzlesize, passFade, nozzlesize);		//max, pixel
+
+	leapLimit = PRINTER::step_calcleapnum(leapnum, nozzlesize, passFade, nozzlesize);		//max, pixel
 	ASSERT(leapLimit > 0);
 
 	if (blimit)
 	{
-		ASSERT(leapLimit>=leapnum[passFade-1]);
-		nFade		= nozzlesize / pass;		//max limit
+		ASSERT(leapLimit >= leapnum[passFade - 1]);
+		nFade = nozzlesize / pass;		//max limit
 	}
 	else
 	{//default
-		leapLimit	= leapnum[0];				//min, pixel
-		nFade		= leapLimit / passFade;		//nozzle
+		leapLimit = leapnum[0];				//min, pixel
+		nFade = leapLimit / passFade;		//nozzle
 	}
 
 	return nFade;

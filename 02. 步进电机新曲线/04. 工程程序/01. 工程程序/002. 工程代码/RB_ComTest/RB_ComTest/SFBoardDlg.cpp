@@ -6,12 +6,13 @@
 #include "SFBoardDlg.h"
 #include "OnlineTimeTableDlg.h"
 #include "OfflineTimeTableDlg.h"
+#include "NewSLineDataTableDlg.h"
 
 void RestrictAecCurve(POINT points[], int nPointCount, CRect* pRect, CPoint* pPtMoveNow, CPoint* pPtMoveLast)
 {
-	int ax,ay;
+	int ax, ay;
 
-	if (pPtMoveNow==NULL && pPtMoveLast==NULL)
+	if (pPtMoveNow == NULL && pPtMoveLast == NULL)
 	{
 		ax = 0;
 		ay = 0;
@@ -22,80 +23,80 @@ void RestrictAecCurve(POINT points[], int nPointCount, CRect* pRect, CPoint* pPt
 		ay = pPtMoveNow->y - pPtMoveLast->y;
 	}
 
-	if (ay<=0)
+	if (ay <= 0)
 	{
-		for(int i=nPointCount-1; i>0; i--)
+		for (int i = nPointCount - 1; i > 0; i--)
 		{
-			if (points[i-1].y<points[i].y)
+			if (points[i - 1].y < points[i].y)
 			{
-				points[i-1].y = points[i].y;
+				points[i - 1].y = points[i].y;
 			}
 		}
 
 	}
 
-	if (ay>0)
+	if (ay > 0)
 	{
-		for(int i=0; i<nPointCount-1; i++)
+		for (int i = 0; i < nPointCount - 1; i++)
 		{
-			if (points[i+1].y>points[i].y)
+			if (points[i + 1].y > points[i].y)
 			{
-				points[i+1].y = points[i].y;
+				points[i + 1].y = points[i].y;
 			}
 		}
 	}
 
-	if (ax>=0)
+	if (ax >= 0)
 	{
-		for(int i=nPointCount-1; i>0; i--)
+		for (int i = nPointCount - 1; i > 0; i--)
 		{
-			if (points[i-1].x>points[i].x)
+			if (points[i - 1].x > points[i].x)
 			{
-				points[i-1].x = points[i].x;
+				points[i - 1].x = points[i].x;
 			}
 		}
 	}
 
-	if (ax<0)
+	if (ax < 0)
 	{
-		for(int i=0; i<nPointCount-1; i++)
+		for (int i = 0; i < nPointCount - 1; i++)
 		{
-			if (points[i+1].x<points[i].x)
+			if (points[i + 1].x < points[i].x)
 			{
-				points[i+1].x = points[i].x;
+				points[i + 1].x = points[i].x;
 			}
 		}
 	}
 
-	for(int i=nPointCount-1; i>=0; i--)
+	for (int i = nPointCount - 1; i >= 0; i--)
 	{
-		if (points[i].y>pRect->bottom)
+		if (points[i].y > pRect->bottom)
 		{
-			points[i].y=pRect->bottom;
+			points[i].y = pRect->bottom;
 		}
 
-		if (points[i].x<pRect->left)
+		if (points[i].x < pRect->left)
 		{
-			points[i].x=pRect->left;
+			points[i].x = pRect->left;
 		}
 
-		if (points[i].y<pRect->top)
+		if (points[i].y < pRect->top)
 		{
-			points[i].y=pRect->top;
+			points[i].y = pRect->top;
 		}
 
-		if (points[i].x>pRect->right)
+		if (points[i].x > pRect->right)
 		{
-			points[i].x=pRect->right;
+			points[i].x = pRect->right;
 		}
 	}
 }
 
 void RestrictDecCurve(POINT points[], int nPointCount, CRect* pRect, CPoint* pPtMoveNow, CPoint* pPtMoveLast)
 {
-	int ax,ay;
+	int ax, ay;
 
-	if (pPtMoveNow==NULL && pPtMoveLast==NULL)
+	if (pPtMoveNow == NULL && pPtMoveLast == NULL)
 	{
 		ax = 0;
 		ay = 0;
@@ -106,71 +107,71 @@ void RestrictDecCurve(POINT points[], int nPointCount, CRect* pRect, CPoint* pPt
 		ay = pPtMoveNow->y - pPtMoveLast->y;
 	}
 
-	if (ay>0)
+	if (ay > 0)
 	{
-		for(int i=nPointCount-1; i>0; i--)
+		for (int i = nPointCount - 1; i > 0; i--)
 		{
-			if (points[i-1].y>points[i].y)
+			if (points[i - 1].y > points[i].y)
 			{
-				points[i-1].y = points[i].y;
+				points[i - 1].y = points[i].y;
 			}
 		}
 
 	}
 
-	if (ay<=0)
+	if (ay <= 0)
 	{
-		for(int i=0; i<nPointCount-1; i++)
+		for (int i = 0; i < nPointCount - 1; i++)
 		{
-			if (points[i+1].y<points[i].y)
+			if (points[i + 1].y < points[i].y)
 			{
-				points[i+1].y = points[i].y;
+				points[i + 1].y = points[i].y;
 			}
 		}
 	}
 
-	if (ax>0)
+	if (ax > 0)
 	{
-		for(int i=nPointCount-1; i>0; i--)
+		for (int i = nPointCount - 1; i > 0; i--)
 		{
-			if (points[i-1].x>points[i].x)
+			if (points[i - 1].x > points[i].x)
 			{
-				points[i-1].x = points[i].x;
+				points[i - 1].x = points[i].x;
 			}
 		}
 	}
 
-	if (ax<=0)
+	if (ax <= 0)
 	{
-		for(int i=0; i<nPointCount-1; i++)
+		for (int i = 0; i < nPointCount - 1; i++)
 		{
-			if (points[i+1].x<points[i].x)
+			if (points[i + 1].x < points[i].x)
 			{
-				points[i+1].x = points[i].x;
+				points[i + 1].x = points[i].x;
 			}
 		}
 	}
 
-	for(int i=nPointCount-1; i>=0; i--)
+	for (int i = nPointCount - 1; i >= 0; i--)
 	{
-		if (points[i].y>pRect->bottom)
+		if (points[i].y > pRect->bottom)
 		{
-			points[i].y=pRect->bottom;
+			points[i].y = pRect->bottom;
 		}
 
-		if (points[i].x<pRect->left)
+		if (points[i].x < pRect->left)
 		{
-			points[i].x=pRect->left;
+			points[i].x = pRect->left;
 		}
 
-		if (points[i].y<pRect->top)
+		if (points[i].y < pRect->top)
 		{
-			points[i].y=pRect->top;
+			points[i].y = pRect->top;
 		}
 
-		if (points[i].x>pRect->right)
+		if (points[i].x > pRect->right)
 		{
-			points[i].x=pRect->right;
+			points[i].x = pRect->right;
 		}
 	}
 }
@@ -188,7 +189,7 @@ double Distance(const POINT& p1, const POINT& p2)
 IMPLEMENT_DYNAMIC(CSFBoardDlg, CDialog)
 
 CSFBoardDlg::CSFBoardDlg(CWnd* pParent /*=NULL*/)
-: CDialog(CSFBoardDlg::IDD, pParent)
+	: CDialog(CSFBoardDlg::IDD, pParent)
 {
 	m_pParentThread = NULL;
 	bIsNewCurve = false;
@@ -287,9 +288,9 @@ BOOL CSFBoardDlg::OnInitDialog()
 	m_cbBoardType.SetCurSel(0);
 	m_bMotoWay = BoardType2MotorWay(0);
 
-	if (AfxMessageBox("使用光栅控制板需切换至调试模式\n是否切换?",MB_YESNO)==IDYES)
+	if (AfxMessageBox("使用光栅控制板需切换至调试模式\n是否切换?", MB_YESNO) == IDYES)
 	{
-		if (!m_pComPort->ras_select(0x01,5000,FALSE))
+		if (!m_pComPort->ras_select(0x01, 5000, FALSE))
 		{
 			AfxMessageBox("切换至调试模式失败");
 		}
@@ -301,32 +302,32 @@ BOOL CSFBoardDlg::OnInitDialog()
 	((CWnd*)GetDlgItem(IDC_BUTTON_SF_SPEEDLEVEL_ADD))->EnableWindow(FALSE);
 	((CWnd*)GetDlgItem(IDC_BUTTON_SPEEDLEVEL_MODIFY))->EnableWindow(FALSE);
 
-	if (m_pComPort->servo_get_existent_speedlevel(m_bMotoWay,CCmdTimeOut::get_existent_speedlevel,FALSE))
+	if (m_pComPort->servo_get_existent_speedlevel(m_bMotoWay, CCmdTimeOut::get_existent_speedlevel, FALSE))
 	{
 		int nExistSpeedLevel = m_pComPort->m_protocolstatus.bExistSpeedLevel;
-		if (nExistSpeedLevel>0)
+		if (nExistSpeedLevel > 0)
 		{
 			m_cbSpeedLevel.EnableWindow(TRUE);
 			((CWnd*)GetDlgItem(IDC_BUTTON_SPEEDLEVEL_MODIFY))->EnableWindow(TRUE);
 
-			for (i=0;i<nExistSpeedLevel;i++)
+			for (i = 0; i < nExistSpeedLevel; i++)
 			{
-				str.Format("%d",i+1);
+				str.Format("%d", i + 1);
 				m_cbSpeedLevel.AddString(str);
 			}
 			m_cbSpeedLevel.SetCurSel(0);
 
-			if (nExistSpeedLevel>=2)
+			if (nExistSpeedLevel >= 2)
 			{
 				((CWnd*)GetDlgItem(IDC_BUTTON_SF_SPEEDLEVEL_ADD))->EnableWindow(TRUE);
 			}
 		}
-	}	
+	}
 	else
 	{
 		AfxMessageBox("获取档位总数--失败");
 	}
-	
+
 	if (m_pComPort->IsDemoMode())
 	{
 		((CWnd*)GetDlgItem(IDC_BUTTON_SF_SPEEDLEVEL_ADD))->EnableWindow(TRUE);
@@ -338,7 +339,7 @@ BOOL CSFBoardDlg::OnInitDialog()
 	((CWnd*)GetDlgItem(IDC_EDIT_SF_SPECIAL_POSITION_PULSE))->SetWindowText("10000");
 
 	fMM = Pulse2MM(10000);
-	str.Format("%.2f",fMM);
+	str.Format("%.2f", fMM);
 	((CWnd*)GetDlgItem(IDC_EDIT_SF_MOVERELATIVE_MM))->SetWindowText(str);
 	((CWnd*)GetDlgItem(IDC_EDIT_SF_MOVERELATIVE_RE_MM))->SetWindowText(str);
 	((CWnd*)GetDlgItem(IDC_EDIT_SF_MOVEABSOLUTE_MM))->SetWindowText(str);
@@ -435,16 +436,16 @@ BOOL CSFBoardDlg::OnInitDialog()
 	((CWnd*)GetDlgItem(IDC_EDIT_SF_XY_MOVE_Y_PULSE))->SetWindowText(str);
 
 	fMM = xy_Pulse2MM(i, sf_boardtype_motor_3axis_x);
-	str.Format("%.2f",fMM);
+	str.Format("%.2f", fMM);
 	((CWnd*)GetDlgItem(IDC_EDIT_SF_XY_MOVE_X_MM))->SetWindowText(str);
 
 	m_xy_ckMotorY_SG.SetCheck(0);
 	fMM = xy_Pulse2MM(i, sf_boardtype_motor_3axis_y_dd);
-	str.Format("%.2f",fMM);
+	str.Format("%.2f", fMM);
 	((CWnd*)GetDlgItem(IDC_EDIT_SF_XY_MOVE_Y_MM))->SetWindowText(str);
 
 	fMM = xy_Pulse2MM(i, sf_boardtype_motor_3axis_x);
-	str.Format("%.2f",fMM);
+	str.Format("%.2f", fMM);
 	((CWnd*)GetDlgItem(IDC_EDIT_SF_XY_MOVE_RE_X_MM))->SetWindowText(str);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -464,41 +465,41 @@ void CSFBoardDlg::PostNcDestroy()
 
 int CSFBoardDlg::MM2Pulse(float fMM)
 {
-	int nPulse,nSel = m_cbBoardType.GetCurSel();
+	int nPulse, nSel = m_cbBoardType.GetCurSel();
 
 	if (m_bThreeAxisServo)
 	{
-		switch(nSel)
+		switch (nSel)
 		{
 		case sf_boardtype_motor_3axis_x:
-			nPulse = fMM * (*m_pfReducer_x)/(*m_pfDollyPerimeter)*(*m_pfPulsesPerRevolution_x);
+			nPulse = fMM * (*m_pfReducer_x) / (*m_pfDollyPerimeter)*(*m_pfPulsesPerRevolution_x);
 			break;
 		case sf_boardtype_motor_3axis_y_dd:
-			nPulse = fMM * (*m_pfReducer_y)/(*m_pfDeferentPerimeter)*(*m_pfPulsesPerRevolution_y);
+			nPulse = fMM * (*m_pfReducer_y) / (*m_pfDeferentPerimeter)*(*m_pfPulsesPerRevolution_y);
 			break;
 		case sf_boardtype_motor_3axis_y_sg:
-			nPulse = fMM * (*m_pfReducer_y)/(*m_pfDeferentPitch)*(*m_pfPulsesPerRevolution_y);
+			nPulse = fMM * (*m_pfReducer_y) / (*m_pfDeferentPitch)*(*m_pfPulsesPerRevolution_y);
 			break;
 		case sf_boardtype_motor_3axis_z_dd:
-			nPulse = fMM * (*m_pfReducer_z)/(*m_pfDeferentPerimeter_z)*(*m_pfPulsesPerRevolution_z);
+			nPulse = fMM * (*m_pfReducer_z) / (*m_pfDeferentPerimeter_z)*(*m_pfPulsesPerRevolution_z);
 			break;
 		case sf_boardtype_motor_3axis_z_sg:
-			nPulse = fMM * (*m_pfReducer_z)/(*m_pfDeferentPitch_z)*(*m_pfPulsesPerRevolution_z);
+			nPulse = fMM * (*m_pfReducer_z) / (*m_pfDeferentPitch_z)*(*m_pfPulsesPerRevolution_z);
 			break;
 		}
 	}
 	else
 	{
-		switch(nSel)
+		switch (nSel)
 		{
 		case sf_boardtype_motor_x:
-			nPulse = fMM * (*m_pfReducer_x)/(*m_pfDollyPerimeter)*(*m_pfPulsesPerRevolution_x);
+			nPulse = fMM * (*m_pfReducer_x) / (*m_pfDollyPerimeter)*(*m_pfPulsesPerRevolution_x);
 			break;
 		case sf_boardtype_motor_y_dd:
-			nPulse = fMM * (*m_pfReducer_y)/(*m_pfDeferentPerimeter)*(*m_pfPulsesPerRevolution_y);
+			nPulse = fMM * (*m_pfReducer_y) / (*m_pfDeferentPerimeter)*(*m_pfPulsesPerRevolution_y);
 			break;
 		case sf_boardtype_motor_y_sg:
-			nPulse = fMM * (*m_pfReducer_y)/(*m_pfDeferentPitch)*(*m_pfPulsesPerRevolution_y);
+			nPulse = fMM * (*m_pfReducer_y) / (*m_pfDeferentPitch)*(*m_pfPulsesPerRevolution_y);
 			break;
 		}
 	}
@@ -513,37 +514,37 @@ float CSFBoardDlg::Pulse2MM(int nPulse)
 
 	if (m_bThreeAxisServo)
 	{
-		switch(nSel)
+		switch (nSel)
 		{
 		case sf_boardtype_motor_3axis_x:
-			fMM = ((float)nPulse)/(*m_pfPulsesPerRevolution_x)*(*m_pfDollyPerimeter)/(*m_pfReducer_x);
+			fMM = ((float)nPulse) / (*m_pfPulsesPerRevolution_x)*(*m_pfDollyPerimeter) / (*m_pfReducer_x);
 			break;
 		case sf_boardtype_motor_3axis_y_dd:
-			fMM = ((float)nPulse)/(*m_pfPulsesPerRevolution_y)*(*m_pfDeferentPerimeter)/(*m_pfReducer_y);
+			fMM = ((float)nPulse) / (*m_pfPulsesPerRevolution_y)*(*m_pfDeferentPerimeter) / (*m_pfReducer_y);
 			break;
 		case sf_boardtype_motor_3axis_y_sg:
-			fMM = ((float)nPulse)/(*m_pfPulsesPerRevolution_y)*(*m_pfDeferentPitch)/(*m_pfReducer_y);
+			fMM = ((float)nPulse) / (*m_pfPulsesPerRevolution_y)*(*m_pfDeferentPitch) / (*m_pfReducer_y);
 			break;
 		case sf_boardtype_motor_3axis_z_dd:
-			fMM = ((float)nPulse)/(*m_pfPulsesPerRevolution_z)*(*m_pfDeferentPerimeter_z)/(*m_pfReducer_z);
+			fMM = ((float)nPulse) / (*m_pfPulsesPerRevolution_z)*(*m_pfDeferentPerimeter_z) / (*m_pfReducer_z);
 			break;
 		case sf_boardtype_motor_3axis_z_sg:
-			fMM = ((float)nPulse)/(*m_pfPulsesPerRevolution_z)*(*m_pfDeferentPitch_z)/(*m_pfReducer_z);
+			fMM = ((float)nPulse) / (*m_pfPulsesPerRevolution_z)*(*m_pfDeferentPitch_z) / (*m_pfReducer_z);
 			break;
 		}
 	}
 	else
 	{
-		switch(nSel)
+		switch (nSel)
 		{
 		case sf_boardtype_motor_x:
-			fMM = ((float)nPulse)/(*m_pfPulsesPerRevolution_x)*(*m_pfDollyPerimeter)/(*m_pfReducer_x);
+			fMM = ((float)nPulse) / (*m_pfPulsesPerRevolution_x)*(*m_pfDollyPerimeter) / (*m_pfReducer_x);
 			break;
 		case sf_boardtype_motor_y_dd:
-			fMM = ((float)nPulse)/(*m_pfPulsesPerRevolution_y)*(*m_pfDeferentPerimeter)/(*m_pfReducer_y);
+			fMM = ((float)nPulse) / (*m_pfPulsesPerRevolution_y)*(*m_pfDeferentPerimeter) / (*m_pfReducer_y);
 			break;
 		case sf_boardtype_motor_y_sg:
-			fMM = ((float)nPulse)/(*m_pfPulsesPerRevolution_y)*(*m_pfDeferentPitch)/(*m_pfReducer_y);
+			fMM = ((float)nPulse) / (*m_pfPulsesPerRevolution_y)*(*m_pfDeferentPitch) / (*m_pfReducer_y);
 			break;
 		}
 
@@ -568,31 +569,37 @@ void CSFBoardDlg::OnBnClickedButtonSfSpeedlevelAdd()
 	//}
 	//else
 	//{
+	if (bIsNewCurve) {
+		CNewSLineDataTableDlg dlg(this);
+		dlg.DoModal();
+	}
+	else {
 		COnlineTimeTableDlg dlg(this);
 		dlg.m_nOperationType = 0;
 		dlg.m_pSFDlg = this;
 		dlg.m_bSpeedLevel = 0xFF;
 		dlg.m_bMotoWay = m_bMotoWay;
 		dlg.DoModal();
+	}
 	//}
-	
-	if (m_pComPort->servo_get_existent_speedlevel(m_bMotoWay,CCmdTimeOut::get_existent_speedlevel,FALSE))
+
+	if (m_pComPort->servo_get_existent_speedlevel(m_bMotoWay, CCmdTimeOut::get_existent_speedlevel, FALSE))
 	{
 		int nExistSpeedLevel = m_pComPort->m_protocolstatus.bExistSpeedLevel;
-		if (nExistSpeedLevel>0)
+		if (nExistSpeedLevel > 0)
 		{
 			m_cbSpeedLevel.EnableWindow(TRUE);
 			((CWnd*)GetDlgItem(IDC_BUTTON_SPEEDLEVEL_MODIFY))->EnableWindow(TRUE);
 
 			m_cbSpeedLevel.ResetContent();
-			for (int i=0;i<nExistSpeedLevel;i++)
+			for (int i = 0; i < nExistSpeedLevel; i++)
 			{
-				str.Format("%d",i+1);
+				str.Format("%d", i + 1);
 				m_cbSpeedLevel.AddString(str);
 			}
 			m_cbSpeedLevel.SetCurSel(0);
 		}
-	}	
+	}
 	else
 	{
 		AfxMessageBox("获取档位总数--失败");
@@ -603,17 +610,22 @@ void CSFBoardDlg::OnBnClickedButtonSpeedlevelModify()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	int nSpeedLevel = m_cbSpeedLevel.GetCurSel();
-	if (nSpeedLevel<2)
-	{
-		COfflineTimeTableDlg dlg(this);
-		dlg.m_nOperationType = 1;
-		dlg.m_pSFDlg = this;
-		dlg.m_bSpeedLevel = nSpeedLevel;
-		dlg.m_bMotoWay = m_bMotoWay;
+	//if (nSpeedLevel<2)
+	//{
+	//	COfflineTimeTableDlg dlg(this);
+	//	dlg.m_nOperationType = 1;
+	//	dlg.m_pSFDlg = this;
+	//	dlg.m_bSpeedLevel = nSpeedLevel;
+	//	dlg.m_bMotoWay = m_bMotoWay;
+	//	dlg.DoModal();
+	//}
+	//else
+	//{
+	if (bIsNewCurve) {
+		CNewSLineDataTableDlg dlg(this);
 		dlg.DoModal();
 	}
-	else
-	{
+	else {
 		COnlineTimeTableDlg dlg(this);
 		dlg.m_nOperationType = 1;
 		dlg.m_pSFDlg = this;
@@ -621,6 +633,7 @@ void CSFBoardDlg::OnBnClickedButtonSpeedlevelModify()
 		dlg.m_bMotoWay = m_bMotoWay;
 		dlg.DoModal();
 	}
+	//}
 }
 
 void CSFBoardDlg::OnCbnSelchangeComboSfBoardtype()
@@ -633,7 +646,7 @@ void CSFBoardDlg::OnCbnSelchangeComboSfBoardtype()
 	bEnableX = bEnableY = bEnableZ = FALSE;
 	if (m_bThreeAxisServo)
 	{
-		switch(nSel)
+		switch (nSel)
 		{
 		case sf_boardtype_motor_3axis_x:
 			bEnableX = TRUE;
@@ -650,7 +663,7 @@ void CSFBoardDlg::OnCbnSelchangeComboSfBoardtype()
 	}
 	else
 	{
-		switch(nSel)
+		switch (nSel)
 		{
 		case sf_boardtype_motor_x:
 			bEnableX = TRUE;
@@ -661,7 +674,7 @@ void CSFBoardDlg::OnCbnSelchangeComboSfBoardtype()
 			break;
 		}
 	}
-	
+
 	m_cbSpecialPositionX.EnableWindow(bEnableX);
 	m_cbSpecialPositionY.EnableWindow(bEnableY);
 	m_cbSpecialPositionZ.EnableWindow(bEnableZ);
@@ -672,29 +685,29 @@ void CSFBoardDlg::OnCbnSelchangeComboSfBoardtype()
 	m_cbSpeedLevel.EnableWindow(FALSE);
 	((CWnd*)GetDlgItem(IDC_BUTTON_SF_SPEEDLEVEL_ADD))->EnableWindow(FALSE);
 	((CWnd*)GetDlgItem(IDC_BUTTON_SPEEDLEVEL_MODIFY))->EnableWindow(FALSE);
-	
+
 	m_pComPort->m_protocolstatus.bExistSpeedLevel = 0;
-	if (m_pComPort->servo_get_existent_speedlevel(m_bMotoWay,CCmdTimeOut::get_existent_speedlevel,FALSE))
+	if (m_pComPort->servo_get_existent_speedlevel(m_bMotoWay, CCmdTimeOut::get_existent_speedlevel, FALSE))
 	{
 		int nExistSpeedLevel = m_pComPort->m_protocolstatus.bExistSpeedLevel;
-		if (nExistSpeedLevel>0)
+		if (nExistSpeedLevel > 0)
 		{
 			m_cbSpeedLevel.EnableWindow(TRUE);
 			((CWnd*)GetDlgItem(IDC_BUTTON_SPEEDLEVEL_MODIFY))->EnableWindow(TRUE);
 
-			for (int i=0;i<nExistSpeedLevel;i++)
+			for (int i = 0; i < nExistSpeedLevel; i++)
 			{
-				str.Format("%d",i+1);
+				str.Format("%d", i + 1);
 				m_cbSpeedLevel.AddString(str);
 			}
 			m_cbSpeedLevel.SetCurSel(0);
 
-			if (nExistSpeedLevel>=2)
+			if (nExistSpeedLevel >= 2)
 			{
 				((CWnd*)GetDlgItem(IDC_BUTTON_SF_SPEEDLEVEL_ADD))->EnableWindow(TRUE);
 			}
 		}
-	}	
+	}
 	else
 	{
 		AfxMessageBox("获取档位总数--失败");
@@ -704,7 +717,7 @@ void CSFBoardDlg::OnCbnSelchangeComboSfBoardtype()
 void CSFBoardDlg::OnBnClickedButtonSfCountFullpulse()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	if (!m_pComPort->servo_count_fullpulse(m_bMotoWay,CCmdTimeOut::count_fullpulse,FALSE))
+	if (!m_pComPort->servo_count_fullpulse(m_bMotoWay, CCmdTimeOut::count_fullpulse, FALSE))
 	{
 		AfxMessageBox("全程脉冲计数--失败");
 	}
@@ -728,7 +741,7 @@ void CSFBoardDlg::OnEnChangeEditSfMoverelativeMm()
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_MOVERELATIVE_MM))->GetWindowText(str);
 		fMM = atof(str);
 		nPulse = MM2Pulse(fMM);
-		str.Format("%d",nPulse);
+		str.Format("%d", nPulse);
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_MOVERELATIVE_PULSE))->SetWindowText(str);
 	}
 }
@@ -750,7 +763,7 @@ void CSFBoardDlg::OnEnChangeEditSfMoverelativeReMm()
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_MOVERELATIVE_RE_MM))->GetWindowText(str);
 		fMM = atof(str);
 		nPulse = MM2Pulse(fMM);
-		str.Format("%d",nPulse);
+		str.Format("%d", nPulse);
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_MOVERELATIVE_RE_PULSE))->SetWindowText(str);
 	}
 }
@@ -772,7 +785,7 @@ void CSFBoardDlg::OnEnChangeEditSfMoverelativePulse()
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_MOVERELATIVE_PULSE))->GetWindowText(str);
 		nPulse = atoi(str);
 		fMM = Pulse2MM(nPulse);
-		str.Format("%.2f",fMM);
+		str.Format("%.2f", fMM);
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_MOVERELATIVE_MM))->SetWindowText(str);
 	}
 }
@@ -794,7 +807,7 @@ void CSFBoardDlg::OnEnChangeEditSfMoverelativeRePulse()
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_MOVERELATIVE_RE_PULSE))->GetWindowText(str);
 		nPulse = atoi(str);
 		fMM = Pulse2MM(nPulse);
-		str.Format("%.2f",fMM);
+		str.Format("%.2f", fMM);
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_MOVERELATIVE_RE_MM))->SetWindowText(str);
 	}
 }
@@ -802,7 +815,7 @@ void CSFBoardDlg::OnEnChangeEditSfMoverelativeRePulse()
 void CSFBoardDlg::OnBnClickedButtonSfMoverelative()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	int nPulse,nRePulse,nSpeedType;
+	int nPulse, nRePulse, nSpeedType;
 	DWORD dwPulse;
 	CString str;
 
@@ -811,9 +824,9 @@ void CSFBoardDlg::OnBnClickedButtonSfMoverelative()
 	((CWnd*)GetDlgItem(IDC_EDIT_SF_MOVERELATIVE_RE_PULSE))->GetWindowText(str);
 	nRePulse = atoi(str);
 
-	if (nPulse<0)
+	if (nPulse < 0)
 	{
-		dwPulse = ((0 - nPulse)|0x01<<31);
+		dwPulse = ((0 - nPulse) | 0x01 << 31);
 	}
 	else
 	{
@@ -821,19 +834,19 @@ void CSFBoardDlg::OnBnClickedButtonSfMoverelative()
 	}
 	nSpeedType = m_cbSpeedLevel.GetCurSel();
 
-	if (nSpeedType==-1)
+	if (nSpeedType == -1)
 	{
 		AfxMessageBox("请先下载时间表");
 		return;
 	}
 
-	if (nSpeedType<2)
+	if (nSpeedType < 2)
 	{
 		AfxMessageBox("请选择联机(第三档以后)速度档");
 		return;
 	}
 
-	if (!m_pComPort->servo_motor_move_relative(m_bMotoWay,nSpeedType,dwPulse,nRePulse,CCmdTimeOut::motor_move_relative,FALSE))
+	if (!m_pComPort->servo_motor_move_relative(m_bMotoWay, nSpeedType, dwPulse, nRePulse, CCmdTimeOut::motor_move_relative, FALSE))
 	{
 		AfxMessageBox("移动相对位置--失败");
 	}
@@ -841,13 +854,13 @@ void CSFBoardDlg::OnBnClickedButtonSfMoverelative()
 	if (m_ckQueryCom.GetCheck())
 	{
 		BOOL bFlag = TRUE;
-		while(1)
+		while (1)
 		{
 			m_pComPort->m_protocolstatus.wComBoardCondition = 0;
 
 			bFlag = !bFlag;
 
-			if (!m_pComPort->com_get_board_condition(5000,bFlag))
+			if (!m_pComPort->com_get_board_condition(5000, bFlag))
 			{
 				AfxMessageBox("查询各板卡工作情况--出错");
 				break;
@@ -855,16 +868,16 @@ void CSFBoardDlg::OnBnClickedButtonSfMoverelative()
 
 			WORD wCondition = m_pComPort->m_protocolstatus.wComBoardCondition;
 
-			if ((wCondition&0x0001)==0x0001)
+			if ((wCondition & 0x0001) == 0x0001)
 			{
 				AfxMessageBox("强制取消打印");
 				break;
 			}
 			else
 			{
-				if (m_bMotoWay==addr_servo_x)
+				if (m_bMotoWay == addr_servo_x)
 				{
-					if ((wCondition&(0x0001<<1))==0)
+					if ((wCondition&(0x0001 << 1)) == 0)
 					{
 						AfxMessageBox("X向移动停止");
 						break;
@@ -874,7 +887,7 @@ void CSFBoardDlg::OnBnClickedButtonSfMoverelative()
 				}
 				else
 				{
-					if ((wCondition&(0x0001<<2))==0)
+					if ((wCondition&(0x0001 << 2)) == 0)
 					{
 						AfxMessageBox("Y向移动停止");
 						break;
@@ -904,7 +917,7 @@ void CSFBoardDlg::OnEnChangeEditSfMoveabsoluteMm()
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_MOVEABSOLUTE_MM))->GetWindowText(str);
 		fMM = atof(str);
 		nPulse = MM2Pulse(fMM);
-		str.Format("%d",nPulse);
+		str.Format("%d", nPulse);
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_MOVEABSOLUTE_PULSE))->SetWindowText(str);
 	}
 }
@@ -926,7 +939,7 @@ void CSFBoardDlg::OnEnChangeEditSfMoveabsolutePulse()
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_MOVEABSOLUTE_PULSE))->GetWindowText(str);
 		nPulse = atoi(str);
 		fMM = Pulse2MM(nPulse);
-		str.Format("%.2f",fMM);
+		str.Format("%.2f", fMM);
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_MOVEABSOLUTE_MM))->SetWindowText(str);
 	}
 }
@@ -934,16 +947,16 @@ void CSFBoardDlg::OnEnChangeEditSfMoveabsolutePulse()
 void CSFBoardDlg::OnBnClickedButtonSfMoveabsolute()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	int nPulse,nSpeedType;
+	int nPulse, nSpeedType;
 	DWORD dwPulse;
 	CString str;
 
 	((CWnd*)GetDlgItem(IDC_EDIT_SF_MOVEABSOLUTE_PULSE))->GetWindowText(str);
 	nPulse = atoi(str);
 
-	if (nPulse<0)
+	if (nPulse < 0)
 	{
-		dwPulse = ((0 - nPulse)|0x01<<31);
+		dwPulse = ((0 - nPulse) | 0x01 << 31);
 	}
 	else
 	{
@@ -951,18 +964,18 @@ void CSFBoardDlg::OnBnClickedButtonSfMoveabsolute()
 	}
 	nSpeedType = m_cbSpeedLevel.GetCurSel();
 
-	if (nSpeedType==-1)
+	if (nSpeedType == -1)
 	{
 		AfxMessageBox("请先下载时间表");
 		return;
 	}
-	if (nSpeedType<2)
+	if (nSpeedType < 2)
 	{
 		AfxMessageBox("请选择联机(第三档以后)速度档");
 		return;
 	}
 
-	if (!m_pComPort->servo_motor_move_absolute(m_bMotoWay,nSpeedType,dwPulse,CCmdTimeOut::motor_move_absolute,FALSE))
+	if (!m_pComPort->servo_motor_move_absolute(m_bMotoWay, nSpeedType, dwPulse, CCmdTimeOut::motor_move_absolute, FALSE))
 	{
 		AfxMessageBox("移动相对位置--失败");
 	}
@@ -970,13 +983,13 @@ void CSFBoardDlg::OnBnClickedButtonSfMoveabsolute()
 	if (m_ckQueryCom.GetCheck())
 	{
 		BOOL bFlag = TRUE;
-		while(1)
+		while (1)
 		{
 			m_pComPort->m_protocolstatus.wComBoardCondition = 0;
 
 			bFlag = !bFlag;
 
-			if (!m_pComPort->com_get_board_condition(5000,bFlag))
+			if (!m_pComPort->com_get_board_condition(5000, bFlag))
 			{
 				AfxMessageBox("查询各板卡工作情况--出错");
 				break;
@@ -984,16 +997,16 @@ void CSFBoardDlg::OnBnClickedButtonSfMoveabsolute()
 
 			WORD wCondition = m_pComPort->m_protocolstatus.wComBoardCondition;
 
-			if ((wCondition&0x0001)==0x0001)
+			if ((wCondition & 0x0001) == 0x0001)
 			{
 				AfxMessageBox("强制取消打印");
 				break;
 			}
 			else
 			{
-				if (m_bMotoWay==addr_servo_x)
+				if (m_bMotoWay == addr_servo_x)
 				{
-					if ((wCondition&(0x0001<<1))==0)
+					if ((wCondition&(0x0001 << 1)) == 0)
 					{
 						AfxMessageBox("X向移动停止");
 						break;
@@ -1003,7 +1016,7 @@ void CSFBoardDlg::OnBnClickedButtonSfMoveabsolute()
 				}
 				else
 				{
-					if ((wCondition&(0x0001<<2))==0)
+					if ((wCondition&(0x0001 << 2)) == 0)
 					{
 						AfxMessageBox("Y向移动停止");
 						break;
@@ -1021,19 +1034,19 @@ void CSFBoardDlg::OnBnClickedButtonSfGetposition()
 	// TODO: 在此添加控件通知处理程序代码
 	m_pComPort->m_protocolstatus.dwCurrentPosition = 0;
 
-	if (m_pComPort->servo_motor_get_position(m_bMotoWay,CCmdTimeOut::motor_get_position,FALSE))
+	if (m_pComPort->servo_motor_get_position(m_bMotoWay, CCmdTimeOut::motor_get_position, FALSE))
 	{
 		CString str;
 		float fMM;
 		int nPulse = m_pComPort->m_protocolstatus.dwCurrentPosition;
 
 		fMM = Pulse2MM(nPulse);
-		str.Format("当前位置: %.2f mm %d pulse",fMM,nPulse);
+		str.Format("当前位置: %.2f mm %d pulse", fMM, nPulse);
 		AfxMessageBox(str);
 
 		str.Format("%d", nPulse);
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_MOVEABSOLUTE_PULSE))->SetWindowText(str);
-		str.Format("%.2f",fMM);
+		str.Format("%.2f", fMM);
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_MOVEABSOLUTE_MM))->SetWindowText(str);
 	}
 	else
@@ -1047,35 +1060,41 @@ void CSFBoardDlg::OnBnClickedButtonSfSpeedlevelAddOffline()
 	// TODO: 在此添加控件通知处理程序代码
 	CString str;
 
-	COfflineTimeTableDlg dlg(this);
-	dlg.m_nOperationType = 0;
-	dlg.m_pSFDlg = this;
-	dlg.m_bSpeedLevel = 0xFF;
-	dlg.m_bMotoWay = m_bMotoWay;
-	dlg.DoModal();
-	
-	if (m_pComPort->servo_get_existent_speedlevel(m_bMotoWay,CCmdTimeOut::get_existent_speedlevel,FALSE))
+	if (bIsNewCurve) {
+		CNewSLineDataTableDlg dlg(this);
+		dlg.DoModal();
+	}
+	else {
+		COfflineTimeTableDlg dlg(this);
+		dlg.m_nOperationType = 0;
+		dlg.m_pSFDlg = this;
+		dlg.m_bSpeedLevel = 0xFF;
+		dlg.m_bMotoWay = m_bMotoWay;
+		dlg.DoModal();
+	}
+
+	if (m_pComPort->servo_get_existent_speedlevel(m_bMotoWay, CCmdTimeOut::get_existent_speedlevel, FALSE))
 	{
 		int nExistSpeedLevel = m_pComPort->m_protocolstatus.bExistSpeedLevel;
-		if (nExistSpeedLevel>0)
+		if (nExistSpeedLevel > 0)
 		{
 			m_cbSpeedLevel.EnableWindow(TRUE);
 			((CWnd*)GetDlgItem(IDC_BUTTON_SPEEDLEVEL_MODIFY))->EnableWindow(TRUE);
 
 			m_cbSpeedLevel.ResetContent();
-			for (int i=0;i<nExistSpeedLevel;i++)
+			for (int i = 0; i < nExistSpeedLevel; i++)
 			{
-				str.Format("%d",i+1);
+				str.Format("%d", i + 1);
 				m_cbSpeedLevel.AddString(str);
 			}
 			m_cbSpeedLevel.SetCurSel(0);
 
-			if (nExistSpeedLevel>=2)
+			if (nExistSpeedLevel >= 2)
 			{
 				((CWnd*)GetDlgItem(IDC_BUTTON_SF_SPEEDLEVEL_ADD))->EnableWindow(TRUE);
 			}
 		}
-	}	
+	}
 	else
 	{
 		AfxMessageBox("获取档位总数--失败");
@@ -1085,7 +1104,7 @@ void CSFBoardDlg::OnBnClickedButtonSfSpeedlevelAddOffline()
 void CSFBoardDlg::OnBnClickedButtonSfMovestop()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	if (!m_pComPort->servo_motor_move_stop(m_bMotoWay,CCmdTimeOut::motor_move_stop,FALSE))
+	if (!m_pComPort->servo_motor_move_stop(m_bMotoWay, CCmdTimeOut::motor_move_stop, FALSE))
 	{
 		AfxMessageBox("停止移动--失败");
 	}
@@ -1096,16 +1115,16 @@ void CSFBoardDlg::OnBnClickedButtonSfOfflinemove()
 	// TODO: 在此添加控件通知处理程序代码
 	BYTE bMoveType = 0;
 
-	if (m_cbOfflineMoveDir.GetCurSel()==1)
+	if (m_cbOfflineMoveDir.GetCurSel() == 1)
 	{
 		bMoveType |= 0x01;
 	}
-	if (m_cbOfflineMoveSpd.GetCurSel()==1)
+	if (m_cbOfflineMoveSpd.GetCurSel() == 1)
 	{
 		bMoveType |= 0x02;
 	}
-	
-	if (!m_pComPort->servo_motor_move(m_bMotoWay,bMoveType,CCmdTimeOut::motor_move_offline,FALSE))
+
+	if (!m_pComPort->servo_motor_move(m_bMotoWay, bMoveType, CCmdTimeOut::motor_move_offline, FALSE))
 	{
 		AfxMessageBox("脱机移动--失败");
 	}
@@ -1116,13 +1135,13 @@ void CSFBoardDlg::OnBnClickedButtonSfGetFullpulse()
 	// TODO: 在此添加控件通知处理程序代码
 	m_pComPort->m_protocolstatus.dwFullPulse = 0;
 
-	if (m_pComPort->servo_get_fullpulse(m_bMotoWay,CCmdTimeOut::get_fullpulse,FALSE))
+	if (m_pComPort->servo_get_fullpulse(m_bMotoWay, CCmdTimeOut::get_fullpulse, FALSE))
 	{
 		int nPulse = m_pComPort->m_protocolstatus.dwFullPulse;
 		CString str;
 		float fMM = Pulse2MM(nPulse);
 
-		str.Format("全程脉冲数: %d pulse %.2f mm",nPulse,fMM);
+		str.Format("全程脉冲数: %d pulse %.2f mm", nPulse, fMM);
 		AfxMessageBox(str);
 	}
 	else
@@ -1142,8 +1161,8 @@ void CSFBoardDlg::OnBnClickedButtonSfSetSpecialPosition()
 
 	((CWnd*)GetDlgItem(IDC_EDIT_SF_SPECIAL_POSITION_PULSE))->GetWindowText(str);
 	dwSpecialPosition = atoi(str);
-	
-	if (!m_pComPort->servo_set_special_position(m_bMotoWay,bSpecialPosition,dwSpecialPosition,CCmdTimeOut::set_special_position,FALSE))
+
+	if (!m_pComPort->servo_set_special_position(m_bMotoWay, bSpecialPosition, dwSpecialPosition, CCmdTimeOut::set_special_position, FALSE))
 	{
 		AfxMessageBox("设置特殊位置--失败");
 	}
@@ -1166,7 +1185,7 @@ void CSFBoardDlg::OnEnChangeEditSfSpecialPositionMm()
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_SPECIAL_POSITION_MM))->GetWindowText(str);
 		fMM = atof(str);
 		nPulse = MM2Pulse(fMM);
-		str.Format("%d",nPulse);
+		str.Format("%d", nPulse);
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_SPECIAL_POSITION_PULSE))->SetWindowText(str);
 	}
 }
@@ -1188,7 +1207,7 @@ void CSFBoardDlg::OnEnChangeEditSfSpecialPositionPulse()
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_SPECIAL_POSITION_PULSE))->GetWindowText(str);
 		nPulse = atoi(str);
 		fMM = Pulse2MM(nPulse);
-		str.Format("%.2f",fMM);
+		str.Format("%.2f", fMM);
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_SPECIAL_POSITION_MM))->SetWindowText(str);
 	}
 }
@@ -1203,12 +1222,12 @@ void CSFBoardDlg::OnBnClickedButtonSfGetSpecialPosition()
 	bSpecialPosition = SpecialPositionFromPosType();
 
 	m_pComPort->m_protocolstatus.dwSpecialPosition = 0;
-	if (m_pComPort->servo_get_special_position(m_bMotoWay,bSpecialPosition,CCmdTimeOut::get_special_position,FALSE))
+	if (m_pComPort->servo_get_special_position(m_bMotoWay, bSpecialPosition, CCmdTimeOut::get_special_position, FALSE))
 	{
 		dwSpecialPosition = m_pComPort->m_protocolstatus.dwSpecialPosition;
 		float fMM = Pulse2MM(dwSpecialPosition);
 
-		str.Format("特殊位置值: %.2f mm %d pulse",fMM,dwSpecialPosition);
+		str.Format("特殊位置值: %.2f mm %d pulse", fMM, dwSpecialPosition);
 		AfxMessageBox(str);
 
 		str.Format("%.2f", fMM);
@@ -1229,17 +1248,17 @@ void CSFBoardDlg::OnBnClickedButtonSfMove2SpecialPosition()
 	BYTE bSpecialPosition;
 	int nSpeedType;
 	CString str;
-	
+
 	nSpeedType = m_cbSpeedLevel.GetCurSel();
 
-	if (nSpeedType==-1)
+	if (nSpeedType == -1)
 	{
 		AfxMessageBox("请先下载时间表");
 		return;
 	}
 	bSpecialPosition = SpecialPositionFromPosType();
-	
-	if (!m_pComPort->servo_motor_move_special_position(m_bMotoWay,nSpeedType,bSpecialPosition,CCmdTimeOut::motor_move_special_position,FALSE))
+
+	if (!m_pComPort->servo_motor_move_special_position(m_bMotoWay, nSpeedType, bSpecialPosition, CCmdTimeOut::motor_move_special_position, FALSE))
 	{
 		AfxMessageBox("移至特殊位置--失败");
 	}
@@ -1247,13 +1266,13 @@ void CSFBoardDlg::OnBnClickedButtonSfMove2SpecialPosition()
 	if (m_ckQueryCom.GetCheck())
 	{
 		BOOL bFlag = TRUE;
-		while(1)
+		while (1)
 		{
 			m_pComPort->m_protocolstatus.wComBoardCondition = 0;
 
 			bFlag = !bFlag;
 
-			if (!m_pComPort->com_get_board_condition(5000,bFlag))
+			if (!m_pComPort->com_get_board_condition(5000, bFlag))
 			{
 				AfxMessageBox("查询各板卡工作情况--出错");
 				break;
@@ -1261,16 +1280,16 @@ void CSFBoardDlg::OnBnClickedButtonSfMove2SpecialPosition()
 
 			WORD wCondition = m_pComPort->m_protocolstatus.wComBoardCondition;
 
-			if ((wCondition&0x0001)==0x0001)
+			if ((wCondition & 0x0001) == 0x0001)
 			{
 				AfxMessageBox("强制取消打印");
 				break;
 			}
 			else
 			{
-				if (m_bMotoWay==addr_servo_x)
+				if (m_bMotoWay == addr_servo_x)
 				{
-					if ((wCondition&(0x0001<<1))==0)
+					if ((wCondition&(0x0001 << 1)) == 0)
 					{
 						AfxMessageBox("X向移动停止");
 						break;
@@ -1280,7 +1299,7 @@ void CSFBoardDlg::OnBnClickedButtonSfMove2SpecialPosition()
 				}
 				else
 				{
-					if ((wCondition&(0x0001<<2))==0)
+					if ((wCondition&(0x0001 << 2)) == 0)
 					{
 						AfxMessageBox("Y向移动停止");
 						break;
@@ -1296,7 +1315,7 @@ void CSFBoardDlg::OnBnClickedButtonSfMove2SpecialPosition()
 void CSFBoardDlg::OnBnClickedButtonSfDeleteTimetableData()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	if (!m_pComPort->servo_delete_all_timetable_data(m_bMotoWay,CCmdTimeOut::delete_all_timetable_data,FALSE))
+	if (!m_pComPort->servo_delete_all_timetable_data(m_bMotoWay, CCmdTimeOut::delete_all_timetable_data, FALSE))
 	{
 		AfxMessageBox("清空档位信息--失败");
 	}
@@ -1308,27 +1327,27 @@ void CSFBoardDlg::OnBnClickedButtonSfDeleteTimetableData()
 	((CWnd*)GetDlgItem(IDC_BUTTON_SF_SPEEDLEVEL_ADD))->EnableWindow(FALSE);
 	((CWnd*)GetDlgItem(IDC_BUTTON_SPEEDLEVEL_MODIFY))->EnableWindow(FALSE);
 
-	if (m_pComPort->servo_get_existent_speedlevel(m_bMotoWay,CCmdTimeOut::get_existent_speedlevel,FALSE))
+	if (m_pComPort->servo_get_existent_speedlevel(m_bMotoWay, CCmdTimeOut::get_existent_speedlevel, FALSE))
 	{
 		int nExistSpeedLevel = m_pComPort->m_protocolstatus.bExistSpeedLevel;
-		if (nExistSpeedLevel>0)
+		if (nExistSpeedLevel > 0)
 		{
 			m_cbSpeedLevel.EnableWindow(TRUE);
 			((CWnd*)GetDlgItem(IDC_BUTTON_SPEEDLEVEL_MODIFY))->EnableWindow(TRUE);
 
-			for (int i=0;i<nExistSpeedLevel;i++)
+			for (int i = 0; i < nExistSpeedLevel; i++)
 			{
-				str.Format("%d",i+1);
+				str.Format("%d", i + 1);
 				m_cbSpeedLevel.AddString(str);
 			}
 			m_cbSpeedLevel.SetCurSel(0);
 
-			if (nExistSpeedLevel>=2)
+			if (nExistSpeedLevel >= 2)
 			{
 				((CWnd*)GetDlgItem(IDC_BUTTON_SF_SPEEDLEVEL_ADD))->EnableWindow(TRUE);
 			}
 		}
-	}	
+	}
 	else
 	{
 		AfxMessageBox("获取档位总数--失败");
@@ -1339,22 +1358,22 @@ void CSFBoardDlg::OnBnClickedButtonSfGetTimetableVitalParameter()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	int nSpeedLevel = m_cbSpeedLevel.GetCurSel();
-	if (nSpeedLevel<2)
+	if (nSpeedLevel < 2)
 	{
 		AfxMessageBox("不是联机速度档位");
 		return;
 	}
-	
-	if (m_pComPort->servo_get_timetable_vital_parameter(m_bMotoWay,nSpeedLevel,CCmdTimeOut::get_timetable_vital_parameter,FALSE))
+
+	if (m_pComPort->servo_get_timetable_vital_parameter(m_bMotoWay, nSpeedLevel, CCmdTimeOut::get_timetable_vital_parameter, FALSE))
 	{
-		float fAecS,fDecS,fEvenV;
+		float fAecS, fDecS, fEvenV;
 		CString str;
 
 		fAecS = Pulse2MM(m_pComPort->m_protocolstatus.dwVitalParaAecPulse);
 		fDecS = Pulse2MM(m_pComPort->m_protocolstatus.dwVitalParaDecPulse);
-		fEvenV = Pulse2MM((float)TIME_CONVERT_VALUE/(float)m_pComPort->m_protocolstatus.dwVitalEvenT);
+		fEvenV = Pulse2MM((float)TIME_CONVERT_VALUE / (float)m_pComPort->m_protocolstatus.dwVitalEvenT);
 
-		str.Format("联机参数: 加速距离: %.2f mm 减速距离: %.2f mm 匀速速度: %.2f mm/s",fAecS,fDecS,fEvenV);
+		str.Format("联机参数: 加速距离: %.2f mm 减速距离: %.2f mm 匀速速度: %.2f mm/s", fAecS, fDecS, fEvenV);
 		AfxMessageBox(str);
 	}
 	else
@@ -1365,15 +1384,15 @@ void CSFBoardDlg::OnBnClickedButtonSfGetTimetableVitalParameter()
 }
 
 BOOL CSFBoardDlg::ExportBoardInfo()
-{	
+{
 	COleDateTime ExportTime = COleDateTime::GetCurrentTime();
-	CString		strIniFile,strSection,strReg,str = "";
-	CString		strFileTitle = "",strFilePath = "";
-	int			nBoardType	= m_cbBoardType.GetCurSel();
+	CString		strIniFile, strSection, strReg, str = "";
+	CString		strFileTitle = "", strFilePath = "";
+	int			nBoardType = m_cbBoardType.GetCurSel();
 
 	if (m_bThreeAxisServo)
 	{
-		switch(nBoardType)
+		switch (nBoardType)
 		{
 		case sf_boardtype_motor_3axis_x:
 			str.Format("SFBoardInfo-Moto_3Axis_X_XC");
@@ -1394,7 +1413,7 @@ BOOL CSFBoardDlg::ExportBoardInfo()
 	}
 	else
 	{
-		switch(nBoardType)
+		switch (nBoardType)
 		{
 		case sf_boardtype_motor_x:
 			str.Format("SFBoardInfo-Moto_X_XC");
@@ -1409,11 +1428,11 @@ BOOL CSFBoardDlg::ExportBoardInfo()
 	}
 
 	strFileTitle = str;
-	str			= ExportTime.Format("-%Y%m%d%H%M%S.SFCFG");
+	str = ExportTime.Format("-%Y%m%d%H%M%S.SFCFG");
 	strFileTitle = strFileTitle + str;
 
-	CFileDialog dlg(FALSE,"*.SFCFG", strFileTitle, 
-		OFN_HIDEREADONLY|OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST, 
+	CFileDialog dlg(FALSE, "*.SFCFG", strFileTitle,
+		OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST,
 		"伺服配置文件 (*.SFCFG)|*.SFCFG|All Files (*.*)|*.*||", this);
 
 	dlg.m_ofn.lpstrTitle = "导出伺服板信息";
@@ -1425,16 +1444,16 @@ BOOL CSFBoardDlg::ExportBoardInfo()
 
 	strFilePath = dlg.GetPathName();
 
-	SetCursor(LoadCursor(NULL,IDC_WAIT));
-	
+	SetCursor(LoadCursor(NULL, IDC_WAIT));
+
 	strIniFile = strFilePath;
 
 	strSection = "BoardInfo";
-	WRITE_PROFILE_INFO("%d",m_bMotoWay);
-	
+	WRITE_PROFILE_INFO("%d", m_bMotoWay);
+
 	int nSpeedNum = m_cbSpeedLevel.GetCount();
 
-	if (nSpeedNum<=0)
+	if (nSpeedNum <= 0)
 	{
 		DeleteFile(strFilePath);
 		return FALSE;
@@ -1442,11 +1461,11 @@ BOOL CSFBoardDlg::ExportBoardInfo()
 	else
 	{
 		strSection = "SpeedNum";
-		WRITE_PROFILE_INFO("%d",nSpeedNum);
-		
-		for (int i=0;i<nSpeedNum;i++)
+		WRITE_PROFILE_INFO("%d", nSpeedNum);
+
+		for (int i = 0; i < nSpeedNum; i++)
 		{
-			if (i<2)
+			if (i < 2)
 			{
 				//Offline
 				COfflineTimeTableDlg dlg(this);
@@ -1456,7 +1475,7 @@ BOOL CSFBoardDlg::ExportBoardInfo()
 				dlg.m_bMotoWay = m_bMotoWay;
 				dlg.m_pComPort = m_pComPort;
 
-				dlg.Create(IDD_DIALOG_SFOFFLINE_TIMETABLE,this);
+				dlg.Create(IDD_DIALOG_SFOFFLINE_TIMETABLE, this);
 				dlg.ShowWindow(FALSE);
 
 				if (!dlg.ExportSpeedLevelInfo(strFilePath))
@@ -1475,7 +1494,7 @@ BOOL CSFBoardDlg::ExportBoardInfo()
 				dlg.m_bMotoWay = m_bMotoWay;
 				dlg.m_pComPort = m_pComPort;
 
-				dlg.Create(IDD_DIALOG_SFONLINE_TIMETABLE,this);
+				dlg.Create(IDD_DIALOG_SFONLINE_TIMETABLE, this);
 				dlg.ShowWindow(FALSE);
 
 				if (!dlg.ExportSpeedLevelInfo(strFilePath))
@@ -1486,7 +1505,7 @@ BOOL CSFBoardDlg::ExportBoardInfo()
 			}
 		}
 	}
-	SetCursor(LoadCursor(NULL,IDC_ARROW));
+	SetCursor(LoadCursor(NULL, IDC_ARROW));
 	return TRUE;
 }
 void CSFBoardDlg::OnBnClickedButtonBoardinfoExport()
@@ -1504,14 +1523,14 @@ void CSFBoardDlg::OnBnClickedButtonBoardinfoExport()
 
 BOOL CSFBoardDlg::ImportBoardInfo()
 {
-	CFileDialog dlg(TRUE,"*.SFCFG", "", 
-		OFN_HIDEREADONLY|OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST, 
+	CFileDialog dlg(TRUE, "*.SFCFG", "",
+		OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST,
 		"伺服配置文件 (*.SFCFG)|*.SFCFG|All Files (*.*)|*.*||", this);
 
 	dlg.m_ofn.lpstrTitle = "导入伺服板信息";
 
-	CString strFilePath = "",str = "";
-	CString strIniFile,strSection;
+	CString strFilePath = "", str = "";
+	CString strIniFile, strSection;
 	char szReg[200];
 
 	if (dlg.DoModal() != IDOK)
@@ -1519,12 +1538,12 @@ BOOL CSFBoardDlg::ImportBoardInfo()
 		return FALSE;
 	}
 	strFilePath = dlg.GetPathName();
-	
-	SetCursor(LoadCursor(NULL,IDC_WAIT));
+
+	SetCursor(LoadCursor(NULL, IDC_WAIT));
 
 	if (!PathFileExists(strFilePath))
 	{
-		str.Format("文件 %s 不存在",strFilePath);
+		str.Format("文件 %s 不存在", strFilePath);
 		AfxMessageBox(str);
 		return FALSE;
 	}
@@ -1536,27 +1555,27 @@ BOOL CSFBoardDlg::ImportBoardInfo()
 	int		nBoardType_Now = m_cbBoardType.GetCurSel();
 	BYTE	bMotorWay = motor_way_none;
 
-	GET_PROFILE_INFO_INT(bMotorWay,0,0,3,UINT);
+	GET_PROFILE_INFO_INT(bMotorWay, 0, 0, 3, UINT);
 	if (bMotorWay != m_bMotoWay)
 	{
 		AfxMessageBox("请选择正确的伺服板类型(小车 导带 丝杆)");
 		return FALSE;
 	}
-	
-	if (AfxMessageBox("即将导入伺服板信息 将会覆盖现有伺服板信息 是否导入？",MB_YESNO)==IDNO)
+
+	if (AfxMessageBox("即将导入伺服板信息 将会覆盖现有伺服板信息 是否导入？", MB_YESNO) == IDNO)
 	{
 		return FALSE;
 	}
-	
+
 	OnBnClickedButtonSfDeleteTimetableData();
 
 	strSection = "SpeedNum";
 	int nSpeedNum = 0;
-	GET_PROFILE_INFO_INT(nSpeedNum,0,0,255,UINT);
-	
-	for (int i=0;i<nSpeedNum;i++)
+	GET_PROFILE_INFO_INT(nSpeedNum, 0, 0, 255, UINT);
+
+	for (int i = 0; i < nSpeedNum; i++)
 	{
-		if (i<2)
+		if (i < 2)
 		{
 			COfflineTimeTableDlg dlg(this);
 			dlg.m_nOperationType = 0;
@@ -1565,7 +1584,7 @@ BOOL CSFBoardDlg::ImportBoardInfo()
 			dlg.m_bMotoWay = m_bMotoWay;
 			dlg.m_pComPort = m_pComPort;
 
-			dlg.Create(IDD_DIALOG_SFOFFLINE_TIMETABLE,this);
+			dlg.Create(IDD_DIALOG_SFOFFLINE_TIMETABLE, this);
 			dlg.ShowWindow(FALSE);
 
 			if (!dlg.ImportSpeedLevelInfo(strFilePath))
@@ -1582,7 +1601,7 @@ BOOL CSFBoardDlg::ImportBoardInfo()
 			dlg.m_bMotoWay = m_bMotoWay;
 			dlg.m_pComPort = m_pComPort;
 
-			dlg.Create(IDD_DIALOG_SFONLINE_TIMETABLE,this);
+			dlg.Create(IDD_DIALOG_SFONLINE_TIMETABLE, this);
 			dlg.ShowWindow(FALSE);
 
 			if (!dlg.ImportSpeedLevelInfo(strFilePath))
@@ -1598,33 +1617,33 @@ BOOL CSFBoardDlg::ImportBoardInfo()
 	((CWnd*)GetDlgItem(IDC_BUTTON_SF_SPEEDLEVEL_ADD))->EnableWindow(FALSE);
 	((CWnd*)GetDlgItem(IDC_BUTTON_SPEEDLEVEL_MODIFY))->EnableWindow(FALSE);
 
-	if (m_pComPort->servo_get_existent_speedlevel(m_bMotoWay,CCmdTimeOut::get_existent_speedlevel,FALSE))
+	if (m_pComPort->servo_get_existent_speedlevel(m_bMotoWay, CCmdTimeOut::get_existent_speedlevel, FALSE))
 	{
 		int nExistSpeedLevel = m_pComPort->m_protocolstatus.bExistSpeedLevel;
-		if (nExistSpeedLevel>0)
+		if (nExistSpeedLevel > 0)
 		{
 			m_cbSpeedLevel.EnableWindow(TRUE);
 			((CWnd*)GetDlgItem(IDC_BUTTON_SPEEDLEVEL_MODIFY))->EnableWindow(TRUE);
 
-			for (int i=0;i<nExistSpeedLevel;i++)
+			for (int i = 0; i < nExistSpeedLevel; i++)
 			{
-				str.Format("%d",i+1);
+				str.Format("%d", i + 1);
 				m_cbSpeedLevel.AddString(str);
 			}
 			m_cbSpeedLevel.SetCurSel(0);
 
-			if (nExistSpeedLevel>=2)
+			if (nExistSpeedLevel >= 2)
 			{
 				((CWnd*)GetDlgItem(IDC_BUTTON_SF_SPEEDLEVEL_ADD))->EnableWindow(TRUE);
 			}
 		}
-	}	
+	}
 	else
 	{
 		AfxMessageBox("获取档位总数--失败");
 		return FALSE;
 	}
-	SetCursor(LoadCursor(NULL,IDC_ARROW));
+	SetCursor(LoadCursor(NULL, IDC_ARROW));
 	return TRUE;
 }
 
@@ -1646,7 +1665,7 @@ int CSFBoardDlg::BoardType2MotorWay(int nBoardType)
 	int nMotorWay = motor_way_none;
 	if (m_bThreeAxisServo)
 	{
-		switch(nBoardType)
+		switch (nBoardType)
 		{
 		case sf_boardtype_motor_3axis_x:
 			nMotorWay = motor_way_3Axis_x;
@@ -1663,7 +1682,7 @@ int CSFBoardDlg::BoardType2MotorWay(int nBoardType)
 	}
 	else
 	{
-		switch(nBoardType)
+		switch (nBoardType)
 		{
 		case sf_boardtype_motor_x:
 			nMotorWay = motor_way_x;
@@ -1672,7 +1691,7 @@ int CSFBoardDlg::BoardType2MotorWay(int nBoardType)
 		case sf_boardtype_motor_y_sg:
 			nMotorWay = motor_way_y;
 			break;
-		}	
+		}
 
 	}
 	return nMotorWay;
@@ -1690,7 +1709,7 @@ BYTE CSFBoardDlg::SpecialPositionFromPosType()
 	bEnableX = bEnableY = bEnableZ = FALSE;
 	if (m_bThreeAxisServo)
 	{
-		switch(nBoardType)
+		switch (nBoardType)
 		{
 		case sf_boardtype_motor_3axis_x:
 			bEnableX = TRUE;
@@ -1707,7 +1726,7 @@ BYTE CSFBoardDlg::SpecialPositionFromPosType()
 	}
 	else
 	{
-		switch(nBoardType)
+		switch (nBoardType)
 		{
 		case sf_boardtype_motor_x:
 			bEnableX = TRUE;
@@ -1861,16 +1880,16 @@ int CSFBoardDlg::xy_MM2Pulse(float fMM, BYTE bMotoWay)
 {
 	int		nPulse = 0;
 
-	switch(bMotoWay)
+	switch (bMotoWay)
 	{
 	case sf_boardtype_motor_3axis_x:
-		nPulse = fMM * (*m_pfReducer_x)/(*m_pfDollyPerimeter)*(*m_pfPulsesPerRevolution_x);
+		nPulse = fMM * (*m_pfReducer_x) / (*m_pfDollyPerimeter)*(*m_pfPulsesPerRevolution_x);
 		break;
 	case sf_boardtype_motor_3axis_y_dd:
-		nPulse = fMM * (*m_pfReducer_y)/(*m_pfDeferentPerimeter)*(*m_pfPulsesPerRevolution_y);
+		nPulse = fMM * (*m_pfReducer_y) / (*m_pfDeferentPerimeter)*(*m_pfPulsesPerRevolution_y);
 		break;
 	case sf_boardtype_motor_3axis_y_sg:
-		nPulse = fMM * (*m_pfReducer_y)/(*m_pfDeferentPitch)*(*m_pfPulsesPerRevolution_y);
+		nPulse = fMM * (*m_pfReducer_y) / (*m_pfDeferentPitch)*(*m_pfPulsesPerRevolution_y);
 		break;
 	default:
 		nPulse = 0;
@@ -1882,23 +1901,23 @@ int CSFBoardDlg::xy_MM2Pulse(float fMM, BYTE bMotoWay)
 float CSFBoardDlg::xy_Pulse2MM(int nPulse, BYTE bMotoWay)
 {
 	float fMM = 0.0;
-	
-	switch(bMotoWay)
+
+	switch (bMotoWay)
 	{
 	case sf_boardtype_motor_3axis_x:
-		fMM = ((float)nPulse)/(*m_pfPulsesPerRevolution_x)*(*m_pfDollyPerimeter)/(*m_pfReducer_x);
+		fMM = ((float)nPulse) / (*m_pfPulsesPerRevolution_x)*(*m_pfDollyPerimeter) / (*m_pfReducer_x);
 		break;
 	case sf_boardtype_motor_3axis_y_dd:
-		fMM = ((float)nPulse)/(*m_pfPulsesPerRevolution_y)*(*m_pfDeferentPerimeter)/(*m_pfReducer_y);
+		fMM = ((float)nPulse) / (*m_pfPulsesPerRevolution_y)*(*m_pfDeferentPerimeter) / (*m_pfReducer_y);
 		break;
 	case sf_boardtype_motor_3axis_y_sg:
-		fMM = ((float)nPulse)/(*m_pfPulsesPerRevolution_y)*(*m_pfDeferentPitch)/(*m_pfReducer_y);
+		fMM = ((float)nPulse) / (*m_pfPulsesPerRevolution_y)*(*m_pfDeferentPitch) / (*m_pfReducer_y);
 		break;
 	default:
 		fMM = 0.0;
 		break;
 	}
-	
+
 	return fMM;
 }
 void CSFBoardDlg::OnBnClickedButtonSfXyMove2SpecialPosition()
@@ -1913,8 +1932,8 @@ void CSFBoardDlg::OnBnClickedButtonSfXyMove2SpecialPosition()
 	((CWnd*)GetDlgItem(IDC_EDIT_SF_XY_SPEED_Y))->GetWindowText(str);
 	bSpeedTypeY = (BYTE)atoi(str);
 
-	xy_SpecialPositionFromPosType(bPosX, bPosY);	
-	if (!m_pComPort->servo_motor_xy_move_special_position(bSpeedTypeX, bSpeedTypeY, bPosX, bPosY,CCmdTimeOut::motor_xy_move_special_position,FALSE))
+	xy_SpecialPositionFromPosType(bPosX, bPosY);
+	if (!m_pComPort->servo_motor_xy_move_special_position(bSpeedTypeX, bSpeedTypeY, bPosX, bPosY, CCmdTimeOut::motor_xy_move_special_position, FALSE))
 	{
 		AfxMessageBox("移动到指定特殊位置--失败");
 	}
@@ -1938,7 +1957,7 @@ void CSFBoardDlg::OnBnClickedButtonSfXyMoverelative()
 	if (nX < 0)
 	{
 		pulseX = -nX;
-		pulseX |= (0x01<<31);
+		pulseX |= (0x01 << 31);
 	}
 	else
 	{
@@ -1952,14 +1971,14 @@ void CSFBoardDlg::OnBnClickedButtonSfXyMoverelative()
 	if (nY < 0)
 	{
 		pulseY = -nY;
-		pulseY |= (0x01<<31);
+		pulseY |= (0x01 << 31);
 	}
 	else
 	{
 		pulseY = nY;
 	}
 
-	if (!m_pComPort->servo_motor_xy_move_relative(bSpeedTypeX, bSpeedTypeY, pulseX, pulseY,CCmdTimeOut::motor_xy_move_relative,FALSE))
+	if (!m_pComPort->servo_motor_xy_move_relative(bSpeedTypeX, bSpeedTypeY, pulseX, pulseY, CCmdTimeOut::motor_xy_move_relative, FALSE))
 	{
 		AfxMessageBox("移动相对距离--失败");
 	}
@@ -2000,7 +2019,7 @@ void CSFBoardDlg::OnBnClickedButtonSfXyMoveabsolute()
 
 	pulseY = nY;
 
-	if (!m_pComPort->servo_motor_xy_move_absolute(bSpeedTypeX, bSpeedTypeY, pulseX, pulseY,CCmdTimeOut::motor_xy_move_absolute,FALSE))
+	if (!m_pComPort->servo_motor_xy_move_absolute(bSpeedTypeX, bSpeedTypeY, pulseX, pulseY, CCmdTimeOut::motor_xy_move_absolute, FALSE))
 	{
 		AfxMessageBox("移动到绝对位置--失败");
 	}
@@ -2024,7 +2043,7 @@ void CSFBoardDlg::OnBnClickedButtonSfXyPrintline()
 	if (nX < 0)
 	{
 		pulseX = -nX;
-		pulseX |= (0x01<<31);
+		pulseX |= (0x01 << 31);
 	}
 	else
 	{
@@ -2038,14 +2057,14 @@ void CSFBoardDlg::OnBnClickedButtonSfXyPrintline()
 	if (nY < 0)
 	{
 		pulseY = -nY;
-		pulseY |= (0x01<<31);
+		pulseY |= (0x01 << 31);
 	}
 	else
 	{
 		pulseY = nY;
 	}
 
-	if (!m_pComPort->servo_motor_xy_print_line(bSpeedTypeX, bSpeedTypeY, pulseX, re_pulseX, pulseY,CCmdTimeOut::motor_xy_print_line,FALSE))
+	if (!m_pComPort->servo_motor_xy_print_line(bSpeedTypeX, bSpeedTypeY, pulseX, re_pulseX, pulseY, CCmdTimeOut::motor_xy_print_line, FALSE))
 	{
 		AfxMessageBox("打印一行--失败");
 	}
@@ -2066,9 +2085,9 @@ void CSFBoardDlg::OnEnChangeEditSfXyMoveXMm()
 		CString str;
 
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_XY_MOVE_X_MM))->GetWindowText(str);
-		fMM		= atof(str);
-		nPulse	= xy_MM2Pulse(fMM, sf_boardtype_motor_3axis_x);
-		str.Format("%d",nPulse);
+		fMM = atof(str);
+		nPulse = xy_MM2Pulse(fMM, sf_boardtype_motor_3axis_x);
+		str.Format("%d", nPulse);
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_XY_MOVE_X_PULSE))->SetWindowText(str);
 	}
 }
@@ -2088,9 +2107,9 @@ void CSFBoardDlg::OnEnChangeEditSfXyMoveXPulse()
 		CString str;
 
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_XY_MOVE_X_PULSE))->GetWindowText(str);
-		nPulse	= atoi(str);
-		fMM		= xy_Pulse2MM(nPulse, sf_boardtype_motor_3axis_x);
-		str.Format("%.2f",fMM);
+		nPulse = atoi(str);
+		fMM = xy_Pulse2MM(nPulse, sf_boardtype_motor_3axis_x);
+		str.Format("%.2f", fMM);
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_XY_MOVE_X_MM))->SetWindowText(str);
 	}
 
@@ -2112,9 +2131,9 @@ void CSFBoardDlg::OnEnChangeEditSfXyMovYMm()
 		BYTE bMotoWay = m_xy_ckMotorY_SG.GetCheck() ? sf_boardtype_motor_3axis_y_sg : sf_boardtype_motor_3axis_y_dd;
 
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_XY_MOVE_Y_MM))->GetWindowText(str);
-		fMM		= atof(str);
-		nPulse	= xy_MM2Pulse(fMM, bMotoWay);
-		str.Format("%d",nPulse);
+		fMM = atof(str);
+		nPulse = xy_MM2Pulse(fMM, bMotoWay);
+		str.Format("%d", nPulse);
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_XY_MOVE_Y_PULSE))->SetWindowText(str);
 	}
 
@@ -2136,9 +2155,9 @@ void CSFBoardDlg::OnEnChangeEditSfXyMoveYPulse()
 		BYTE bMotoWay = m_xy_ckMotorY_SG.GetCheck() ? sf_boardtype_motor_3axis_y_sg : sf_boardtype_motor_3axis_y_dd;
 
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_XY_MOVE_Y_PULSE))->GetWindowText(str);
-		nPulse	= atoi(str);
-		fMM		= xy_Pulse2MM(nPulse, bMotoWay);
-		str.Format("%.2f",fMM);
+		nPulse = atoi(str);
+		fMM = xy_Pulse2MM(nPulse, bMotoWay);
+		str.Format("%.2f", fMM);
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_XY_MOVE_Y_MM))->SetWindowText(str);
 	}
 
@@ -2159,9 +2178,9 @@ void CSFBoardDlg::OnEnChangeEditSfXyMoveReXMm()
 		CString str;
 
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_XY_MOVE_RE_X_MM))->GetWindowText(str);
-		fMM		= atof(str);
-		nPulse	= xy_MM2Pulse(fMM, sf_boardtype_motor_3axis_x);
-		str.Format("%d",nPulse);
+		fMM = atof(str);
+		nPulse = xy_MM2Pulse(fMM, sf_boardtype_motor_3axis_x);
+		str.Format("%d", nPulse);
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_XY_MOVE_RE_X_PULSE))->SetWindowText(str);
 	}
 }
@@ -2182,9 +2201,9 @@ void CSFBoardDlg::OnEnChangeEditSfXyMoveReXPulse()
 		CString str;
 
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_XY_MOVE_RE_X_PULSE))->GetWindowText(str);
-		nPulse	= atoi(str);
-		fMM		= xy_Pulse2MM(nPulse, sf_boardtype_motor_3axis_x);
-		str.Format("%.2f",fMM);
+		nPulse = atoi(str);
+		fMM = xy_Pulse2MM(nPulse, sf_boardtype_motor_3axis_x);
+		str.Format("%.2f", fMM);
 		((CWnd*)GetDlgItem(IDC_EDIT_SF_XY_MOVE_RE_X_MM))->SetWindowText(str);
 	}
 

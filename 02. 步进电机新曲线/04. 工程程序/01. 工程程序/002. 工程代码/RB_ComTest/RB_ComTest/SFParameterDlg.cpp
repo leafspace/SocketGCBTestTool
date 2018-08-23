@@ -11,7 +11,7 @@
 IMPLEMENT_DYNAMIC(CSFParameterDlg, CDialog)
 
 CSFParameterDlg::CSFParameterDlg(CWnd* pParent /*=NULL*/)
-: CDialog(CSFParameterDlg::IDD, pParent)
+	: CDialog(CSFParameterDlg::IDD, pParent)
 {
 
 }
@@ -46,38 +46,38 @@ BOOL CSFParameterDlg::OnInitDialog()
 	// TODO:  在此添加额外的初始化
 	CString str;
 
-	str.Format("%.2f",*m_pfReducer_x);
+	str.Format("%.2f", *m_pfReducer_x);
 	((CWnd*)GetDlgItem(IDC_EDIT_SFP_REDUCER_X))->SetWindowText(str);
 
-	str.Format("%.2f",*m_pfPulsesPerRevolution_x);
+	str.Format("%.2f", *m_pfPulsesPerRevolution_x);
 	((CWnd*)GetDlgItem(IDC_EDIT_SFP_PULSESPERREVOLUTION_X))->SetWindowText(str);
 
 
-	str.Format("%.2f",*m_pfDollyPerimeter);
+	str.Format("%.2f", *m_pfDollyPerimeter);
 	((CWnd*)GetDlgItem(IDC_EDIT_SFP_DOLLYPERIMETER))->SetWindowText(str);
 
-	str.Format("%.2f",*m_pfReducer_y);
+	str.Format("%.2f", *m_pfReducer_y);
 	((CWnd*)GetDlgItem(IDC_EDIT_SFP_REDUCER_Y))->SetWindowText(str);
 
-	str.Format("%.2f",*m_pfPulsesPerRevolution_y);
+	str.Format("%.2f", *m_pfPulsesPerRevolution_y);
 	((CWnd*)GetDlgItem(IDC_EDIT_SFP_PULSESPERREVOLUTION_Y))->SetWindowText(str);
 
-	str.Format("%.2f",*m_pfDeferentPerimeter);
+	str.Format("%.2f", *m_pfDeferentPerimeter);
 	((CWnd*)GetDlgItem(IDC_EDIT_SFP_DEFERENTPERIMETER))->SetWindowText(str);
 
-	str.Format("%.2f",*m_pfDeferentPitch);
+	str.Format("%.2f", *m_pfDeferentPitch);
 	((CWnd*)GetDlgItem(IDC_EDIT_DEFERENTPITCH))->SetWindowText(str);
 
-	str.Format("%.2f",*m_pfReducer_z);
+	str.Format("%.2f", *m_pfReducer_z);
 	((CWnd*)GetDlgItem(IDC_EDIT_SFP_REDUCER_Z))->SetWindowText(str);
 
-	str.Format("%.2f",*m_pfPulsesPerRevolution_z);
+	str.Format("%.2f", *m_pfPulsesPerRevolution_z);
 	((CWnd*)GetDlgItem(IDC_EDIT_SFP_PULSESPERREVOLUTION_Z))->SetWindowText(str);
 
-	str.Format("%.2f",*m_pfDeferentPerimeter_z);
+	str.Format("%.2f", *m_pfDeferentPerimeter_z);
 	((CWnd*)GetDlgItem(IDC_EDIT_SFP_DEFERENTPERIMETER_Z))->SetWindowText(str);
 
-	str.Format("%.2f",*m_pfDeferentPitch_z);
+	str.Format("%.2f", *m_pfDeferentPitch_z);
 	((CWnd*)GetDlgItem(IDC_EDIT_DEFERENTPITCH_Z))->SetWindowText(str);
 
 
@@ -140,12 +140,12 @@ void CSFParameterDlg::OnBnClickedButtonSbpSetParameterX()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	SF_BOARD_PARAMETER_X sf_board_parameter_x;
-	
+
 	sf_board_parameter_x.m_fReducerX = *m_pfReducer_x;
 	sf_board_parameter_x.m_fDollyPerimeter = *m_pfDollyPerimeter;
 	sf_board_parameter_x.m_fPulsesPerRevolution_x = *m_pfPulsesPerRevolution_x;
-	
-	if (!m_pComPort->servo_set_board_parameter_x(sf_board_parameter_x,CCmdTimeOut::set_firm_parameter,FALSE, m_bThreeAxisServo))
+
+	if (!m_pComPort->servo_set_board_parameter_x(sf_board_parameter_x, CCmdTimeOut::set_firm_parameter, FALSE, m_bThreeAxisServo))
 	{
 		AfxMessageBox("设置伺服参数--X方向--失败");
 	}
@@ -164,8 +164,8 @@ void CSFParameterDlg::OnBnClickedButtonSbpSetParameterY()
 	sf_board_parameter_y.m_fDeferentPerimeter = *m_pfDeferentPerimeter;
 	sf_board_parameter_y.m_fDeferentPitch = *m_pfDeferentPitch;
 	sf_board_parameter_y.m_fPulsesPerRevolution_y = *m_pfPulsesPerRevolution_y;
-	
-	if (!m_pComPort->servo_set_board_parameter_y(sf_board_parameter_y,CCmdTimeOut::set_firm_parameter,FALSE, m_bThreeAxisServo))
+
+	if (!m_pComPort->servo_set_board_parameter_y(sf_board_parameter_y, CCmdTimeOut::set_firm_parameter, FALSE, m_bThreeAxisServo))
 	{
 		AfxMessageBox("设置伺服参数--Y方向--失败");
 	}
@@ -182,12 +182,12 @@ void CSFParameterDlg::OnBnClickedButtonSbpSetParameterZ()
 	if (!m_bThreeAxisServo)
 		return;
 
-	sf_board_parameter_z.m_fReducer_Z				= *m_pfReducer_z;
-	sf_board_parameter_z.m_fDeferentPerimeter_Z		= *m_pfDeferentPerimeter_z;
-	sf_board_parameter_z.m_fDeferentPitch_Z			= *m_pfDeferentPitch_z;
-	sf_board_parameter_z.m_fPulsesPerRevolution_Z	= *m_pfPulsesPerRevolution_z;
+	sf_board_parameter_z.m_fReducer_Z = *m_pfReducer_z;
+	sf_board_parameter_z.m_fDeferentPerimeter_Z = *m_pfDeferentPerimeter_z;
+	sf_board_parameter_z.m_fDeferentPitch_Z = *m_pfDeferentPitch_z;
+	sf_board_parameter_z.m_fPulsesPerRevolution_Z = *m_pfPulsesPerRevolution_z;
 
-	if (!m_pComPort->servo_set_board_parameter_z(sf_board_parameter_z,CCmdTimeOut::set_firm_parameter,FALSE))
+	if (!m_pComPort->servo_set_board_parameter_z(sf_board_parameter_z, CCmdTimeOut::set_firm_parameter, FALSE))
 	{
 		AfxMessageBox("设置伺服参数--Y方向--失败");
 	}
@@ -201,14 +201,14 @@ void CSFParameterDlg::OnBnClickedButtonSbpGetParameterX()
 	// TODO: 在此添加控件通知处理程序代码
 	BZERO(m_pComPort->m_protocolstatus.sf_board_parameter_x);
 
-	if (m_pComPort->servo_get_board_parameter_x(CCmdTimeOut::get_firm_parameter,FALSE, m_bThreeAxisServo))
+	if (m_pComPort->servo_get_board_parameter_x(CCmdTimeOut::get_firm_parameter, FALSE, m_bThreeAxisServo))
 	{
 		*m_pfReducer_x = m_pComPort->m_protocolstatus.sf_board_parameter_x.m_fReducerX;
 		*m_pfDollyPerimeter = m_pComPort->m_protocolstatus.sf_board_parameter_x.m_fDollyPerimeter;
 		*m_pfPulsesPerRevolution_x = m_pComPort->m_protocolstatus.sf_board_parameter_x.m_fPulsesPerRevolution_x;
 
 		CString str;
-		str.Format("查询成功: 减速机: %.2f 小车周长: %.2f 每圈脉冲: %.2f",*m_pfReducer_x,*m_pfDollyPerimeter,*m_pfPulsesPerRevolution_x);
+		str.Format("查询成功: 减速机: %.2f 小车周长: %.2f 每圈脉冲: %.2f", *m_pfReducer_x, *m_pfDollyPerimeter, *m_pfPulsesPerRevolution_x);
 		AfxMessageBox(str);
 	}
 	else
@@ -222,7 +222,7 @@ void CSFParameterDlg::OnBnClickedButtonSbpGetParameterY()
 	// TODO: 在此添加控件通知处理程序代码
 	BZERO(m_pComPort->m_protocolstatus.sf_board_parameter_y);
 
-	if (m_pComPort->servo_get_board_parameter_y(CCmdTimeOut::get_firm_parameter,FALSE, m_bThreeAxisServo))
+	if (m_pComPort->servo_get_board_parameter_y(CCmdTimeOut::get_firm_parameter, FALSE, m_bThreeAxisServo))
 	{
 		*m_pfReducer_y = m_pComPort->m_protocolstatus.sf_board_parameter_y.m_fReducerY;
 		*m_pfDeferentPerimeter = m_pComPort->m_protocolstatus.sf_board_parameter_y.m_fDeferentPerimeter;
@@ -230,7 +230,7 @@ void CSFParameterDlg::OnBnClickedButtonSbpGetParameterY()
 		*m_pfPulsesPerRevolution_y = m_pComPort->m_protocolstatus.sf_board_parameter_y.m_fPulsesPerRevolution_y;
 
 		CString str;
-		str.Format("查询成功: 减速机: %.2f 导带周长: %.2f 丝杆螺距: %.2f 每圈脉冲: %.2f",*m_pfReducer_y,*m_pfDeferentPerimeter,*m_pfDeferentPitch,*m_pfPulsesPerRevolution_y);
+		str.Format("查询成功: 减速机: %.2f 导带周长: %.2f 丝杆螺距: %.2f 每圈脉冲: %.2f", *m_pfReducer_y, *m_pfDeferentPerimeter, *m_pfDeferentPitch, *m_pfPulsesPerRevolution_y);
 		AfxMessageBox(str);
 	}
 	else
@@ -247,15 +247,15 @@ void CSFParameterDlg::OnBnClickedButtonSbpGetParameterZ()
 
 	BZERO(m_pComPort->m_protocolstatus.sf_board_parameter_z);
 
-	if (m_pComPort->servo_get_board_parameter_z(CCmdTimeOut::get_firm_parameter,FALSE))
+	if (m_pComPort->servo_get_board_parameter_z(CCmdTimeOut::get_firm_parameter, FALSE))
 	{
-		*m_pfReducer_z				= m_pComPort->m_protocolstatus.sf_board_parameter_z.m_fReducer_Z;
-		*m_pfDeferentPerimeter_z	= m_pComPort->m_protocolstatus.sf_board_parameter_z.m_fDeferentPerimeter_Z;
-		*m_pfDeferentPitch_z		= m_pComPort->m_protocolstatus.sf_board_parameter_z.m_fDeferentPitch_Z;
-		*m_pfPulsesPerRevolution_z	= m_pComPort->m_protocolstatus.sf_board_parameter_z.m_fPulsesPerRevolution_Z;
+		*m_pfReducer_z = m_pComPort->m_protocolstatus.sf_board_parameter_z.m_fReducer_Z;
+		*m_pfDeferentPerimeter_z = m_pComPort->m_protocolstatus.sf_board_parameter_z.m_fDeferentPerimeter_Z;
+		*m_pfDeferentPitch_z = m_pComPort->m_protocolstatus.sf_board_parameter_z.m_fDeferentPitch_Z;
+		*m_pfPulsesPerRevolution_z = m_pComPort->m_protocolstatus.sf_board_parameter_z.m_fPulsesPerRevolution_Z;
 
 		CString str;
-		str.Format("查询成功(Motor_Z): 减速机: %.2f 导带周长: %.2f 丝杆螺距: %.2f 每圈脉冲: %.2f",*m_pfReducer_z,*m_pfDeferentPerimeter_z,*m_pfDeferentPitch_z,*m_pfPulsesPerRevolution_z);
+		str.Format("查询成功(Motor_Z): 减速机: %.2f 导带周长: %.2f 丝杆螺距: %.2f 每圈脉冲: %.2f", *m_pfReducer_z, *m_pfDeferentPerimeter_z, *m_pfDeferentPitch_z, *m_pfPulsesPerRevolution_z);
 		AfxMessageBox(str);
 	}
 	else

@@ -16,12 +16,12 @@ class CSocketDataThread : public ABaseThread
 public:
 	/*1.构造与系构函数 */
 	CSocketDataThread();
-	virtual ~CSocketDataThread();          
-	
+	virtual ~CSocketDataThread();
+
 protected:
 	/*5.执行线程 */
 	void Execute(void);						//线程执行
-	
+
 	friend class CCommunicationPort;
 };
 
@@ -42,7 +42,7 @@ void CSocketDataThread::Execute()
 	CCommunicationPort* pPort = (CCommunicationPort*)m_pThreadData;
 	ASSERT(pPort != NULL);
 	bPause = false;
-	while(1)
+	while (1)
 	{
 		if (m_IsNeedExit)
 			break;
@@ -54,24 +54,24 @@ void CSocketDataThread::Execute()
 bool CCommunicationPort::socket_thread_create()
 {
 	CSocketDataThread*	pThread;
-	
+
 	socket_thread_close();
 	if (m_socket_pThread == NULL)
 		m_socket_pThread = (void*)new CSocketDataThread;
 	if (m_socket_pThread == NULL)
 		goto failed;
-	
+
 	pThread = (CSocketDataThread*)m_socket_pThread;
 	ASSERT(pThread != NULL);
 	if (!pThread->Create(this))
 	{
 		goto failed;
 	}
-	
+
 	ASSERT(socket_thread_isready());
-	
+
 	return socket_thread_isready();
-	
+
 failed:
 	socket_thread_close();
 	return false;
@@ -86,16 +86,16 @@ bool CCommunicationPort::socket_thread_close()
 bool CCommunicationPort::socket_thread_delete()
 {
 	CSocketDataThread* pThread;
-	
+
 	socket_thread_close();
-	
+
 	pThread = (CSocketDataThread*)m_socket_pThread;
 	if (pThread != NULL)
 	{
 		delete pThread;
 	}
 	m_socket_pThread = NULL;
-	
+
 	return true;
 }
 
@@ -103,9 +103,9 @@ bool CCommunicationPort::socket_thread_delete()
 bool CCommunicationPort::socket_thread_isready() const
 {
 	CSocketDataThread* pThread;
-	
+
 	pThread = (CSocketDataThread*)m_socket_pThread;
-	if (pThread==NULL)
+	if (pThread == NULL)
 	{
 		return false;
 	}
@@ -120,14 +120,14 @@ bool CCommunicationPort::socket_thread_isready() const
 bool CCommunicationPort::socket_thread_isrunning() const
 {
 	CSocketDataThread* pThread;
-	
+
 	pThread = (CSocketDataThread*)m_socket_pThread;
-	if (pThread==NULL)
+	if (pThread == NULL)
 		return false;
-		
+
 	if (pThread->IsTerminated())
 		return false;
-		
+
 	//只要有一个线程还处于正常运行状态，即返回TRUE
 	return TRUE;
 }
@@ -138,9 +138,9 @@ void CCommunicationPort::socket_thread_wait_for_terminated(DWORD dwTimeOut)
 {
 	DWORD	dwStart;
 	CSocketDataThread* pThread;
-	
+
 	pThread = (CSocketDataThread*)m_socket_pThread;
-	if (pThread==NULL)
+	if (pThread == NULL)
 		return;
 
 	if (pThread != NULL)
@@ -151,16 +151,16 @@ void CCommunicationPort::socket_thread_wait_for_terminated(DWORD dwTimeOut)
 	Sleep(100);
 	//等待线程处理完成
 	dwStart = GetTickCount();
-	while(1)
+	while (1)
 	{
 		if (pThread->IsTerminated())
 			return;
-		
-		if (dwTimeOut > 0 && (::GetTickCount()-dwStart) > dwTimeOut)
+
+		if (dwTimeOut > 0 && (::GetTickCount() - dwStart) > dwTimeOut)
 			break;		//超时，强制结束线程
 		Sleep(1);
 	}
-	
+
 	//强制结束线程处理过程
 	if (pThread != NULL)
 	{
@@ -271,14 +271,14 @@ DWORD CCommunicationPort::socket_repeater_config_proc(void *pData, const void *p
 	return dwResult;
 }
 //中继数据帧分析-添加数据信息
-DWORD CCommunicationPort::socket_AddReceiveData(const void* pBuf,DWORD InBufferCount)
+DWORD CCommunicationPort::socket_AddReceiveData(const void* pBuf, DWORD InBufferCount)
 {
 	if (!socket_IsEnable())
 		return 0;
 
 	if (!m_socket_Control.IsOpen())
 		return 0;
-	
+
 	ReceiveData(pBuf, InBufferCount);
 
 	return InBufferCount;

@@ -30,13 +30,13 @@ CRB_ComTestApp::CRB_ComTestApp()
 	m_strAppPath = "";
 	m_strIniFile = "Config.cfg";
 
-	m_bDemoMode	 = FALSE;
+	m_bDemoMode = FALSE;
 
 }
 CRB_ComTestApp::~CRB_ComTestApp()
 {
 	{
-		CString strIniFile,strSection,strReg;
+		CString strIniFile, strSection, strReg;
 
 		strIniFile = theApp.m_strIniFile;
 		strSection = "DEBUG";
@@ -84,29 +84,29 @@ BOOL CRB_ComTestApp::InitInstance()
 	SetRegistryKey(_T("RainBow ComTest"));
 
 	{
-		char	sPath[MAX_PATH+100];
+		char	sPath[MAX_PATH + 100];
 
 		::GetModuleFileName(m_hInstance, sPath, _countof(sPath));
 
 		char* pStr = ::strrchr(sPath, '\\');
 		if (pStr != NULL)
 		{
-			*(pStr+1) = '\0';
+			*(pStr + 1) = '\0';
 		}
 		else
 		{
 			ASSERT(0);
-			strcat_s(sPath, MAX_PATH+100,"\\");
+			strcat_s(sPath, MAX_PATH + 100, "\\");
 		}
 
-		m_strAppPath	= sPath;
+		m_strAppPath = sPath;
 	}
 
 	m_strIniFile = theApp.m_strAppPath + "Config.cfg";
 
 	{
 		char szReg[200];
-		CString strIniFile,strSection;
+		CString strIniFile, strSection;
 
 		strIniFile = theApp.m_strIniFile;
 		strSection = "DEBUG";

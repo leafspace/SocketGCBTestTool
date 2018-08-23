@@ -51,13 +51,13 @@ BOOL CCBSocketPort_Data::IsOpen() const
 DWORD CCBSocketPort_Data::ReceiveDataEx()
 {
 	DWORD dwResult = m_dwReceiveSize;
-	
+
 	ASSERT(m_pBuffer != NULL);
 	ASSERT(m_dwReceiveSize <= m_dwBufferSize);
 
 	DWORD	i;
 	BYTE	bReturnFlag = 0;
-	for(i=0; i<m_dwReceiveSize; i++)
+	for (i = 0; i < m_dwReceiveSize; i++)
 	{
 		bReturnFlag = m_pBuffer[i];
 	}
@@ -77,17 +77,17 @@ CCBSocketPort_Control::CCBSocketPort_Control()
 	m_pProtocolstatus = NULL;
 
 	//是否输出Debug信息（写文件）
-	m_debug_bWriteSendInfo		= FALSE;
-	m_debug_bWriteReceiveInfo	= FALSE;
-	
-	m_debug_strWriteSendInfoFile	= "";
-	m_debug_strWriteReceiveInfoFile	= "";
+	m_debug_bWriteSendInfo = FALSE;
+	m_debug_bWriteReceiveInfo = FALSE;
 
-	m_pc_repeater_config_pFunc		= NULL;
-	m_pc_repeater_config_pFuncData	= NULL;
+	m_debug_strWriteSendInfoFile = "";
+	m_debug_strWriteReceiveInfoFile = "";
+
+	m_pc_repeater_config_pFunc = NULL;
+	m_pc_repeater_config_pFuncData = NULL;
 
 	//初始化发送缓冲区
-	m_sendBuffer.InitBuffer(NULL, (gcb_pt_data_len_max+100));
+	m_sendBuffer.InitBuffer(NULL, (gcb_pt_data_len_max + 100));
 }
 CCBSocketPort_Control::~CCBSocketPort_Control()
 {
@@ -96,8 +96,8 @@ CCBSocketPort_Control::~CCBSocketPort_Control()
 
 void CCBSocketPort_Control::PC_Repeater_Config_SetProc(PC_REPEATER_CONFIG_PROC pFunc, void *pData)
 {
-	m_pc_repeater_config_pFunc		= pFunc;
-	m_pc_repeater_config_pFuncData	= pData;
+	m_pc_repeater_config_pFunc = pFunc;
+	m_pc_repeater_config_pFuncData = pData;
 }
 //	pszIP, uPort:[in]运动控制卡IP地址及操作端口
 //	nBufferSize :[in]初始化接收缓冲区大小
@@ -105,13 +105,13 @@ void CCBSocketPort_Control::PC_Repeater_Config_SetProc(PC_REPEATER_CONFIG_PROC p
 //	dwHeartBeatTime	:[in]心跳检测信号发送间隔，ms，为0时不自动发送检测信号
 BOOL CCBSocketPort_Control::Open(const char *pszIP, short nPort, int nBufferSize, int nGrowSize, DWORD dwHeartBeatTime)
 {
-	if (m_pProtocolstatus==NULL)
+	if (m_pProtocolstatus == NULL)
 		m_pProtocolstatus = new GCB_Protocol_Control_Statue;
-	if (m_pProtocolstatus==NULL)
+	if (m_pProtocolstatus == NULL)
 		return FALSE;
 
 	m_pProtocolstatus->Initialize();
-	
+
 	nBufferSize = max(gcb_pt_data_len_max, nBufferSize);		//至少要能存放一条完整的指令串
 	if (!CSocketBase::Open(pszIP, nPort, nBufferSize, nGrowSize, dwHeartBeatTime))
 		return FALSE;
@@ -122,7 +122,7 @@ BOOL CCBSocketPort_Control::Open(const char *pszIP, short nPort, int nBufferSize
 BOOL CCBSocketPort_Control::Close(BOOL bReleaseBuffer)
 {
 	CSocketBase::Close(bReleaseBuffer);
-	
+
 	if (bReleaseBuffer)
 	{
 		if (m_pProtocolstatus != NULL)
@@ -133,8 +133,8 @@ BOOL CCBSocketPort_Control::Close(BOOL bReleaseBuffer)
 	}
 	m_sendBuffer.InitBuffer(NULL, 0);
 
-	m_pc_repeater_config_pFunc		= NULL;
-	m_pc_repeater_config_pFuncData	= NULL;
+	m_pc_repeater_config_pFunc = NULL;
+	m_pc_repeater_config_pFuncData = NULL;
 	return TRUE;
 }
 BOOL CCBSocketPort_Control::IsOpen() const
@@ -154,14 +154,14 @@ BOOL CCBSocketPort_Control::debug_IsWriteReceiveInfo() const
 //	pszFileName :[in]Debug信息文件名
 void CCBSocketPort_Control::debug_WriteSendInfo(const char *pszFileName, BOOL bWrite)
 {
-	m_debug_bWriteSendInfo			= bWrite;
-	m_debug_strWriteSendInfoFile	= pszFileName;
+	m_debug_bWriteSendInfo = bWrite;
+	m_debug_strWriteSendInfoFile = pszFileName;
 }
 //	pszFileName :[in]Debug信息文件名
 void CCBSocketPort_Control::debug_WriteReceiveInfo(const char *pszFileName, BOOL bWrite)
 {
-	m_debug_bWriteReceiveInfo		= bWrite;
-	m_debug_strWriteReceiveInfoFile	= pszFileName;
+	m_debug_bWriteReceiveInfo = bWrite;
+	m_debug_strWriteReceiveInfoFile = pszFileName;
 }
 // 数据帧分析（仅处理一个有效帧）
 //返回：被处理的缓冲数据个数
@@ -174,7 +174,7 @@ DWORD CCBSocketPort_Control::DataFrameAnalyze(const BYTE* pBuffer, DWORD dwBuffe
 	DWORD		dwResult = 0;
 	const BYTE	*pCmdData;
 
-	if (pBuffer==NULL || dwBufferSize==0)
+	if (pBuffer == NULL || dwBufferSize == 0)
 		return 0;
 
 	if (dwBufferSize < gcb_pt_data_len_min)
@@ -188,16 +188,16 @@ DWORD CCBSocketPort_Control::DataFrameAnalyze(const BYTE* pBuffer, DWORD dwBuffe
 		return dwResult;
 	}
 
-	bCmd			= pBuffer[gcb_pt_data_cmd];
-	wCmdSize		= MAKEWORD(pBuffer[gcb_pt_data_cmdsize1], pBuffer[gcb_pt_data_cmdsize2]);
-	dwEndFlagPos	= gcb_pt_data_startfixcount;
-	dwEndFlagPos	+= wCmdSize;
-	dwFrameLen		= dwEndFlagPos + gcb_pt_data_endfixcount;
+	bCmd = pBuffer[gcb_pt_data_cmd];
+	wCmdSize = MAKEWORD(pBuffer[gcb_pt_data_cmdsize1], pBuffer[gcb_pt_data_cmdsize2]);
+	dwEndFlagPos = gcb_pt_data_startfixcount;
+	dwEndFlagPos += wCmdSize;
+	dwFrameLen = dwEndFlagPos + gcb_pt_data_endfixcount;
 
 	if (dwBufferSize < dwFrameLen)
 	{//指令串不全
 		dwResult = 0;
-		goto end;		
+		goto end;
 	}
 
 	if (pBuffer[dwEndFlagPos] != gcb_protocol_dataframe_end)
@@ -209,34 +209,34 @@ DWORD CCBSocketPort_Control::DataFrameAnalyze(const BYTE* pBuffer, DWORD dwBuffe
 	//有效参数数据起始
 	dwResult = dwFrameLen;
 	pCmdData = pBuffer + gcb_pt_data_startfixcount;
-	switch(bCmd)
+	switch (bCmd)
 	{
 	case cmd_gcb_getversion:
 		//版本
-		ASSERT(wCmdSize==2);
-		m_pProtocolstatus->gcb_getversion.commState		= gcb_comm_result_succeed;
-		m_pProtocolstatus->gcb_getversion_val			= PROTOCOL_MAKEDATA_WORD(pCmdData);
+		ASSERT(wCmdSize == 2);
+		m_pProtocolstatus->gcb_getversion.commState = gcb_comm_result_succeed;
+		m_pProtocolstatus->gcb_getversion_val = PROTOCOL_MAKEDATA_WORD(pCmdData);
 		break;
 	case cmd_gcb_getbuffersize:
 		//得设备定位参数
 		ASSERT(wCmdSize == 4);
-		m_pProtocolstatus->gcb_getbuffersize.commState	= gcb_comm_result_succeed;
-		m_pProtocolstatus->gcb_getbuffersize_val		= PROTOCOL_MAKEDATA_DWORD(pCmdData);
+		m_pProtocolstatus->gcb_getbuffersize.commState = gcb_comm_result_succeed;
+		m_pProtocolstatus->gcb_getbuffersize_val = PROTOCOL_MAKEDATA_DWORD(pCmdData);
 		break;
 	case cmd_gcb_init:
 		//板卡初始化
-		ASSERT(wCmdSize==1);
-		m_pProtocolstatus->gcb_init.commState			= TRANS_COMMSTATE_GCB_TO_PC(pCmdData[0]);
+		ASSERT(wCmdSize == 1);
+		m_pProtocolstatus->gcb_init.commState = TRANS_COMMSTATE_GCB_TO_PC(pCmdData[0]);
 		break;
 	case cmd_gcb_print_ready:
 		//打印准备
-		ASSERT(wCmdSize==1);
-		m_pProtocolstatus->gcb_print_ready.commState	= TRANS_COMMSTATE_GCB_TO_PC(pCmdData[0]);
+		ASSERT(wCmdSize == 1);
+		m_pProtocolstatus->gcb_print_ready.commState = TRANS_COMMSTATE_GCB_TO_PC(pCmdData[0]);
 		break;
 	case cmd_gcb_repeater_config:
 		//下级板卡配置指令（PC-->GCB-->板卡）
-		ASSERT(wCmdSize==1);
-		m_pProtocolstatus->gcb_repeater_config.commState= TRANS_COMMSTATE_GCB_TO_PC(pCmdData[0]);
+		ASSERT(wCmdSize == 1);
+		m_pProtocolstatus->gcb_repeater_config.commState = TRANS_COMMSTATE_GCB_TO_PC(pCmdData[0]);
 		break;
 	case cmd_pc_repeater_config:
 		//下级板卡配置指令（板卡-->GCB-->PC）
@@ -271,23 +271,23 @@ int CCBSocketPort_Control::dataframe_transdata(BYTE* pDstBuffer, BYTE bCmd, BYTE
 
 int CCBSocketPort_Control::dataframe_transdata(BYTE* pDstBuffer, BYTE bCmd, const BYTE* pCmdData, WORD wCmdSize)
 {
-	if (pDstBuffer==NULL)
+	if (pDstBuffer == NULL)
 		return 0;
 
 	int		nIndex;
 
-	pDstBuffer[gcb_pt_data_start1]		= gcb_protocol_dataframe_start1;
-	pDstBuffer[gcb_pt_data_start2]		= gcb_protocol_dataframe_start2;
-	pDstBuffer[gcb_pt_data_cmd]			= bCmd;
-	pDstBuffer[gcb_pt_data_cmdsize1]	= LOBYTE(wCmdSize);
-	pDstBuffer[gcb_pt_data_cmdsize2]	= HIBYTE(wCmdSize);
+	pDstBuffer[gcb_pt_data_start1] = gcb_protocol_dataframe_start1;
+	pDstBuffer[gcb_pt_data_start2] = gcb_protocol_dataframe_start2;
+	pDstBuffer[gcb_pt_data_cmd] = bCmd;
+	pDstBuffer[gcb_pt_data_cmdsize1] = LOBYTE(wCmdSize);
+	pDstBuffer[gcb_pt_data_cmdsize2] = HIBYTE(wCmdSize);
 	nIndex = gcb_pt_data_startfixcount;
 	if (wCmdSize > 0)
 	{
-		if (pCmdData==NULL)
+		if (pCmdData == NULL)
 			return 0;
 
-		memcpy(pDstBuffer+gcb_pt_data_startfixcount, pCmdData, wCmdSize);
+		memcpy(pDstBuffer + gcb_pt_data_startfixcount, pCmdData, wCmdSize);
 		nIndex += wCmdSize;
 	}
 
@@ -331,23 +331,23 @@ DWORD CCBSocketPort_Control::ReceiveDataEx()
 	BYTE	*pBufferEnd;
 	BYTE	bFlag;
 
-	if (m_pBuffer==NULL)
+	if (m_pBuffer == NULL)
 	{
 		ASSERT(0);
 		return 0;
 	}
 	pBufferEnd = pBuffer + m_dwReceiveSize;
-	while(pBuffer < pBufferEnd)
+	while (pBuffer < pBufferEnd)
 	{
 		dwLen = 1;			//默认处理1个字节
 		bFlag = pBuffer[gcb_pt_data_start1];
-		switch(bFlag)
+		switch (bFlag)
 		{
 		case gcb_protocol_dataframe_start1:
 			//数据帧起始
 			//处理相关数据帧信息（仅处理一个有效帧）
-			dwLen = DataFrameAnalyze(pBuffer, m_dwReceiveSize-(pBuffer-m_pBuffer));
-			if (dwLen==0)
+			dwLen = DataFrameAnalyze(pBuffer, m_dwReceiveSize - (pBuffer - m_pBuffer));
+			if (dwLen == 0)
 			{//有效数据帧格式，但可能还未接收完整
 				goto end;
 			}
@@ -359,7 +359,7 @@ DWORD CCBSocketPort_Control::ReceiveDataEx()
 	}
 
 end:
-	dwResult = (pBuffer-m_pBuffer);
+	dwResult = (pBuffer - m_pBuffer);
 
 	if (debug_IsWriteReceiveInfo())
 	{
@@ -369,7 +369,7 @@ end:
 		{
 			strIniFile = g_AppPath.m_strDebug + "socket_control_debuginfo_receive.txt";
 		}
-		CSocketBase::Write_Communication_Info(strIniFile, m_pBuffer, dwResult, (32*1024), (16*1024), FALSE);
+		CSocketBase::Write_Communication_Info(strIniFile, m_pBuffer, dwResult, (32 * 1024), (16 * 1024), FALSE);
 	}
 
 	return dwResult;
@@ -402,7 +402,7 @@ int CCBSocketPort_Control::Commu_SendMsg(const void* snd_msg, int msg_len)
 		{
 			strIniFile = g_AppPath.m_strDebug + "socket_control_debuginfo.txt";
 		}
-		CSocketBase::Write_Communication_Info(strIniFile, (const BYTE*)snd_msg, msg_len, (256*1024), (32*1024), TRUE);
+		CSocketBase::Write_Communication_Info(strIniFile, (const BYTE*)snd_msg, msg_len, (256 * 1024), (32 * 1024), TRUE);
 	}
 
 	nResult = CSocketBase::Commu_SendMsg(snd_msg, msg_len);
@@ -443,7 +443,7 @@ int CCBSocketPort_Control::Commu_SendMsg_handshake(GCB_COMMAND_STATE *pCmdState,
 	}
 
 	nResult = shr_timeout;
-	dwLast	= ::GetTickCount();
+	dwLast = ::GetTickCount();
 	while (::GetTickCount() <= (dwLast + time_check))
 	{
 		switch (pCmdState->commState)
@@ -474,17 +474,17 @@ end:
 //版本
 int CCBSocketPort_Control::sendorder_gcb_getversion(WORD *pwVersion, int time_check)
 {
-	if (pwVersion != NULL)	
+	if (pwVersion != NULL)
 		*pwVersion = 0;
 
 	if (!IsOpen())
 		return shr_send_failed;
 
-	int						nResult		= shr_timeout;
-	BYTE					*snd_msg	= NULL;
-	int						msg_len		= 0;
-	GCB_COMMAND_STATE	*pCmdState	= &(m_pProtocolstatus->gcb_getversion);
-	BYTE					bCmd		= cmd_gcb_getversion;
+	int						nResult = shr_timeout;
+	BYTE					*snd_msg = NULL;
+	int						msg_len = 0;
+	GCB_COMMAND_STATE	*pCmdState = &(m_pProtocolstatus->gcb_getversion);
+	BYTE					bCmd = cmd_gcb_getversion;
 
 	snd_msg = m_sendBuffer.LockBuffer(gcb_pt_data_len_max, TRUE);
 	if (snd_msg == NULL)
@@ -497,12 +497,12 @@ int CCBSocketPort_Control::sendorder_gcb_getversion(WORD *pwVersion, int time_ch
 	nResult = Commu_SendMsg_handshake(pCmdState, snd_msg, msg_len, time_check);
 	if (nResult == shr_succeed)
 	{
-		ASSERT(time_check <= 0 || pCmdState->commState==gcb_comm_result_succeed);
+		ASSERT(time_check <= 0 || pCmdState->commState == gcb_comm_result_succeed);
 		if (pwVersion != NULL)
 		{
-			if (pCmdState->commState==gcb_comm_result_succeed)
+			if (pCmdState->commState == gcb_comm_result_succeed)
 			{
-				*pwVersion	= m_pProtocolstatus->gcb_getversion_val;
+				*pwVersion = m_pProtocolstatus->gcb_getversion_val;
 			}
 			else
 			{//未正常获得版本信息
@@ -517,35 +517,35 @@ int CCBSocketPort_Control::sendorder_gcb_getversion(WORD *pwVersion, int time_ch
 }
 int CCBSocketPort_Control::sendorder_gcb_getbuffersize(DWORD *pdwBufferSize, int time_check)
 {
-	if (pdwBufferSize != NULL)	
+	if (pdwBufferSize != NULL)
 		*pdwBufferSize = 0;
-	
+
 	if (!IsOpen())
 		return shr_send_failed;
-	
-	int						nResult		= shr_timeout;
-	BYTE					*snd_msg	= NULL;
-	int						msg_len		= 0;
-	GCB_COMMAND_STATE	*pCmdState	= &(m_pProtocolstatus->gcb_getbuffersize);
-	BYTE					bCmd		= cmd_gcb_getbuffersize;
-	
+
+	int						nResult = shr_timeout;
+	BYTE					*snd_msg = NULL;
+	int						msg_len = 0;
+	GCB_COMMAND_STATE	*pCmdState = &(m_pProtocolstatus->gcb_getbuffersize);
+	BYTE					bCmd = cmd_gcb_getbuffersize;
+
 	snd_msg = m_sendBuffer.LockBuffer(gcb_pt_data_len_max, TRUE);
 	if (snd_msg == NULL)
 		return shr_outofmemory;
-	
+
 	msg_len = CCBSocketPort_Control::dataframe_transdata(snd_msg, bCmd, NULL, 0);
 	ASSERT(msg_len >= gcb_pt_data_len_min);
-	
+
 	m_pProtocolstatus->gcb_getbuffersize_val = 0;
 	nResult = Commu_SendMsg_handshake(pCmdState, snd_msg, msg_len, time_check);
 	if (nResult == shr_succeed)
 	{
-		ASSERT(time_check <= 0 || pCmdState->commState==gcb_comm_result_succeed);
+		ASSERT(time_check <= 0 || pCmdState->commState == gcb_comm_result_succeed);
 		if (pdwBufferSize != NULL)
 		{
-			if (pCmdState->commState==gcb_comm_result_succeed)
+			if (pCmdState->commState == gcb_comm_result_succeed)
 			{
-				*pdwBufferSize	= m_pProtocolstatus->gcb_getbuffersize_val;
+				*pdwBufferSize = m_pProtocolstatus->gcb_getbuffersize_val;
 			}
 			else
 			{//未正常获得版本信息
@@ -553,9 +553,9 @@ int CCBSocketPort_Control::sendorder_gcb_getbuffersize(DWORD *pdwBufferSize, int
 			}
 		}
 	}
-	
+
 	m_sendBuffer.UnlockBuffer(snd_msg);
-	
+
 	return nResult;
 }
 //板卡初始化
@@ -563,28 +563,28 @@ int CCBSocketPort_Control::sendorder_gcb_init(BYTE bInitWay, int time_check)
 {
 	if (!IsOpen())
 		return shr_send_failed;
-	
-	int						nResult		= shr_timeout;
-	BYTE					*snd_msg	= NULL;
-	int						msg_len		= 0;
-	GCB_COMMAND_STATE	*pCmdState	= &(m_pProtocolstatus->gcb_init);
-	BYTE					bCmd		= cmd_gcb_init;
-	
+
+	int						nResult = shr_timeout;
+	BYTE					*snd_msg = NULL;
+	int						msg_len = 0;
+	GCB_COMMAND_STATE	*pCmdState = &(m_pProtocolstatus->gcb_init);
+	BYTE					bCmd = cmd_gcb_init;
+
 	snd_msg = m_sendBuffer.LockBuffer(gcb_pt_data_len_max, TRUE);
 	if (snd_msg == NULL)
 		return shr_outofmemory;
-	
+
 	msg_len = CCBSocketPort_Control::dataframe_transdata(snd_msg, bCmd, bInitWay);
 	ASSERT(msg_len >= gcb_pt_data_len_min);
-	
+
 	nResult = Commu_SendMsg_handshake(pCmdState, snd_msg, msg_len, time_check);
 	if (nResult == shr_succeed)
 	{
-		ASSERT(time_check <= 0 || pCmdState->commState==gcb_comm_result_succeed);
+		ASSERT(time_check <= 0 || pCmdState->commState == gcb_comm_result_succeed);
 	}
-	
+
 	m_sendBuffer.UnlockBuffer(snd_msg);
-	
+
 	return nResult;
 }
 //打印准备
@@ -593,11 +593,11 @@ int CCBSocketPort_Control::sendorder_gcb_print_ready(int time_check)
 	if (!IsOpen())
 		return shr_send_failed;
 
-	int						nResult		= shr_timeout;
-	BYTE					*snd_msg	= NULL;
-	int						msg_len		= 0;
-	GCB_COMMAND_STATE	*pCmdState	= &(m_pProtocolstatus->gcb_print_ready);
-	BYTE					bCmd		= cmd_gcb_print_ready;
+	int						nResult = shr_timeout;
+	BYTE					*snd_msg = NULL;
+	int						msg_len = 0;
+	GCB_COMMAND_STATE	*pCmdState = &(m_pProtocolstatus->gcb_print_ready);
+	BYTE					bCmd = cmd_gcb_print_ready;
 
 	snd_msg = m_sendBuffer.LockBuffer(gcb_pt_data_len_max, TRUE);
 	if (snd_msg == NULL)
@@ -609,7 +609,7 @@ int CCBSocketPort_Control::sendorder_gcb_print_ready(int time_check)
 	nResult = Commu_SendMsg_handshake(pCmdState, snd_msg, msg_len, time_check);
 	if (nResult == shr_succeed)
 	{
-		ASSERT(time_check <= 0 || pCmdState->commState==gcb_comm_result_succeed);
+		ASSERT(time_check <= 0 || pCmdState->commState == gcb_comm_result_succeed);
 	}
 
 	m_sendBuffer.UnlockBuffer(snd_msg);
@@ -622,28 +622,28 @@ int CCBSocketPort_Control::sendorder_gcb_repeater_config(void *pDataList, BYTE c
 {
 	if (!IsOpen())
 		return shr_send_failed;
-	
-	int						nResult		= shr_timeout;
-	BYTE					*snd_msg	= NULL;
-	int						msg_len		= 0;
-	GCB_COMMAND_STATE	*pCmdState	= &(m_pProtocolstatus->gcb_repeater_config);
-	BYTE					bCmd		= cmd_gcb_repeater_config;
-	
+
+	int						nResult = shr_timeout;
+	BYTE					*snd_msg = NULL;
+	int						msg_len = 0;
+	GCB_COMMAND_STATE	*pCmdState = &(m_pProtocolstatus->gcb_repeater_config);
+	BYTE					bCmd = cmd_gcb_repeater_config;
+
 	snd_msg = m_sendBuffer.LockBuffer(gcb_pt_data_len_max, TRUE);
 	if (snd_msg == NULL)
 		return shr_outofmemory;
-	
+
 	msg_len = CCBSocketPort_Control::dataframe_transdata(snd_msg, bCmd, (const BYTE*)pDataList, cmdSize);
 	ASSERT(msg_len >= gcb_pt_data_len_min);
-	
+
 	nResult = Commu_SendMsg_handshake(pCmdState, snd_msg, msg_len, time_check);
 	if (nResult == shr_succeed)
 	{
-		ASSERT(time_check <= 0 || pCmdState->commState==gcb_comm_result_succeed);
+		ASSERT(time_check <= 0 || pCmdState->commState == gcb_comm_result_succeed);
 	}
-	
+
 	m_sendBuffer.UnlockBuffer(snd_msg);
-	
+
 	return nResult;
 }
 

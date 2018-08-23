@@ -26,10 +26,10 @@ class CAboutDlg : public CDialog
 public:
 	CAboutDlg();
 
-// 对话框数据
+	// 对话框数据
 	enum { IDD = IDD_ABOUTBOX };
 
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 
 // 实现
@@ -152,15 +152,15 @@ BOOL CRB_ComTestDlg::OnInitDialog()
 	GetConfigInfo();
 
 	m_cbComNum.ResetContent();
-	for (i=0; i< _COM_NUM_MAX_; i++)
+	for (i = 0; i < _COM_NUM_MAX_; i++)
 	{
-		strTmp.Format("COM%d", i+1);
+		strTmp.Format("COM%d", i + 1);
 		m_cbComNum.AddString(strTmp);
 	}
 	if (m_nCom < 0 || m_nCom >= _COM_NUM_MAX_)
 		m_nCom = 0;
 	m_cbComNum.SetCurSel(m_nCom);
-	
+
 	m_port.m_pComWnd = this;
 	m_port.DemoMode(theApp.m_bDemoMode);
 
@@ -176,7 +176,7 @@ BOOL CRB_ComTestDlg::OnInitDialog()
 
 
 	m_cbDlgType.SetCurSel(functype_servo_4005);
-	
+
 #ifdef _CONFIG_CLIENT_
 	CRect rectLarge;
 	CRect rectSmall;
@@ -185,12 +185,12 @@ BOOL CRB_ComTestDlg::OnInitDialog()
 	GetWindowRect(&rectLarge);
 	GetDlgItem(IDC_EDIT_COMRECIVE)->GetWindowRect(&rectSeparator);
 
-	rectSmall.left	= rectLarge.left;
-	rectSmall.top	= rectLarge.top;
-	rectSmall.right	= rectSeparator.left;
-	rectSmall.bottom= rectLarge.bottom;
+	rectSmall.left = rectLarge.left;
+	rectSmall.top = rectLarge.top;
+	rectSmall.right = rectSeparator.left;
+	rectSmall.bottom = rectLarge.bottom;
 
-	SetWindowPos(NULL,0,0,rectSmall.Width(),rectSmall.Height(),SWP_NOMOVE | SWP_NOZORDER);
+	SetWindowPos(NULL, 0, 0, rectSmall.Width(), rectSmall.Height(), SWP_NOMOVE | SWP_NOZORDER);
 
 	m_cbDlgType.SetCurSel(functype_raser_flatlaser);
 #endif
@@ -258,14 +258,14 @@ void CRB_ComTestDlg::OnBnClickedButtonOpencom()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	UpdateData(TRUE);
-	if (m_bConnect==FALSE)
+	if (m_bConnect == FALSE)
 	{
-		switch(m_nPortType)
+		switch (m_nPortType)
 		{
 		default:
 		case 0:
 			//com
-			if (m_port.Open(m_nCom+1,9600,4096,1024))
+			if (m_port.Open(m_nCom + 1, 9600, 4096, 1024))
 			{
 				m_port.m_pComWnd = this;
 				m_bConnect = TRUE;
@@ -277,13 +277,13 @@ void CRB_ComTestDlg::OnBnClickedButtonOpencom()
 			break;
 		case 1:
 			//tcp
-			BYTE a,b,c,d;
+			BYTE a, b, c, d;
 			CString strIP, strError;
 			a = HIBYTE(HIWORD(m_dwIP));
 			b = LOBYTE(HIWORD(m_dwIP));
 			c = HIBYTE(LOWORD(m_dwIP));
 			d = LOBYTE(LOWORD(m_dwIP));
-			strIP.Format("%d.%d.%d.%d", a,b,c,d);
+			strIP.Format("%d.%d.%d.%d", a, b, c, d);
 			if (m_port.socket_Open(strIP, 2048, 1024, 1000, &strError))
 			{
 				m_port.m_pComWnd = this;
@@ -331,326 +331,326 @@ void CRB_ComTestDlg::OnBnClickedButtonOpendlg()
 	nSel = functype_raser_flatlaser;		//光栅板 - 平网蓝光
 #endif
 
-	switch(nSel)
+	switch (nSel)
 	{
 	case functype_servo_4005:
-		{//伺服板 V4005
-			CSFBoardThread		*pSFBoardhread = NULL;
-			CSFBoardDlg			**ppDlg = NULL;
+	{//伺服板 V4005
+		CSFBoardThread		*pSFBoardhread = NULL;
+		CSFBoardDlg			**ppDlg = NULL;
 
-			ppDlg = (CSFBoardDlg**)(&m_pDlgList[nSel]);
-			ASSERT(ppDlg != NULL);
-			if (ppDlg != NULL && (*ppDlg) != NULL && ::IsWindow((*ppDlg)->m_hWnd))
+		ppDlg = (CSFBoardDlg**)(&m_pDlgList[nSel]);
+		ASSERT(ppDlg != NULL);
+		if (ppDlg != NULL && (*ppDlg) != NULL && ::IsWindow((*ppDlg)->m_hWnd))
+		{
+			if ((*ppDlg)->m_bThreeAxisServo)
 			{
-				if ((*ppDlg)->m_bThreeAxisServo)
-				{
-					AfxMessageBox("已打开三轴伺服配置模式，需先关闭！");
-				}
-				(*ppDlg)->ShowWindow(SW_SHOW);
-				break;
+				AfxMessageBox("已打开三轴伺服配置模式，需先关闭！");
 			}
-
-			pSFBoardhread = (CSFBoardThread*)AfxBeginThread(RUNTIME_CLASS(CSFBoardThread),THREAD_PRIORITY_ABOVE_NORMAL, 0, CREATE_SUSPENDED);
-			if (pSFBoardhread==NULL)
-			{
-				AfxMessageBox("Failed to create thread.");
-				break;
-			}
-			pSFBoardhread->m_pfReducer_x				= &m_fReducer_x;
-			pSFBoardhread->m_pfPulsesPerRevolution_x	= &m_fPulsesPerRevolution_x;
-			pSFBoardhread->m_pfDollyPerimeter			= &m_fDollyPerimeter;
-
-			pSFBoardhread->m_pfReducer_y				= &m_fReducer_y;
-			pSFBoardhread->m_pfPulsesPerRevolution_y	= &m_fPulsesPerRevolution_y;	
-			pSFBoardhread->m_pfDeferentPerimeter		= &m_fDeferentPerimeter;
-			pSFBoardhread->m_pfDeferentPitch			= &m_fDeferentPitch;
-
-			pSFBoardhread->m_pfReducer_z				= &m_fReducer_z;
-			pSFBoardhread->m_pfPulsesPerRevolution_z	= &m_fPulsesPerRevolution_z;	
-			pSFBoardhread->m_pfDeferentPerimeter_z		= &m_fDeferentPerimeter_z;
-			pSFBoardhread->m_pfDeferentPitch_z			= &m_fDeferentPitch_z;
-
-			pSFBoardhread->m_pComPort					= &m_port;
-			pSFBoardhread->m_bThreeAxisServo			= FALSE;
-
-			pSFBoardhread->m_ppDlg						= ppDlg;
-			pSFBoardhread->bIsNewCurve					= false;
-
-			ulTimeStart = ::GetTickCount64();
-			pSFBoardhread->ResumeThread();
-			while (::GetTickCount64() < (ulTimeStart + ulTimeout))
-			{
-				if ((*ppDlg) != NULL)
-				{
-					if (::IsWindow((*ppDlg)->m_hWnd))
-					{
-						break;
-					}
-				}
-			}
-			ASSERT((CWnd**)ppDlg == &(m_pDlgList[nSel]));
-			if (m_pDlgList[nSel]==NULL || m_pDlgList[nSel]->m_hWnd==NULL)
-			{
-				AfxMessageBox("Failed to open dialog.");
-				break;
-			}
-
-			break;
-		}
-	case functype_raser:
-		{//光栅板 - 数码
-			CRasBoardThread		*pRasThread;
-			CRasBoardDlg		**ppDlg = NULL;
-
-			ppDlg = (CRasBoardDlg**)&(m_pDlgList[nSel]);
-			ASSERT(ppDlg != NULL);
-			if (ppDlg != NULL && (*ppDlg) != NULL && ::IsWindow((*ppDlg)->m_hWnd))
-			{
-				(*ppDlg)->ShowWindow(SW_SHOW);
-				break;
-			}
-
-			pRasThread = (CRasBoardThread*)AfxBeginThread(RUNTIME_CLASS(CRasBoardThread),THREAD_PRIORITY_ABOVE_NORMAL, 0, CREATE_SUSPENDED);
-			if (pRasThread==NULL)
-			{
-				AfxMessageBox("Failed to create thread.");
-				break;
-			}
-
-			pRasThread->m_pfReducer_x				= &m_fReducer_x;
-			pRasThread->m_pfPulsesPerRevolution_x	= &m_fPulsesPerRevolution_x;
-			pRasThread->m_pfDollyPerimeter			= &m_fDollyPerimeter;
-
-			pRasThread->m_pfReducer_y				= &m_fReducer_y;
-			pRasThread->m_pfPulsesPerRevolution_y	= &m_fPulsesPerRevolution_y;	
-			pRasThread->m_pfDeferentPerimeter		= &m_fDeferentPerimeter;
-			pRasThread->m_pfDeferentPitch			= &m_fDeferentPitch;
-
-			pRasThread->m_pfReducer_z				= &m_fReducer_z;
-			pRasThread->m_pfPulsesPerRevolution_z	= &m_fPulsesPerRevolution_z;	
-			pRasThread->m_pfDeferentPerimeter_z		= &m_fDeferentPerimeter_z;
-			pRasThread->m_pfDeferentPitch_z			= &m_fDeferentPitch_z;
-
-			pRasThread->m_pComPort					= &m_port;
-			pRasThread->m_ppDlg						= ppDlg;
-
-			ulTimeStart = ::GetTickCount64();
-			pRasThread->ResumeThread();
-			while (::GetTickCount64() < (ulTimeStart + ulTimeout))
-			{
-				if ((*ppDlg) != NULL)
-				{
-					if (::IsWindow((*ppDlg)->m_hWnd))
-					{
-						break;
-					}
-				}
-			}
-			ASSERT((CWnd**)ppDlg == &(m_pDlgList[nSel]));
-			if (m_pDlgList[nSel]==NULL || m_pDlgList[nSel]->m_hWnd==NULL)
-			{
-				AfxMessageBox("Failed to open dialog.");
-				break;
-			}
-
-
-			break;
-		}
-	case functype_servo_param:
-		{//伺服固件参数
-			CSFParameterDlg		**ppDlg = NULL;
-
-			ppDlg = (CSFParameterDlg**)(&m_pDlgList[nSel]);
-			ASSERT(ppDlg != NULL);
-			if (ppDlg != NULL && (*ppDlg) != NULL && ::IsWindow((*ppDlg)->m_hWnd))
-			{
-				(*ppDlg)->ShowWindow(SW_SHOW);
-				break;
-			}
-			(*ppDlg) = new CSFParameterDlg();
-			if ((*ppDlg) == NULL)
-			{
-				AfxMessageBox("Out of memory!");
-				break;
-			}
-
-			(*ppDlg)->m_pfReducer_x				= &m_fReducer_x;
-			(*ppDlg)->m_pfPulsesPerRevolution_x	= &m_fPulsesPerRevolution_x;
-			(*ppDlg)->m_pfDollyPerimeter		= &m_fDollyPerimeter;
-
-			(*ppDlg)->m_pfReducer_y				= &m_fReducer_y;
-			(*ppDlg)->m_pfPulsesPerRevolution_y	= &m_fPulsesPerRevolution_y;	
-			(*ppDlg)->m_pfDeferentPerimeter		= &m_fDeferentPerimeter;
-			(*ppDlg)->m_pfDeferentPitch			= &m_fDeferentPitch;
-
-			(*ppDlg)->m_pfReducer_z				= &m_fReducer_z;
-			(*ppDlg)->m_pfPulsesPerRevolution_z	= &m_fPulsesPerRevolution_z;	
-			(*ppDlg)->m_pfDeferentPerimeter_z	= &m_fDeferentPerimeter_z;
-			(*ppDlg)->m_pfDeferentPitch_z		= &m_fDeferentPitch_z;
-
-
-			(*ppDlg)->m_pComPort				= &m_port;
-			(*ppDlg)->m_bThreeAxisServo			= FALSE;
-
-			(*ppDlg)->Create(IDD_DIALOG_SFPARAMATER, this);
 			(*ppDlg)->ShowWindow(SW_SHOW);
-
-			ASSERT((CWnd**)ppDlg == &(m_pDlgList[nSel]));
-
 			break;
 		}
+
+		pSFBoardhread = (CSFBoardThread*)AfxBeginThread(RUNTIME_CLASS(CSFBoardThread), THREAD_PRIORITY_ABOVE_NORMAL, 0, CREATE_SUSPENDED);
+		if (pSFBoardhread == NULL)
+		{
+			AfxMessageBox("Failed to create thread.");
+			break;
+		}
+		pSFBoardhread->m_pfReducer_x = &m_fReducer_x;
+		pSFBoardhread->m_pfPulsesPerRevolution_x = &m_fPulsesPerRevolution_x;
+		pSFBoardhread->m_pfDollyPerimeter = &m_fDollyPerimeter;
+
+		pSFBoardhread->m_pfReducer_y = &m_fReducer_y;
+		pSFBoardhread->m_pfPulsesPerRevolution_y = &m_fPulsesPerRevolution_y;
+		pSFBoardhread->m_pfDeferentPerimeter = &m_fDeferentPerimeter;
+		pSFBoardhread->m_pfDeferentPitch = &m_fDeferentPitch;
+
+		pSFBoardhread->m_pfReducer_z = &m_fReducer_z;
+		pSFBoardhread->m_pfPulsesPerRevolution_z = &m_fPulsesPerRevolution_z;
+		pSFBoardhread->m_pfDeferentPerimeter_z = &m_fDeferentPerimeter_z;
+		pSFBoardhread->m_pfDeferentPitch_z = &m_fDeferentPitch_z;
+
+		pSFBoardhread->m_pComPort = &m_port;
+		pSFBoardhread->m_bThreeAxisServo = FALSE;
+
+		pSFBoardhread->m_ppDlg = ppDlg;
+		pSFBoardhread->bIsNewCurve = false;
+
+		ulTimeStart = ::GetTickCount64();
+		pSFBoardhread->ResumeThread();
+		while (::GetTickCount64() < (ulTimeStart + ulTimeout))
+		{
+			if ((*ppDlg) != NULL)
+			{
+				if (::IsWindow((*ppDlg)->m_hWnd))
+				{
+					break;
+				}
+			}
+		}
+		ASSERT((CWnd**)ppDlg == &(m_pDlgList[nSel]));
+		if (m_pDlgList[nSel] == NULL || m_pDlgList[nSel]->m_hWnd == NULL)
+		{
+			AfxMessageBox("Failed to open dialog.");
+			break;
+		}
+
+		break;
+	}
+	case functype_raser:
+	{//光栅板 - 数码
+		CRasBoardThread		*pRasThread;
+		CRasBoardDlg		**ppDlg = NULL;
+
+		ppDlg = (CRasBoardDlg**)&(m_pDlgList[nSel]);
+		ASSERT(ppDlg != NULL);
+		if (ppDlg != NULL && (*ppDlg) != NULL && ::IsWindow((*ppDlg)->m_hWnd))
+		{
+			(*ppDlg)->ShowWindow(SW_SHOW);
+			break;
+		}
+
+		pRasThread = (CRasBoardThread*)AfxBeginThread(RUNTIME_CLASS(CRasBoardThread), THREAD_PRIORITY_ABOVE_NORMAL, 0, CREATE_SUSPENDED);
+		if (pRasThread == NULL)
+		{
+			AfxMessageBox("Failed to create thread.");
+			break;
+		}
+
+		pRasThread->m_pfReducer_x = &m_fReducer_x;
+		pRasThread->m_pfPulsesPerRevolution_x = &m_fPulsesPerRevolution_x;
+		pRasThread->m_pfDollyPerimeter = &m_fDollyPerimeter;
+
+		pRasThread->m_pfReducer_y = &m_fReducer_y;
+		pRasThread->m_pfPulsesPerRevolution_y = &m_fPulsesPerRevolution_y;
+		pRasThread->m_pfDeferentPerimeter = &m_fDeferentPerimeter;
+		pRasThread->m_pfDeferentPitch = &m_fDeferentPitch;
+
+		pRasThread->m_pfReducer_z = &m_fReducer_z;
+		pRasThread->m_pfPulsesPerRevolution_z = &m_fPulsesPerRevolution_z;
+		pRasThread->m_pfDeferentPerimeter_z = &m_fDeferentPerimeter_z;
+		pRasThread->m_pfDeferentPitch_z = &m_fDeferentPitch_z;
+
+		pRasThread->m_pComPort = &m_port;
+		pRasThread->m_ppDlg = ppDlg;
+
+		ulTimeStart = ::GetTickCount64();
+		pRasThread->ResumeThread();
+		while (::GetTickCount64() < (ulTimeStart + ulTimeout))
+		{
+			if ((*ppDlg) != NULL)
+			{
+				if (::IsWindow((*ppDlg)->m_hWnd))
+				{
+					break;
+				}
+			}
+		}
+		ASSERT((CWnd**)ppDlg == &(m_pDlgList[nSel]));
+		if (m_pDlgList[nSel] == NULL || m_pDlgList[nSel]->m_hWnd == NULL)
+		{
+			AfxMessageBox("Failed to open dialog.");
+			break;
+		}
+
+
+		break;
+	}
+	case functype_servo_param:
+	{//伺服固件参数
+		CSFParameterDlg		**ppDlg = NULL;
+
+		ppDlg = (CSFParameterDlg**)(&m_pDlgList[nSel]);
+		ASSERT(ppDlg != NULL);
+		if (ppDlg != NULL && (*ppDlg) != NULL && ::IsWindow((*ppDlg)->m_hWnd))
+		{
+			(*ppDlg)->ShowWindow(SW_SHOW);
+			break;
+		}
+		(*ppDlg) = new CSFParameterDlg();
+		if ((*ppDlg) == NULL)
+		{
+			AfxMessageBox("Out of memory!");
+			break;
+		}
+
+		(*ppDlg)->m_pfReducer_x = &m_fReducer_x;
+		(*ppDlg)->m_pfPulsesPerRevolution_x = &m_fPulsesPerRevolution_x;
+		(*ppDlg)->m_pfDollyPerimeter = &m_fDollyPerimeter;
+
+		(*ppDlg)->m_pfReducer_y = &m_fReducer_y;
+		(*ppDlg)->m_pfPulsesPerRevolution_y = &m_fPulsesPerRevolution_y;
+		(*ppDlg)->m_pfDeferentPerimeter = &m_fDeferentPerimeter;
+		(*ppDlg)->m_pfDeferentPitch = &m_fDeferentPitch;
+
+		(*ppDlg)->m_pfReducer_z = &m_fReducer_z;
+		(*ppDlg)->m_pfPulsesPerRevolution_z = &m_fPulsesPerRevolution_z;
+		(*ppDlg)->m_pfDeferentPerimeter_z = &m_fDeferentPerimeter_z;
+		(*ppDlg)->m_pfDeferentPitch_z = &m_fDeferentPitch_z;
+
+
+		(*ppDlg)->m_pComPort = &m_port;
+		(*ppDlg)->m_bThreeAxisServo = FALSE;
+
+		(*ppDlg)->Create(IDD_DIALOG_SFPARAMATER, this);
+		(*ppDlg)->ShowWindow(SW_SHOW);
+
+		ASSERT((CWnd**)ppDlg == &(m_pDlgList[nSel]));
+
+		break;
+	}
 	case functype_servo_3axis_1001:
 	case functype_servo_3axis_1001_new:
-		{//三轴伺服板 V1001
-			CSFBoardThread		*pSFBoardhread = NULL;
-			CSFBoardDlg			**ppDlg = NULL;
+	{//三轴伺服板 V1001
+		CSFBoardThread		*pSFBoardhread = NULL;
+		CSFBoardDlg			**ppDlg = NULL;
 
-			ppDlg = (CSFBoardDlg**)(&m_pDlgList[nSel]);
-			ASSERT(ppDlg != NULL);
-			if (ppDlg != NULL && (*ppDlg) != NULL && ::IsWindow((*ppDlg)->m_hWnd))
+		ppDlg = (CSFBoardDlg**)(&m_pDlgList[nSel]);
+		ASSERT(ppDlg != NULL);
+		if (ppDlg != NULL && (*ppDlg) != NULL && ::IsWindow((*ppDlg)->m_hWnd))
+		{
+			if (!(*ppDlg)->m_bThreeAxisServo)
 			{
-				if (!(*ppDlg)->m_bThreeAxisServo)
-				{
-					AfxMessageBox("已打开单轴伺服配置模式，需先关闭！");
-				}
-				(*ppDlg)->ShowWindow(SW_SHOW);
-				break;
+				AfxMessageBox("已打开单轴伺服配置模式，需先关闭！");
 			}
-
-			pSFBoardhread = (CSFBoardThread*)AfxBeginThread(RUNTIME_CLASS(CSFBoardThread),THREAD_PRIORITY_ABOVE_NORMAL, 0, CREATE_SUSPENDED);
-			if (pSFBoardhread==NULL)
-			{
-				AfxMessageBox("Failed to create thread.");
-				break;
-			}
-
-			//pSFBoardhread->m_bAutoDelete = FALSE;
-			pSFBoardhread->m_pfReducer_x				= &m_fReducer_x;
-			pSFBoardhread->m_pfPulsesPerRevolution_x	= &m_fPulsesPerRevolution_x;
-			pSFBoardhread->m_pfDollyPerimeter			= &m_fDollyPerimeter;
-
-			pSFBoardhread->m_pfReducer_y				= &m_fReducer_y;
-			pSFBoardhread->m_pfPulsesPerRevolution_y	= &m_fPulsesPerRevolution_y;	
-			pSFBoardhread->m_pfDeferentPerimeter		= &m_fDeferentPerimeter;
-			pSFBoardhread->m_pfDeferentPitch			= &m_fDeferentPitch;
-
-			pSFBoardhread->m_pfReducer_z				= &m_fReducer_z;
-			pSFBoardhread->m_pfPulsesPerRevolution_z	= &m_fPulsesPerRevolution_z;	
-			pSFBoardhread->m_pfDeferentPerimeter_z		= &m_fDeferentPerimeter_z;
-			pSFBoardhread->m_pfDeferentPitch_z			= &m_fDeferentPitch_z;
-
-			pSFBoardhread->m_pComPort					= &m_port;
-			pSFBoardhread->m_bThreeAxisServo			= TRUE;
-
-			pSFBoardhread->m_ppDlg						= ppDlg;
-			pSFBoardhread->bIsNewCurve					= nSel == functype_servo_3axis_1001_new;
-
-			ulTimeStart = ::GetTickCount64();
-			pSFBoardhread->ResumeThread();
-			while (::GetTickCount64() < (ulTimeStart + ulTimeout))
-			{
-				if ((*ppDlg) != NULL)
-				{
-					if (::IsWindow((*ppDlg)->m_hWnd))
-					{
-						break;
-					}
-				}
-			}
-			ASSERT((CWnd**)ppDlg == &(m_pDlgList[nSel]));
-			if (m_pDlgList[nSel]==NULL || m_pDlgList[nSel]->m_hWnd==NULL)
-			{
-				AfxMessageBox("Failed to open dialog.");
-				break;
-			}
-
-			break;
-		}
-	case functype_servo_3axis_1001_param:
-		{//三轴伺服板固件参数 V1001
-			CSFParameterDlg		**ppDlg = NULL;
-
-			ppDlg = (CSFParameterDlg**)(&m_pDlgList[nSel]);
-			ASSERT(ppDlg != NULL);
-			if (ppDlg != NULL && (*ppDlg) != NULL && ::IsWindow((*ppDlg)->m_hWnd))
-			{
-				(*ppDlg)->ShowWindow(SW_SHOW);
-				break;
-			}
-			(*ppDlg) = new CSFParameterDlg();
-			if ((*ppDlg) == NULL)
-			{
-				AfxMessageBox("Out of memory!");
-				break;
-			}
-
-			(*ppDlg)->m_pfReducer_x				= &m_fReducer_x;
-			(*ppDlg)->m_pfPulsesPerRevolution_x	= &m_fPulsesPerRevolution_x;
-			(*ppDlg)->m_pfDollyPerimeter		= &m_fDollyPerimeter;
-
-			(*ppDlg)->m_pfReducer_y				= &m_fReducer_y;
-			(*ppDlg)->m_pfPulsesPerRevolution_y	= &m_fPulsesPerRevolution_y;	
-			(*ppDlg)->m_pfDeferentPerimeter		= &m_fDeferentPerimeter;
-			(*ppDlg)->m_pfDeferentPitch			= &m_fDeferentPitch;
-
-			(*ppDlg)->m_pfReducer_z				= &m_fReducer_z;
-			(*ppDlg)->m_pfPulsesPerRevolution_z	= &m_fPulsesPerRevolution_z;	
-			(*ppDlg)->m_pfDeferentPerimeter_z	= &m_fDeferentPerimeter_z;
-			(*ppDlg)->m_pfDeferentPitch_z		= &m_fDeferentPitch_z;
-
-			(*ppDlg)->m_pComPort				= &m_port;
-			(*ppDlg)->m_bThreeAxisServo			= TRUE;
-
-			(*ppDlg)->Create(IDD_DIALOG_SFPARAMATER, this);
 			(*ppDlg)->ShowWindow(SW_SHOW);
-
-			ASSERT((CWnd**)ppDlg == &(m_pDlgList[nSel]));
-
 			break;
 		}
+
+		pSFBoardhread = (CSFBoardThread*)AfxBeginThread(RUNTIME_CLASS(CSFBoardThread), THREAD_PRIORITY_ABOVE_NORMAL, 0, CREATE_SUSPENDED);
+		if (pSFBoardhread == NULL)
+		{
+			AfxMessageBox("Failed to create thread.");
+			break;
+		}
+
+		//pSFBoardhread->m_bAutoDelete = FALSE;
+		pSFBoardhread->m_pfReducer_x = &m_fReducer_x;
+		pSFBoardhread->m_pfPulsesPerRevolution_x = &m_fPulsesPerRevolution_x;
+		pSFBoardhread->m_pfDollyPerimeter = &m_fDollyPerimeter;
+
+		pSFBoardhread->m_pfReducer_y = &m_fReducer_y;
+		pSFBoardhread->m_pfPulsesPerRevolution_y = &m_fPulsesPerRevolution_y;
+		pSFBoardhread->m_pfDeferentPerimeter = &m_fDeferentPerimeter;
+		pSFBoardhread->m_pfDeferentPitch = &m_fDeferentPitch;
+
+		pSFBoardhread->m_pfReducer_z = &m_fReducer_z;
+		pSFBoardhread->m_pfPulsesPerRevolution_z = &m_fPulsesPerRevolution_z;
+		pSFBoardhread->m_pfDeferentPerimeter_z = &m_fDeferentPerimeter_z;
+		pSFBoardhread->m_pfDeferentPitch_z = &m_fDeferentPitch_z;
+
+		pSFBoardhread->m_pComPort = &m_port;
+		pSFBoardhread->m_bThreeAxisServo = TRUE;
+
+		pSFBoardhread->m_ppDlg = ppDlg;
+		pSFBoardhread->bIsNewCurve = nSel == functype_servo_3axis_1001_new;
+
+		ulTimeStart = ::GetTickCount64();
+		pSFBoardhread->ResumeThread();
+		while (::GetTickCount64() < (ulTimeStart + ulTimeout))
+		{
+			if ((*ppDlg) != NULL)
+			{
+				if (::IsWindow((*ppDlg)->m_hWnd))
+				{
+					break;
+				}
+			}
+		}
+		ASSERT((CWnd**)ppDlg == &(m_pDlgList[nSel]));
+		if (m_pDlgList[nSel] == NULL || m_pDlgList[nSel]->m_hWnd == NULL)
+		{
+			AfxMessageBox("Failed to open dialog.");
+			break;
+		}
+
+		break;
+	}
+	case functype_servo_3axis_1001_param:
+	{//三轴伺服板固件参数 V1001
+		CSFParameterDlg		**ppDlg = NULL;
+
+		ppDlg = (CSFParameterDlg**)(&m_pDlgList[nSel]);
+		ASSERT(ppDlg != NULL);
+		if (ppDlg != NULL && (*ppDlg) != NULL && ::IsWindow((*ppDlg)->m_hWnd))
+		{
+			(*ppDlg)->ShowWindow(SW_SHOW);
+			break;
+		}
+		(*ppDlg) = new CSFParameterDlg();
+		if ((*ppDlg) == NULL)
+		{
+			AfxMessageBox("Out of memory!");
+			break;
+		}
+
+		(*ppDlg)->m_pfReducer_x = &m_fReducer_x;
+		(*ppDlg)->m_pfPulsesPerRevolution_x = &m_fPulsesPerRevolution_x;
+		(*ppDlg)->m_pfDollyPerimeter = &m_fDollyPerimeter;
+
+		(*ppDlg)->m_pfReducer_y = &m_fReducer_y;
+		(*ppDlg)->m_pfPulsesPerRevolution_y = &m_fPulsesPerRevolution_y;
+		(*ppDlg)->m_pfDeferentPerimeter = &m_fDeferentPerimeter;
+		(*ppDlg)->m_pfDeferentPitch = &m_fDeferentPitch;
+
+		(*ppDlg)->m_pfReducer_z = &m_fReducer_z;
+		(*ppDlg)->m_pfPulsesPerRevolution_z = &m_fPulsesPerRevolution_z;
+		(*ppDlg)->m_pfDeferentPerimeter_z = &m_fDeferentPerimeter_z;
+		(*ppDlg)->m_pfDeferentPitch_z = &m_fDeferentPitch_z;
+
+		(*ppDlg)->m_pComPort = &m_port;
+		(*ppDlg)->m_bThreeAxisServo = TRUE;
+
+		(*ppDlg)->Create(IDD_DIALOG_SFPARAMATER, this);
+		(*ppDlg)->ShowWindow(SW_SHOW);
+
+		ASSERT((CWnd**)ppDlg == &(m_pDlgList[nSel]));
+
+		break;
+	}
 	case functype_raser_flatlaser:
-		{//光栅板 - 平网蓝光
-  			CLDBoardThread		*pLDThread;
-  			CLDBoardDlg			**ppDlg = NULL;
-  
-  			ppDlg = (CLDBoardDlg**)&(m_pDlgList[nSel]);
-  			ASSERT(ppDlg != NULL);
-  			if (ppDlg != NULL && (*ppDlg) != NULL && ::IsWindow((*ppDlg)->m_hWnd))
-  			{
-  				(*ppDlg)->ShowWindow(SW_SHOW);
-  				break;
-  			}
-  
-  			pLDThread = (CLDBoardThread*)AfxBeginThread(RUNTIME_CLASS(CLDBoardThread),THREAD_PRIORITY_ABOVE_NORMAL, 0, CREATE_SUSPENDED);
-  			if (pLDThread==NULL)
-  			{
-  				AfxMessageBox("Failed to create thread.");
-  				break;
-  			}
-   
-  			pLDThread->m_pComPort		= &m_port;
-  			pLDThread->m_ppDlg			= ppDlg;
-  
-  			ulTimeStart = ::GetTickCount64();
-  			pLDThread->ResumeThread();
-  			while (::GetTickCount64() < (ulTimeStart + ulTimeout))
-  			{
-  				if ((*ppDlg) != NULL)
-  				{
-  					if (::IsWindow((*ppDlg)->m_hWnd))
-  					{
-  						break;
-  					}
-  				}
-  			}
-  			ASSERT((CWnd**)ppDlg == &(m_pDlgList[nSel]));
-  			if (m_pDlgList[nSel]==NULL || m_pDlgList[nSel]->m_hWnd==NULL)
-  			{
-  				AfxMessageBox("Failed to open dialog.");
-  				break;
-  			}
+	{//光栅板 - 平网蓝光
+		CLDBoardThread		*pLDThread;
+		CLDBoardDlg			**ppDlg = NULL;
+
+		ppDlg = (CLDBoardDlg**)&(m_pDlgList[nSel]);
+		ASSERT(ppDlg != NULL);
+		if (ppDlg != NULL && (*ppDlg) != NULL && ::IsWindow((*ppDlg)->m_hWnd))
+		{
+			(*ppDlg)->ShowWindow(SW_SHOW);
 			break;
 		}
+
+		pLDThread = (CLDBoardThread*)AfxBeginThread(RUNTIME_CLASS(CLDBoardThread), THREAD_PRIORITY_ABOVE_NORMAL, 0, CREATE_SUSPENDED);
+		if (pLDThread == NULL)
+		{
+			AfxMessageBox("Failed to create thread.");
+			break;
+		}
+
+		pLDThread->m_pComPort = &m_port;
+		pLDThread->m_ppDlg = ppDlg;
+
+		ulTimeStart = ::GetTickCount64();
+		pLDThread->ResumeThread();
+		while (::GetTickCount64() < (ulTimeStart + ulTimeout))
+		{
+			if ((*ppDlg) != NULL)
+			{
+				if (::IsWindow((*ppDlg)->m_hWnd))
+				{
+					break;
+				}
+			}
+		}
+		ASSERT((CWnd**)ppDlg == &(m_pDlgList[nSel]));
+		if (m_pDlgList[nSel] == NULL || m_pDlgList[nSel]->m_hWnd == NULL)
+		{
+			AfxMessageBox("Failed to open dialog.");
+			break;
+		}
+		break;
+	}
 	}
 }
 
@@ -664,7 +664,7 @@ void CRB_ComTestDlg::OnBnClickedButtonClearEdit()
 LONG CRB_ComTestDlg::OnComRecive(WPARAM wPALAM, LPARAM lPALAM)
 {
 	CString* str = (CString*)wPALAM;
-	m_edtComRecive.SetSel(-1,-1);
+	m_edtComRecive.SetSel(-1, -1);
 	m_edtComRecive.ReplaceSel(*str);
 	return 0;
 }
@@ -672,7 +672,7 @@ LONG CRB_ComTestDlg::OnComRecive(WPARAM wPALAM, LPARAM lPALAM)
 LONG CRB_ComTestDlg::OnComSend(WPARAM wPALAM, LPARAM lPALAM)
 {
 	CString* str = (CString*)wPALAM;
-	m_edtComSend.SetSel(-1,-1);
+	m_edtComSend.SetSel(-1, -1);
 	m_edtComSend.ReplaceSel(*str);
 	return 0;
 }
@@ -688,10 +688,10 @@ void CRB_ComTestDlg::OnBnClickedOk()
 
 void CRB_ComTestDlg::SetConfigInfo(void)
 {
-	CString strIniFile,strSection,strReg;
+	CString strIniFile, strSection, strReg;
 
 	strIniFile = theApp.m_strIniFile;
-	
+
 	strSection = "PORT";
 	WRITE_PROFILE_INFO("%d", m_nCom);
 	WRITE_PROFILE_INFO("%d", m_nPortType);
@@ -719,7 +719,7 @@ void CRB_ComTestDlg::SetConfigInfo(void)
 void CRB_ComTestDlg::GetConfigInfo(void)
 {
 	char szReg[200];
-	CString strIniFile,strSection;
+	CString strIniFile, strSection;
 
 	strIniFile = theApp.m_strIniFile;
 
@@ -751,7 +751,7 @@ void CRB_ComTestDlg::EnableControl(void)
 {
 	m_cbComNum.EnableWindow(!m_bConnect);
 	m_cbDlgType.EnableWindow(m_bConnect);
-	
+
 	ENABLECONTROL(IDC_RADIO_USECOM, !m_bConnect);
 	ENABLECONTROL(IDC_RADIO_USETCP, !m_bConnect);
 	ENABLECONTROL(IDC_IPADDRESS_SOCKETPORT, !m_bConnect);
@@ -773,7 +773,7 @@ BOOL CRB_ComTestDlg::DestroyWindow()
 	CCmdTimeOut::SaveToCfg();
 
 	int i;
-	for (i=0; i<functype_count; i++)
+	for (i = 0; i < functype_count; i++)
 	{
 		if (m_pDlgList[i] != NULL)
 		{

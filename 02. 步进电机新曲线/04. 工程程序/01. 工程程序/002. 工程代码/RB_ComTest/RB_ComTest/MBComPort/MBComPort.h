@@ -28,7 +28,7 @@
 #define WM_LD_PROGRESS				WM_USER+5
 #define WM_LD_SET_POWER_STATUS		WM_USER+6
 
-struct OnLinePara 
+struct OnLinePara
 {
 	DWORD dist_acce; //第N档对应的加速距离，cts，DWORD
 	DWORD dist_dece; //第N档对应的减速距离，cts，DWORD
@@ -55,25 +55,25 @@ enum PROTOCOL_MODE
 enum DEVICE_POSITION
 {
 	//小车位置标识定义
-	pos_x_device_current	= 0x01,		//设备定位-当前位置（小车不动）
-	pos_x_device_min	= 0x02,		//设备定位-最小位置（设备原点）
-	pos_x_device_max	= 0x03,		//设备定位-最大位置
-	pos_x_device_lastpos	= 0x04,		//设备定位-上次位置
-	pos_x_device_ready	= 0x05,		//设备定位-待机位（设备启动并自检完成后待机位置）
-	pos_x_device_check	= 0x06,		//设备定位-检测位（功率检测位，暂仅平网蓝光使用）
-	pos_x_device_clean	= 0x07,		//设备定位-清洗位（平网蓝光暂不需要，但使用喷头的系统中需要） 
-	pos_x_device_moisture= 0x08,		//设备定位-保湿位（平网蓝光暂不需要，但使用喷头的系统中需要）
+	pos_x_device_current = 0x01,		//设备定位-当前位置（小车不动）
+	pos_x_device_min = 0x02,		//设备定位-最小位置（设备原点）
+	pos_x_device_max = 0x03,		//设备定位-最大位置
+	pos_x_device_lastpos = 0x04,		//设备定位-上次位置
+	pos_x_device_ready = 0x05,		//设备定位-待机位（设备启动并自检完成后待机位置）
+	pos_x_device_check = 0x06,		//设备定位-检测位（功率检测位，暂仅平网蓝光使用）
+	pos_x_device_clean = 0x07,		//设备定位-清洗位（平网蓝光暂不需要，但使用喷头的系统中需要） 
+	pos_x_device_moisture = 0x08,		//设备定位-保湿位（平网蓝光暂不需要，但使用喷头的系统中需要）
 
 	//丝杆/导带位置标识定义
-	pos_y_device_current	= 0x10,//设备定位-当前位置（丝杆/导带不动，导带机时除本参数项外，其它所有Y向标识均无效）
-	pos_y_device_min	= 0x20,		//设备定位-最小位置（设备原点，导带机不需要）
-	pos_y_device_max	= 0x30,		//设备定位-最大位置（导带机不需要）
-	pos_y_device_ready	= 0x40,		//设备定位-待机位（设备启动并自检完成后待机位置，导带机不需要）
-	pos_y_device_lastpos	= 0x50,		//设备定位-上次位置（导带机不需要）
+	pos_y_device_current = 0x10,//设备定位-当前位置（丝杆/导带不动，导带机时除本参数项外，其它所有Y向标识均无效）
+	pos_y_device_min = 0x20,		//设备定位-最小位置（设备原点，导带机不需要）
+	pos_y_device_max = 0x30,		//设备定位-最大位置（导带机不需要）
+	pos_y_device_ready = 0x40,		//设备定位-待机位（设备启动并自检完成后待机位置，导带机不需要）
+	pos_y_device_lastpos = 0x50,		//设备定位-上次位置（导带机不需要）
 
-	pos_zero_x_current_y	= pos_x_device_min | pos_y_device_current,
+	pos_zero_x_current_y = pos_x_device_min | pos_y_device_current,
 
-	pos_unknown				= 0x00		//未知，作“当前位置”（pos_x/y_device_current）处理
+	pos_unknown = 0x00		//未知，作“当前位置”（pos_x/y_device_current）处理
 };
 #define POS_X_DEVICE_MASK	0x0F		//定位标识掩码-小车方向
 #define POS_Y_DEVICE_MASK	0xF0		//定位标识掩码-丝杆/导带方向
@@ -81,34 +81,34 @@ enum DEVICE_POSITION
 //保存当前位置-标识定义
 enum DEVICE_CURRENT_POSITION_STORE
 {
-	store_current_pos_x	= 0x01,		//保存小车（X向）电机当前位置
-	store_current_pos_y	= 0x02, 		//保存丝杆（Y向）电机当前位置
-	store_current_pos_xy	= store_current_pos_x | store_current_pos_y		//保存X和Y向电机当前位置信息
+	store_current_pos_x = 0x01,		//保存小车（X向）电机当前位置
+	store_current_pos_y = 0x02, 		//保存丝杆（Y向）电机当前位置
+	store_current_pos_xy = store_current_pos_x | store_current_pos_y		//保存X和Y向电机当前位置信息
 };
 
 enum COMM_RESULT
 {
-	comm_result_succeed		= 0x00,	//指令正常执行完成
+	comm_result_succeed = 0x00,	//指令正常执行完成
 
-	comm_result_para_invalid		= 0x01,	//参数设置失败
-	comm_result_move_invalid	     = 0x02,	//小车移动方向的位置已到极限，移动命令无效
-	comm_result_download_invalid 	= 0x03, 	//写FLASH操作未成功
-	
-	comm_result_checking		= 0x04,
-	comm_result_other			= 0xFF	//其它错误
+	comm_result_para_invalid = 0x01,	//参数设置失败
+	comm_result_move_invalid = 0x02,	//小车移动方向的位置已到极限，移动命令无效
+	comm_result_download_invalid = 0x03, 	//写FLASH操作未成功
+
+	comm_result_checking = 0x04,
+	comm_result_other = 0xFF	//其它错误
 };
 
 //指令执行状态反馈（正常接收指令串，在执行过程中的反馈信息）
 //下位机反馈信息定义（MB）
 enum FLATLASER_COMM_RESULT
 {
-	mb_comm_result_succeed		= 0x00,	//指令正常执行完成
+	mb_comm_result_succeed = 0x00,	//指令正常执行完成
 
-	mb_comm_result_failed	     = 0x01,	//下位机分级处理时通信失败
-	mb_comm_result_offline		= 0x02,	//下位机处于脱机状态
-	
-	mb_comm_result_checking		= 0x03,
-	mb_comm_result_other			= 0xFF	//其它错误
+	mb_comm_result_failed = 0x01,	//下位机分级处理时通信失败
+	mb_comm_result_offline = 0x02,	//下位机处于脱机状态
+
+	mb_comm_result_checking = 0x03,
+	mb_comm_result_other = 0xFF	//其它错误
 };
 
 //指令执行状态反馈（正常接收指令串，在执行过程中的反馈信息）
@@ -126,46 +126,46 @@ enum FLATLASER_COMM_RESULT
 enum FLATLASER_ADDRESS_TYPE
 {
 
-	addr_none		= 0x00,		//初始化，未知类型
-	addr_pc			= 0x02,		//GCB，电脑
+	addr_none = 0x00,		//初始化，未知类型
+	addr_pc = 0x02,		//GCB，电脑
 
-	addr_ld		= 0x03,		//LD，激光数据板
+	addr_ld = 0x03,		//LD，激光数据板
 
-	addr_lp_1		= 0x04,		//LP，激光驱动板 1
-	addr_lp_2		= 0x05,		//LP，激光驱动板 2
-	addr_lp_3		= 0x06,		//LP，激光驱动板 3
-	addr_lp_4		= 0x07,		//LP，激光驱动板 4
+	addr_lp_1 = 0x04,		//LP，激光驱动板 1
+	addr_lp_2 = 0x05,		//LP，激光驱动板 2
+	addr_lp_3 = 0x06,		//LP，激光驱动板 3
+	addr_lp_4 = 0x07,		//LP，激光驱动板 4
 
-	addr_ts			= 0x08,		//TS，触摸屏
-	addr_com		= 0x09,		//COM，通信板
+	addr_ts = 0x08,		//TS，触摸屏
+	addr_com = 0x09,		//COM，通信板
 
-	address_pd		= 0x10,		//PD，功率检测板
+	address_pd = 0x10,		//PD，功率检测板
 
-	addr_servo_x	= 0x11,		//SERVOX，小车电机伺服驱动板
-	addr_servo_y	= 0x12,		//SERVOY，导带电机伺服驱动板
+	addr_servo_x = 0x11,		//SERVOX，小车电机伺服驱动板
+	addr_servo_y = 0x12,		//SERVOY，导带电机伺服驱动板
 
-	addr_power		= 0x13,		//POWER，电源控制板
+	addr_power = 0x13,		//POWER，电源控制板
 
-	addr_rec_cloth	= 0x14,         //REC，收布板
-	addr_sec_cloth	= 0x15,         //SEC，送布板
-	addr_ink		= 0x16,         //INK，供墨板
-	addr_correct	= 0x17,         //CB，纠偏板
-	addr_mb			= 0x20,         //MB，高速数码底板
-	addr_gcb		= 0x21,         //GCB，高速数码核心板 
-	addr_ghb1		= 0x22,          //GHB1，高速数码喷头板 1
-	addr_ghb2		= 0x23,          //GHB2，高速数码喷头板 2
-	addr_ghb3		= 0x24,          //GHB3，高速数码喷头板 3
-	addr_ghb4		= 0x25,          //GHB4，高速数码喷头板 4
-	addr_ghb5		= 0x26,          //GHB5，高速数码喷头板 5
-	addr_ghb6		= 0x27,         //GHB6，高速数码喷头板 6
-	addr_ghb7		= 0x28,         //GHB7，高速数码喷头板 7
-	addr_ghb8		= 0x29,         //GHB8，高速数码喷头板 8
+	addr_rec_cloth = 0x14,         //REC，收布板
+	addr_sec_cloth = 0x15,         //SEC，送布板
+	addr_ink = 0x16,         //INK，供墨板
+	addr_correct = 0x17,         //CB，纠偏板
+	addr_mb = 0x20,         //MB，高速数码底板
+	addr_gcb = 0x21,         //GCB，高速数码核心板 
+	addr_ghb1 = 0x22,          //GHB1，高速数码喷头板 1
+	addr_ghb2 = 0x23,          //GHB2，高速数码喷头板 2
+	addr_ghb3 = 0x24,          //GHB3，高速数码喷头板 3
+	addr_ghb4 = 0x25,          //GHB4，高速数码喷头板 4
+	addr_ghb5 = 0x26,          //GHB5，高速数码喷头板 5
+	addr_ghb6 = 0x27,         //GHB6，高速数码喷头板 6
+	addr_ghb7 = 0x28,         //GHB7，高速数码喷头板 7
+	addr_ghb8 = 0x29,         //GHB8，高速数码喷头板 8
 
-	addr_raster		= 0x20,         //光栅控制板
+	addr_raster = 0x20,         //光栅控制板
 
 	addr_servo_three_axis = 0x30,	//三轴伺服板
 
-	addr_unknown	= 0xFF		//未知
+	addr_unknown = 0xFF		//未知
 };
 
 struct TIME_TABLE_ONLINE_PAMARATER	//表参数
@@ -347,7 +347,7 @@ struct LD_VOLTAGE
 //信息检索状态
 enum PROTOCOL_QUERY_WAY
 {
-	protocol_queryway_failed	= 0,	//失败
+	protocol_queryway_failed = 0,	//失败
 	protocol_queryway_checking,			//信息检索中
 	protocol_queryway_ok,				//成功（MB返回有效信息）
 
@@ -356,7 +356,7 @@ enum PROTOCOL_QUERY_WAY
 //参数设定状态
 enum PROTOCOL_CONFIG_WAY
 {
-	protocol_configway_failed	= 0,	//失败
+	protocol_configway_failed = 0,	//失败
 	protocol_configway_checking,		//参数设定中
 	protocol_configway_ok,				//成功（MB返回有效信息）
 
@@ -365,7 +365,7 @@ enum PROTOCOL_CONFIG_WAY
 //打印指令处理状态
 enum PROTOCOL_PRINT_WAY
 {
-	protocol_printway_failed	= 0,	//失败
+	protocol_printway_failed = 0,	//失败
 	protocol_printway_checking,			//指令发送中
 	protocol_printway_ok,				//成功（MB成功处理并返回有效确认信息）
 
@@ -374,28 +374,28 @@ enum PROTOCOL_PRINT_WAY
 
 enum FLATLASER_LD_COMM_RESULT
 {
-	ld_comm_result_succeed		= 0x00,		//指令正常执行完成
+	ld_comm_result_succeed = 0x00,		//指令正常执行完成
 
-	ld_comm_result_failed			= 0x01,		//下位机分级处理时通信失败
-	ld_comm_result_offline			= 0x02,		//下位机处于脱机状态
-	ld_comm_result_power_invalid	= 0x03, 	//激光功率不达标
-	ld_comm_result_config_invalid	= 0x04, 	//存储单元无法操作（无效）
-	ld_comm_result_config_invalidata= 0x05, 	//存储单元数据无效（或在写入时出错）
+	ld_comm_result_failed = 0x01,		//下位机分级处理时通信失败
+	ld_comm_result_offline = 0x02,		//下位机处于脱机状态
+	ld_comm_result_power_invalid = 0x03, 	//激光功率不达标
+	ld_comm_result_config_invalid = 0x04, 	//存储单元无法操作（无效）
+	ld_comm_result_config_invalidata = 0x05, 	//存储单元数据无效（或在写入时出错）
 
-	ld_comm_result_checking			= 0x06,
+	ld_comm_result_checking = 0x06,
 
-	ld_comm_result_other			= 0xFF		//其它错误
+	ld_comm_result_other = 0xFF		//其它错误
 };
 
 //系统异常信息定义，不包括系统出现无法维系正常打印的情况（如触发打印限位来停止打印过程等）
 //	以下各状态按位取值，同一状态字中可包含多个异常信息
 enum MB_SYSTEM_STATUS
 {
-	mb_system_normal	= 0x00,		//缺省，无异常状态
+	mb_system_normal = 0x00,		//缺省，无异常状态
 
-	mb_system_ink		= 0x01,		//液位低
+	mb_system_ink = 0x01,		//液位低
 
-	mb_system_unknown	= 0x80,		//其它异常状态
+	mb_system_unknown = 0x80,		//其它异常状态
 
 };
 
@@ -443,7 +443,7 @@ struct /*RP_EXT_CLASS*/ Protocol_Control_Statue
 	volatile BYTE	bQueryWay_ControlThickness;				//信息检索状态-当前的布厚参数设定，PROTOCOL_QUERY_WAY
 	volatile BYTE	bQueryWay_sprayparam;					//信息检索状态-当前散喷参数设定值，PROTOCOL_QUERY_WAY
 	volatile BYTE	bQueryWay_cleanheadparam;				//信息检索状态-当前自动清洗参数设定值，PROTOCOL_QUERY_WAY
-	
+
 	volatile BYTE	bQueryWay_motoparam_general;
 	volatile BYTE	bQueryWay_motoparam_x;
 	volatile BYTE	bQueryWay_motoparam_y;
@@ -508,15 +508,15 @@ struct /*RP_EXT_CLASS*/ Protocol_Control_Statue
 	volatile BYTE	bConfigWay_SF_SetFirmParameterX;
 	volatile BYTE	bConfigWay_SF_SetFirmParameterY;
 	volatile BYTE	bConfigWay_SF_SetFirmParameterZ;
-	
+
 	volatile BYTE	bQueryWay_SF_GetFirmParameterX;
 	volatile BYTE	bQueryWay_SF_GetFirmParameterY;
 	volatile BYTE	bQueryWay_SF_GetFirmParameterZ;
-	
+
 	SF_BOARD_PARAMETER_X sf_board_parameter_x;
 	SF_BOARD_PARAMETER_Y sf_board_parameter_y;
 	SF_BOARD_PARAMETER_Z sf_board_parameter_z;
-	
+
 	volatile BYTE	bQueryWay_SF_GetTimeTableVitalParameter;
 	DWORD dwVitalParaAecPulse;
 	DWORD dwVitalParaDecPulse;
@@ -556,7 +556,7 @@ struct /*RP_EXT_CLASS*/ Protocol_Control_Statue
 	volatile BYTE	bConfigWay_BoardCard_SetAddr;
 	volatile BYTE	bQueryWay_BoardCard_GetAddr;
 	BYTE	bBoardCardAddr;
-	
+
 	//供墨
 	volatile BYTE	bConfigWay_Ink_Check485;
 	volatile BYTE	bQueryWay_Ink_CheckState;
@@ -574,7 +574,7 @@ struct /*RP_EXT_CLASS*/ Protocol_Control_Statue
 	volatile BYTE	bConfigWay_RC_Pass;
 	volatile BYTE	bConfigWay_RC_PrintStop;
 	volatile BYTE	bConfigWay_RC_PrintOver;
-	
+
 	//送布
 	volatile BYTE	bQueryWay_SC_CheckState;
 	//BYTE bScState0;
@@ -586,7 +586,7 @@ struct /*RP_EXT_CLASS*/ Protocol_Control_Statue
 	volatile BYTE	bConfigWay_SC_Motor;
 	volatile BYTE	bConfigWay_SC_Stop;
 	volatile BYTE	bConfigWay_SC_CancleWrongLabel;
-	
+
 	//纠偏
 	volatile BYTE	bConfigWay_CB_AutoCorrect;
 	volatile BYTE	bConfigWay_CB_ManualCorrect;
@@ -596,13 +596,13 @@ struct /*RP_EXT_CLASS*/ Protocol_Control_Statue
 	volatile BYTE	bQueryWay_COM_GetBoardCondition;
 	WORD wComBoardCondition;
 	volatile BYTE	bPrintWay_COM_Motor_MoveRelative;
-	
+
 	//RAS
 	volatile BYTE	bPrintWay_RAS_PrintStart;
 	volatile BYTE	bPrintWay_RAS_PrintLine;
 	volatile BYTE	bPrintWay_RAS_PrintEnd;
 	volatile BYTE	bPrintWay_RAS_Select;
-	
+
 	int nSpeedLevelNum;
 	OnLinePara onlinePara[10];
 	PositionPara positionPara;
@@ -611,15 +611,15 @@ struct /*RP_EXT_CLASS*/ Protocol_Control_Statue
 	volatile BYTE bPrintWay_RAS_GetPosition;
 	volatile BYTE bPrintWay_RAS_PrintStop;
 	volatile BYTE bPrintWay_RAS_Move2Position;
-	
+
 	DWORD dwErrorCode;
 	DWORD dwException;
 
 	//收布新协议
 	volatile BYTE	bPrintWay_RC_ComState;
-	
+
 	//送布新协议
-    volatile BYTE	bPrintWay_SC_ComState;
+	volatile BYTE	bPrintWay_SC_ComState;
 	BYTE bScState0;
 	BYTE bScState1;
 	DWORD dwTemperature;
@@ -635,7 +635,7 @@ struct /*RP_EXT_CLASS*/ Protocol_Control_Statue
 	//LD send
 	BYTE			bFeedBackChannel;
 	WORD			wFeedBackVol;
-	int				nProgress;			
+	int				nProgress;
 
 	volatile BYTE	bQueryWay_ld_all_power;
 
@@ -666,7 +666,7 @@ struct /*RP_EXT_CLASS*/ Protocol_Control_Statue
 	//LD
 	LD_VOLTAGE		ldVoltage;  //64路新增
 
-public:	
+public:
 	//	bAll :[in]是否包括所有参数，FALSE时不初始化 wProtocolVersion
 	void Initialize(BOOL bAll);
 };
@@ -678,7 +678,7 @@ enum SERVO_THREE_AXIS_WAY
 	sv_three_axis_way_y = 0x02,		//Y轴
 	sv_three_axis_way_z = 0x03,		//Z轴
 
-	sv_three_axis_way_unknown	= 0x00		//未知
+	sv_three_axis_way_unknown = 0x00		//未知
 };
 enum SF_MOTOR_WAY
 {
@@ -718,7 +718,7 @@ public:
 public:
 	CWnd* m_pComWnd;
 
-	CString m_strReciveData;	
+	CString m_strReciveData;
 	CString m_strSendData;
 	//DWORD m_dwSendThreadID;
 	//DWORD m_dwReciveThreadID;
@@ -746,8 +746,8 @@ public:
 	//time_repeatsend		:[in]当发送失败时，重发指令口串的时间间隔（累积值在 timeout范围内） ms
 	//sendmsg_level			:[in] SENDMSG_LEVEL
 	//返回值：SENDMSG_STATUS
-	virtual int SendMsg_handshake( BYTE *snd_msg, int s_msg_len, int timeout, int time_repeatsend, int sendmsg_level);
-	virtual int SendMsg_handshake0( BYTE *snd_msg, int s_msg_len, int timeout, int time_repeatsend, int sendmsg_level, BOOL bFlag);
+	virtual int SendMsg_handshake(BYTE *snd_msg, int s_msg_len, int timeout, int time_repeatsend, int sendmsg_level);
+	virtual int SendMsg_handshake0(BYTE *snd_msg, int s_msg_len, int timeout, int time_repeatsend, int sendmsg_level, BOOL bFlag);
 	//操作指令串发送
 	//snd_msg, s_msg_len	:[in]发送的指令串及长度
 	//timeout				:[in]发送指令的总延时值 ms
@@ -755,8 +755,8 @@ public:
 	//pFlag					:[in/out]指令发送状态标识（接收到相应信息时被自动赋值），当为NULL时，使用 sml_normal 模式发送
 	//pFlagCheck,nCheckCount:[in]指定函数退出条件，除 TimeOut外，仅当  *pFlag==pFlagCheck[i] 时才返回
 	//time_check			:[in]函数退出条件(pFlagCheck[i])判断的超时设置，ms
-	virtual int SendMsg_handshake( BYTE *snd_msg, int s_msg_len, int timeout, int time_repeatsend, volatile BYTE *pFlag, FLAGCHECK *pFlagCheck, int nCheckCount, int time_check);
-	virtual int SendMsg_handshake0( BYTE *snd_msg, int s_msg_len, int timeout, int time_repeatsend, volatile BYTE *pFlag, FLAGCHECK *pFlagCheck, int nCheckCount, int time_check,BOOL bFlag);
+	virtual int SendMsg_handshake(BYTE *snd_msg, int s_msg_len, int timeout, int time_repeatsend, volatile BYTE *pFlag, FLAGCHECK *pFlagCheck, int nCheckCount, int time_check);
+	virtual int SendMsg_handshake0(BYTE *snd_msg, int s_msg_len, int timeout, int time_repeatsend, volatile BYTE *pFlag, FLAGCHECK *pFlagCheck, int nCheckCount, int time_check, BOOL bFlag);
 
 	//清接收缓冲区
 	virtual void ClearReadBuffer();
@@ -779,7 +779,7 @@ protected:
 	BOOL m_debug_bWriteSendInfo;
 	BOOL m_debug_bWriteReceiveInfo;
 
-//protected:
+	//protected:
 public:
 	Protocol_Control_Statue		m_protocolstatus;		//由下位机返回的各种参数（状态）信息-当前
 
@@ -814,8 +814,8 @@ public:
 	// 封装指令信息到数据帧中
 	//	pDstBuffer :[out]封装后的数据帧缓冲区，缓冲区大小 >= pt_data_len_max
 	static int dataframe_transdata(BYTE* pDstBuffer, BYTE bCmd, const BYTE* pCmdData, BYTE bCmdSize);
-	
-	static int dataframe_transdata0(BYTE* pDstBuffer, BYTE bSrcAddress,BYTE bDstAddress, BYTE bCmd, BYTE bCmdCount,const BYTE* pCmdData, BYTE bCmdSize);
+
+	static int dataframe_transdata0(BYTE* pDstBuffer, BYTE bSrcAddress, BYTE bDstAddress, BYTE bCmd, BYTE bCmdCount, const BYTE* pCmdData, BYTE bCmdSize);
 
 	//得当前下位机返回的各种参数（状态）信息
 	const Protocol_Control_Statue *GetControlStatus() const;
@@ -880,7 +880,7 @@ public:
 	BOOL sendorder_set_moto_z(const MOTOPARAM_Z &param, int time_check);
 
 	//=================打印=================
-	
+
 	// 发送指令-打印准备
 	BOOL sendorder_print_start(const ky_print_info *pPrintInfo, int time_check);
 	// 发送指令-打印准备
@@ -903,7 +903,7 @@ public:
 #pragma pack(pop)
 	//	wProtocolVersion	:[in]//下位机协议版本信息，PROTOCOL_VERSION_INFO，protocol_version_none 表示自适应
 	BOOL sendorder_print_line(const PRINTLINE_INFO &lineInfo, WORD wProtocolVersion, int time_check);
-	
+
 	// 发送指令-回到打印原点
 	//	bOriginPosition		:[in]指定原点位置，PRINTER::ORIGIN_POSITION
 	BOOL sendorder_print_back2origin(BYTE bOriginPosition, int time_check);
@@ -954,162 +954,162 @@ public:
 
 	//SF
 	//	bMotoWay :[in]SF_MOTOR_WAY
-	BOOL servo_get_existent_speedlevel(BYTE bMotoWay,int time_check,BOOL bFlag);
-	BOOL servo_set_online_timetable_paramater(BYTE bMotoWay,const TIME_TABLE_ONLINE &timetableOnline,int time_check,BOOL bFlag);
-	BOOL servo_set_online_timetable_timevalue(BYTE bMotoWay,const TIME_TABLE_ONLINE &timetableOnline,int time_check,BOOL bFlag);
-	
-	BOOL servo_set_offline_timetable_paramater(BYTE bMotoWay,const TIME_TABLE_OFFLINE &timetableOffline,int time_check,BOOL bFlag);
-	BOOL servo_set_offline_timetable_timevalue(BYTE bMotoWay,const TIME_TABLE_OFFLINE &timetableOffline,int time_check,BOOL bFlag);
-	
+	BOOL servo_get_existent_speedlevel(BYTE bMotoWay, int time_check, BOOL bFlag);
+	BOOL servo_set_online_timetable_paramater(BYTE bMotoWay, const TIME_TABLE_ONLINE &timetableOnline, int time_check, BOOL bFlag);
+	BOOL servo_set_online_timetable_timevalue(BYTE bMotoWay, const TIME_TABLE_ONLINE &timetableOnline, int time_check, BOOL bFlag);
+
+	BOOL servo_set_offline_timetable_paramater(BYTE bMotoWay, const TIME_TABLE_OFFLINE &timetableOffline, int time_check, BOOL bFlag);
+	BOOL servo_set_offline_timetable_timevalue(BYTE bMotoWay, const TIME_TABLE_OFFLINE &timetableOffline, int time_check, BOOL bFlag);
+
 	TIME_TABLE_ONLINE_PAMARATER m_parameterOnline;
 	TIME_TABLE_OFFLINE_PAMARATER m_parameterOffline;
 
-	BOOL servo_get_online_timetable_paramater(BYTE bMotoWay,BYTE bSpeedLevel,int time_check,BOOL bFlag);
-	BOOL servo_get_offline_timetable_paramater(BYTE bMotoWay,BYTE bSpeedLevel,int time_check,BOOL bFlag);
+	BOOL servo_get_online_timetable_paramater(BYTE bMotoWay, BYTE bSpeedLevel, int time_check, BOOL bFlag);
+	BOOL servo_get_offline_timetable_paramater(BYTE bMotoWay, BYTE bSpeedLevel, int time_check, BOOL bFlag);
 
-	BOOL servo_count_fullpulse(BYTE bMotoWay,int time_check,BOOL bFlag);
-	BOOL servo_motor_move_relative(BYTE bMotoWay, BYTE bSpeedType,DWORD dwPulse,DWORD dwRePulse,int time_check,BOOL bFlag);
-	BOOL servo_motor_move_absolute(BYTE bMotoWay, BYTE bSpeedType,DWORD dwPulse,int time_check,BOOL bFlag);
+	BOOL servo_count_fullpulse(BYTE bMotoWay, int time_check, BOOL bFlag);
+	BOOL servo_motor_move_relative(BYTE bMotoWay, BYTE bSpeedType, DWORD dwPulse, DWORD dwRePulse, int time_check, BOOL bFlag);
+	BOOL servo_motor_move_absolute(BYTE bMotoWay, BYTE bSpeedType, DWORD dwPulse, int time_check, BOOL bFlag);
 
-	BOOL servo_motor_get_position(BYTE bMotoWay,int time_check,BOOL bFlag);
-	BOOL servo_motor_move_special_position(BYTE bMotoWay, BYTE bSpeedType,BYTE bSpecialPosition,int time_check,BOOL bFlag);
-	BOOL servo_motor_move_stop(BYTE bMotoWay,int time_check,BOOL bFlag);
-	BOOL servo_motor_move(BYTE bMotoWay,BYTE bMoveType,int time_check,BOOL bFlag);
+	BOOL servo_motor_get_position(BYTE bMotoWay, int time_check, BOOL bFlag);
+	BOOL servo_motor_move_special_position(BYTE bMotoWay, BYTE bSpeedType, BYTE bSpecialPosition, int time_check, BOOL bFlag);
+	BOOL servo_motor_move_stop(BYTE bMotoWay, int time_check, BOOL bFlag);
+	BOOL servo_motor_move(BYTE bMotoWay, BYTE bMoveType, int time_check, BOOL bFlag);
 
 	BOOL servo_motor_xy_move_relative(BYTE bSpeedTypeX, BYTE bSpeedTypeY, DWORD pulseX, DWORD pulseY, int time_check, BOOL bFlag);
 	BOOL servo_motor_xy_move_absolute(BYTE bSpeedTypeX, BYTE bSpeedTypeY, DWORD pulseX, DWORD pulseY, int time_check, BOOL bFlag);
-	BOOL servo_motor_xy_move_special_position(BYTE bSpeedTypeX, BYTE bSpeedTypeY, BYTE bPosX, BYTE bPosY,int time_check,BOOL bFlag);
+	BOOL servo_motor_xy_move_special_position(BYTE bSpeedTypeX, BYTE bSpeedTypeY, BYTE bPosX, BYTE bPosY, int time_check, BOOL bFlag);
 	BOOL servo_motor_xy_print_line(BYTE bSpeedTypeX, BYTE bSpeedTypeY, DWORD pulseX, DWORD re_pulseX, DWORD yDist, int time_check, BOOL bFlag);
 
-	BOOL servo_get_fullpulse(BYTE bMotoWay,int time_check,BOOL bFlag);
-	BOOL servo_get_special_position(BYTE bMotoWay,BYTE bSpecialPosition,int time_check,BOOL bFlag);
-	BOOL servo_set_special_position(BYTE bMotoWay, BYTE bSpecialPosition,DWORD dwSpecialPosition,int time_check,BOOL bFlag);
-	BOOL servo_delete_all_timetable_data(BYTE bMotoWay,int time_check,BOOL bFlag);
+	BOOL servo_get_fullpulse(BYTE bMotoWay, int time_check, BOOL bFlag);
+	BOOL servo_get_special_position(BYTE bMotoWay, BYTE bSpecialPosition, int time_check, BOOL bFlag);
+	BOOL servo_set_special_position(BYTE bMotoWay, BYTE bSpecialPosition, DWORD dwSpecialPosition, int time_check, BOOL bFlag);
+	BOOL servo_delete_all_timetable_data(BYTE bMotoWay, int time_check, BOOL bFlag);
 
-	BOOL servo_set_board_parameter_x(SF_BOARD_PARAMETER_X sf_board_parameter_x,int time_check,BOOL bFlag, BOOL bThreeAxisMotor);
-	BOOL servo_set_board_parameter_y(SF_BOARD_PARAMETER_Y sf_board_parameter_y,int time_check,BOOL bFlag, BOOL bThreeAxisMotor);
-	BOOL servo_set_board_parameter_z(SF_BOARD_PARAMETER_Z sf_board_parameter_z,int time_check,BOOL bFlag);
+	BOOL servo_set_board_parameter_x(SF_BOARD_PARAMETER_X sf_board_parameter_x, int time_check, BOOL bFlag, BOOL bThreeAxisMotor);
+	BOOL servo_set_board_parameter_y(SF_BOARD_PARAMETER_Y sf_board_parameter_y, int time_check, BOOL bFlag, BOOL bThreeAxisMotor);
+	BOOL servo_set_board_parameter_z(SF_BOARD_PARAMETER_Z sf_board_parameter_z, int time_check, BOOL bFlag);
 
-	BOOL servo_get_board_parameter_x(int time_check,BOOL bFlag, BOOL bThreeAxisMotor);
-	BOOL servo_get_board_parameter_y(int time_check,BOOL bFlag, BOOL bThreeAxisMotor);
-	BOOL servo_get_board_parameter_z(int time_check,BOOL bFlag);
-	
-	BOOL servo_get_timetable_vital_parameter(BYTE bMotoWay,BYTE bSpeedLevel,int time_check,BOOL bFlag);
+	BOOL servo_get_board_parameter_x(int time_check, BOOL bFlag, BOOL bThreeAxisMotor);
+	BOOL servo_get_board_parameter_y(int time_check, BOOL bFlag, BOOL bThreeAxisMotor);
+	BOOL servo_get_board_parameter_z(int time_check, BOOL bFlag);
+
+	BOOL servo_get_timetable_vital_parameter(BYTE bMotoWay, BYTE bSpeedLevel, int time_check, BOOL bFlag);
 
 
 	//MB
 	//BOOL mb_set_online_state(BYTE bOnlineState,int time_check,BOOL bFlag);
-	BOOL mb_print_start(MB_PRINT_START_PARAMETER mb_print_start_parameter,int time_check,BOOL bFlag);
-	BOOL mb_print_line(MB_PRINT_LINE_PARAMETER mb_print_line_parameter,int time_check,BOOL bFlag);
-	BOOL mb_print_end(BYTE bPosition,int time_check,BOOL bFlag);
-	BOOL mb_print_pause(int time_check,BOOL bFlag);
-	BOOL mb_print_resume(int time_check,BOOL bFlag);
-	BOOL mb_print_stop(int time_check,BOOL bFlag);
-	BOOL mb_move_absolute_position(DWORD dwPositionX,DWORD dwPositionY,int time_check,BOOL bFlag);
-	BOOL mb_move_relative_position(DWORD dwPulseX,DWORD dwPulseY,int time_check,BOOL bFlag);
-	BOOL mb_move_to_special_position(BYTE bSpecialPosition,int time_check,BOOL bFlag);
-	BOOL mb_store_current_position(BYTE bCurrentPosition,int time_check,BOOL bFlag);
+	BOOL mb_print_start(MB_PRINT_START_PARAMETER mb_print_start_parameter, int time_check, BOOL bFlag);
+	BOOL mb_print_line(MB_PRINT_LINE_PARAMETER mb_print_line_parameter, int time_check, BOOL bFlag);
+	BOOL mb_print_end(BYTE bPosition, int time_check, BOOL bFlag);
+	BOOL mb_print_pause(int time_check, BOOL bFlag);
+	BOOL mb_print_resume(int time_check, BOOL bFlag);
+	BOOL mb_print_stop(int time_check, BOOL bFlag);
+	BOOL mb_move_absolute_position(DWORD dwPositionX, DWORD dwPositionY, int time_check, BOOL bFlag);
+	BOOL mb_move_relative_position(DWORD dwPulseX, DWORD dwPulseY, int time_check, BOOL bFlag);
+	BOOL mb_move_to_special_position(BYTE bSpecialPosition, int time_check, BOOL bFlag);
+	BOOL mb_store_current_position(BYTE bCurrentPosition, int time_check, BOOL bFlag);
 	//BOOL mb_set_clean_head_parameter(MB_CLEAN_HEAD_PARAMETER mb_clean_head_parameter,int time_check,BOOL bFlag);
 	//BOOL mb_get_clean_head_parameter(int time_check,BOOL bFlag);
 	//BOOL mb_print_clean_head(MB_CLEAN_HEAD_PARAMETER mb_clean_head_parameter,int time_check,BOOL bFlag);
-	
+
 	BOOL mb_confirmation_online_state(void);
 
 	//板卡
-	BOOL board_card_set_info(BYTE bDstAddr,BOARD_CARD_INFO board_card_info,int time_check,BOOL bFlag);
-	BOOL board_card_get_info(BYTE bDstAddr,int time_check,BOOL bFlag);
-	BOOL board_card_set_addr(DWORD dwSN,BYTE bAddr,int time_check,BOOL bFlag);
-	BOOL board_card_get_addr(DWORD dwSN,int time_check,BOOL bFlag);
+	BOOL board_card_set_info(BYTE bDstAddr, BOARD_CARD_INFO board_card_info, int time_check, BOOL bFlag);
+	BOOL board_card_get_info(BYTE bDstAddr, int time_check, BOOL bFlag);
+	BOOL board_card_set_addr(DWORD dwSN, BYTE bAddr, int time_check, BOOL bFlag);
+	BOOL board_card_get_addr(DWORD dwSN, int time_check, BOOL bFlag);
 
 	//供墨
-	BOOL ink_check_485(int time_check,BOOL bFlag);
-	BOOL ink_check_state(int time_check,BOOL bFlag);
-	BOOL ink_force(WORD wForce,int time_check,BOOL bFlag);
-	BOOL ink_press(WORD wPress,WORD wPressTime,int time_check,BOOL bFlag);
-	BOOL ink_scrape(int time_check,BOOL bFlag);
-	BOOL ink_moisturize(BYTE bMoisturize,int time_check,BOOL bFlag);
-	BOOL ink_cycle_motor(BYTE bOpen,int time_check,BOOL bFlag);
+	BOOL ink_check_485(int time_check, BOOL bFlag);
+	BOOL ink_check_state(int time_check, BOOL bFlag);
+	BOOL ink_force(WORD wForce, int time_check, BOOL bFlag);
+	BOOL ink_press(WORD wPress, WORD wPressTime, int time_check, BOOL bFlag);
+	BOOL ink_scrape(int time_check, BOOL bFlag);
+	BOOL ink_moisturize(BYTE bMoisturize, int time_check, BOOL bFlag);
+	BOOL ink_cycle_motor(BYTE bOpen, int time_check, BOOL bFlag);
 
 	//收布
-	BOOL rc_check_state(int time_check,BOOL bFlag);
-	BOOL rc_pass(BYTE bPass,DWORD dwPass,int time_check,BOOL bFlag);
-	BOOL rc_print_stop(BYTE bPrintStop,int time_check,BOOL bFlag);
-	BOOL rc_print_over(int time_check,BOOL bFlag);
+	BOOL rc_check_state(int time_check, BOOL bFlag);
+	BOOL rc_pass(BYTE bPass, DWORD dwPass, int time_check, BOOL bFlag);
+	BOOL rc_print_stop(BYTE bPrintStop, int time_check, BOOL bFlag);
+	BOOL rc_print_over(int time_check, BOOL bFlag);
 
 	//送布
-	BOOL sc_check_state(int time_check,BOOL bFlag);
-	BOOL sc_band_dry(BYTE bBandDry,WORD wBandDry,int time_check,BOOL bFlag);
-	BOOL sc_pre_dry(BYTE bPreDry,WORD wPreDry,int time_check,BOOL bFlag);
-	BOOL sc_band_wash(BYTE bOpen,int time_check,BOOL bFlag);
-	BOOL sc_press_roller(BYTE bOpen,int time_check,BOOL bFlag);
-	BOOL sc_motor(BYTE bOpen,int time_check,BOOL bFlag);
-	BOOL sc_stop(int time_check,BOOL bFlag);
-	BOOL sc_cancel_wrong_label(int time_check,BOOL bFlag);
+	BOOL sc_check_state(int time_check, BOOL bFlag);
+	BOOL sc_band_dry(BYTE bBandDry, WORD wBandDry, int time_check, BOOL bFlag);
+	BOOL sc_pre_dry(BYTE bPreDry, WORD wPreDry, int time_check, BOOL bFlag);
+	BOOL sc_band_wash(BYTE bOpen, int time_check, BOOL bFlag);
+	BOOL sc_press_roller(BYTE bOpen, int time_check, BOOL bFlag);
+	BOOL sc_motor(BYTE bOpen, int time_check, BOOL bFlag);
+	BOOL sc_stop(int time_check, BOOL bFlag);
+	BOOL sc_cancel_wrong_label(int time_check, BOOL bFlag);
 
 	//纠偏
-	BOOL cb_auto_correct(DWORD dwPulse,int time_check,BOOL bFlag);
-	BOOL cb_manual_correct(BYTE bType,DWORD dwPulse,int time_check,BOOL bFlag);
-	BOOL cb_manual_correct_stop(int time_check,BOOL bFlag);
+	BOOL cb_auto_correct(DWORD dwPulse, int time_check, BOOL bFlag);
+	BOOL cb_manual_correct(BYTE bType, DWORD dwPulse, int time_check, BOOL bFlag);
+	BOOL cb_manual_correct_stop(int time_check, BOOL bFlag);
 
 	//COM
-	BOOL com_motor_move_relative(BYTE bMotoWay, BYTE bSpeedType,DWORD dwPulse,DWORD dwRePulse,int time_check,BOOL bFlag);
-	BOOL com_get_board_condition(int time_check,BOOL bFlag);
-	
+	BOOL com_motor_move_relative(BYTE bMotoWay, BYTE bSpeedType, DWORD dwPulse, DWORD dwRePulse, int time_check, BOOL bFlag);
+	BOOL com_get_board_condition(int time_check, BOOL bFlag);
+
 	//RAS
-	BOOL ras_print_start(RAS_PRINT_START_PARAMETER ras_print_start_parameter,int time_check,BOOL bFlag);
-	BOOL ras_print_line(RAS_PRINT_LINE_PARAMETER ras_print_line_parameter,int time_check,BOOL bFlag);
-	BOOL ras_print_end(BYTE bPosition,int time_check,BOOL bFlag);
-	BOOL ras_select(BYTE bSelect,int time_check,BOOL bFlag);
+	BOOL ras_print_start(RAS_PRINT_START_PARAMETER ras_print_start_parameter, int time_check, BOOL bFlag);
+	BOOL ras_print_line(RAS_PRINT_LINE_PARAMETER ras_print_line_parameter, int time_check, BOOL bFlag);
+	BOOL ras_print_end(BYTE bPosition, int time_check, BOOL bFlag);
+	BOOL ras_select(BYTE bSelect, int time_check, BOOL bFlag);
 	BOOL ras_confirmation(BYTE bCmd);
-	BOOL ras_get_speed(BYTE bMotoDirection,int time_check,BOOL bFlag);
-	BOOL ras_get_position(int time_check,BOOL bFlag);
-	BOOL ras_print_stop(int time_check,BOOL bFlag);
-	BOOL ras_move2_position(DWORD x,DWORD y,int time_check,BOOL bFlag);
+	BOOL ras_get_speed(BYTE bMotoDirection, int time_check, BOOL bFlag);
+	BOOL ras_get_position(int time_check, BOOL bFlag);
+	BOOL ras_print_stop(int time_check, BOOL bFlag);
+	BOOL ras_move2_position(DWORD x, DWORD y, int time_check, BOOL bFlag);
 
 	CWnd* m_pRasDlg;
 	int m_nProtocolMode; //仅限RAS板打印模式
 
 	//新收布板
-	BOOL rc_servo_motor_move_distance(BYTE bSpeedType,DWORD dwPulse,int time_check,BOOL bFlag);
-	BOOL rc_up_down_motor_move(BYTE bType,int time_check,BOOL bFlag);
-	BOOL rc_servo_motor_move(BYTE bSpeedType,int time_check,BOOL bFlag);
-	BOOL rc_heater_con(BYTE bType,int time_check,BOOL bFlag);
-	BOOL rc_cloth_motor_con(BYTE bType,int time_check,BOOL bFlag);
-	BOOL rc_up_down_motor_reset(int time_check,BOOL bFlag);
+	BOOL rc_servo_motor_move_distance(BYTE bSpeedType, DWORD dwPulse, int time_check, BOOL bFlag);
+	BOOL rc_up_down_motor_move(BYTE bType, int time_check, BOOL bFlag);
+	BOOL rc_servo_motor_move(BYTE bSpeedType, int time_check, BOOL bFlag);
+	BOOL rc_heater_con(BYTE bType, int time_check, BOOL bFlag);
+	BOOL rc_cloth_motor_con(BYTE bType, int time_check, BOOL bFlag);
+	BOOL rc_up_down_motor_reset(int time_check, BOOL bFlag);
 
 	//新送布板
-	BOOL sc_new_sendcloth_check_state(int time_check,BOOL bFlag);
-	BOOL sc_new_band_dry(BYTE bType,int time_check,BOOL bFlag);
-	BOOL sc_new_band_wash(BYTE bType,int time_check,BOOL bFlag);
-	BOOL sc_new_pre_dry(BYTE bType,int time_check,BOOL bFlag);
-	BOOL sc_new_dd_band_wash(BYTE bType,int time_check,BOOL bFlag);
-	BOOL sc_new_get_temperature(BYTE bType,int time_check,BOOL bFlag);
-	BOOL sc_new_press_cloth(BYTE bType,int time_check,BOOL bFlag);
-	BOOL sc_new_cloth_roller(BYTE bType,DWORD dwType,int time_check,BOOL bFlag);
-	BOOL sc_new_cancle_wrong_lable(int time_check,BOOL bFlag);
-	BOOL sc_new_manual_correct(BYTE bType,int time_check,BOOL bFlag);
-	BOOL sc_new_manual_correct_stop(int time_check,BOOL bFlag);
+	BOOL sc_new_sendcloth_check_state(int time_check, BOOL bFlag);
+	BOOL sc_new_band_dry(BYTE bType, int time_check, BOOL bFlag);
+	BOOL sc_new_band_wash(BYTE bType, int time_check, BOOL bFlag);
+	BOOL sc_new_pre_dry(BYTE bType, int time_check, BOOL bFlag);
+	BOOL sc_new_dd_band_wash(BYTE bType, int time_check, BOOL bFlag);
+	BOOL sc_new_get_temperature(BYTE bType, int time_check, BOOL bFlag);
+	BOOL sc_new_press_cloth(BYTE bType, int time_check, BOOL bFlag);
+	BOOL sc_new_cloth_roller(BYTE bType, DWORD dwType, int time_check, BOOL bFlag);
+	BOOL sc_new_cancle_wrong_lable(int time_check, BOOL bFlag);
+	BOOL sc_new_manual_correct(BYTE bType, int time_check, BOOL bFlag);
+	BOOL sc_new_manual_correct_stop(int time_check, BOOL bFlag);
 
 	//LD
 	CWnd* m_pLDWnd;
 
-	BOOL ld_power_off(int time_check,BOOL bFlag);
+	BOOL ld_power_off(int time_check, BOOL bFlag);
 
-	BOOL ld_set_check_power(const BYTE bPowerChannel, const WORD wVolValue, int time_check,BOOL bFlag);
-	BOOL ld_set_laser_test_power(const BYTE bPowerChannel, const WORD wVolValue, int time_check,BOOL bFlag);
-	BOOL ld_set_pc_power(const BYTE bChannel, WORD wVoltage_PC, int time_check,BOOL bFlag);
-	BOOL ld_set_ld_power(const BYTE bChannel, WORD wVoltage_LD, int time_check,BOOL bFlag);
-	BOOL ld_get_last_power(const BYTE bChannel, int time_check,BOOL bFlag);
-	BOOL ld_get_now_power(const BYTE bChannel, int time_check,BOOL bFlag);
-	BOOL ld_correct_power(const BYTE bChannel, int time_check,BOOL bFlag);
+	BOOL ld_set_check_power(const BYTE bPowerChannel, const WORD wVolValue, int time_check, BOOL bFlag);
+	BOOL ld_set_laser_test_power(const BYTE bPowerChannel, const WORD wVolValue, int time_check, BOOL bFlag);
+	BOOL ld_set_pc_power(const BYTE bChannel, WORD wVoltage_PC, int time_check, BOOL bFlag);
+	BOOL ld_set_ld_power(const BYTE bChannel, WORD wVoltage_LD, int time_check, BOOL bFlag);
+	BOOL ld_get_last_power(const BYTE bChannel, int time_check, BOOL bFlag);
+	BOOL ld_get_now_power(const BYTE bChannel, int time_check, BOOL bFlag);
+	BOOL ld_correct_power(const BYTE bChannel, int time_check, BOOL bFlag);
 
 	//映射表
-	BOOL ld_set_map_data(const WORD* wMapVolValue, const BYTE* bMapPowerValue, BYTE bMapNum, int time_check,BOOL bFlag);
-	BOOL ld_get_map_data(int time_check,BOOL bFlag);
+	BOOL ld_set_map_data(const WORD* wMapVolValue, const BYTE* bMapPowerValue, BYTE bMapNum, int time_check, BOOL bFlag);
+	BOOL ld_get_map_data(int time_check, BOOL bFlag);
 
-	BOOL ld_set_light_on(const DWORD* dwLightData, int time_check,BOOL bFlag);
-	BOOL ld_set_light_off(const DWORD* dwLightData, int time_check,BOOL bFlag);
-	BOOL ld_set_light_on_time(const BYTE bChannel, const DWORD dwContinueTime, int time_check,BOOL bFlag);
+	BOOL ld_set_light_on(const DWORD* dwLightData, int time_check, BOOL bFlag);
+	BOOL ld_set_light_off(const DWORD* dwLightData, int time_check, BOOL bFlag);
+	BOOL ld_set_light_on_time(const BYTE bChannel, const DWORD dwContinueTime, int time_check, BOOL bFlag);
 
 	//发送确认指令-LD中间过程反馈
 	BOOL ld_confirmation_set_power_status(void);
@@ -1150,7 +1150,7 @@ public:
 	//中继数据帧分析
 	static DWORD socket_repeater_config_proc(void *pData, const void *pDataList, int dataSize);
 	//中继数据帧分析-添加数据信息
-	DWORD socket_AddReceiveData(const void* pBuf,DWORD InBufferCount);
+	DWORD socket_AddReceiveData(const void* pBuf, DWORD InBufferCount);
 	BOOL socket_IsEnable() const;
 	BOOL socket_IsOpen() const;
 	void socket_Close(BOOL bReleaseBuffer);

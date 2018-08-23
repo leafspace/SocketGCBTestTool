@@ -17,7 +17,7 @@ protected:
 public:
 	virtual BOOL InitInstance();
 	virtual int ExitInstance();
-	
+
 	float* m_pfReducer_x;				//X减速机
 	float* m_pfDollyPerimeter;			//小车周长
 	float* m_pfPulsesPerRevolution_x;	//X每圈脉冲
@@ -33,7 +33,7 @@ public:
 	float* m_pfDeferentPitch_z;			//Z丝杆螺距
 
 	CCommunicationPort* m_pComPort;
-	
+
 	CRasBoardDlg	**m_ppDlg;
 
 protected:

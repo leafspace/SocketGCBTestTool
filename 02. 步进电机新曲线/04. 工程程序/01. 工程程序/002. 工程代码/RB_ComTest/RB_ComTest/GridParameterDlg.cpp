@@ -39,10 +39,10 @@ BOOL CGridParameterDlg::OnInitDialog()
 
 	// TODO:  在此添加额外的初始化
 	CString str;
-	
+
 	str.Format("%.2f", *m_pfIOSpace);
 	((CWnd*)GetDlgItem(IDC_EDIT_IO_DISTANCE))->SetWindowText(str);
-	
+
 	str.Format("%.2f", *m_pfIOBaseGridNum);
 	((CWnd*)GetDlgItem(IDC_EDIT_IO_BASEGRIDNUM))->SetWindowText(str);
 

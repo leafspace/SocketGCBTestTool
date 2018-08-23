@@ -11,7 +11,7 @@ public:
 	CSFParameterDlg(CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~CSFParameterDlg();
 
-// 对话框数据
+	// 对话框数据
 	enum { IDD = IDD_DIALOG_SFPARAMATER };
 
 protected:

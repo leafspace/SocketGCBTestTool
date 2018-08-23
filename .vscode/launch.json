@@ -19,7 +19,7 @@
             "name": "新曲线工程 调试",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/02. 步进电机新曲线/04. 工程程序/01. 工程程序/001. 原始代码/RB_ComTest/Output/Release/RainBow_Com.exe",
+            "program": "${workspaceFolder}/02. 步进电机新曲线/04. 工程程序/01. 工程程序/002. 工程代码/RB_ComTest/Output/Debug/RainBow_Com_Debug.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

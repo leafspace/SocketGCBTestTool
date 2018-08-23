@@ -23,7 +23,7 @@ UINT ThreadProcPrint1(LPVOID pParam)
 
 	pPrintDlg->m_pgsPrint.ShowWindow(TRUE);
 	pPrintDlg->m_staticPrint.ShowWindow(TRUE);
-	pPrintDlg->m_pgsPrint.SetRange(0,1000);
+	pPrintDlg->m_pgsPrint.SetRange(0, 1000);
 	pPrintDlg->m_staticPrint.SetWindowText("0%");
 	pPrintDlg->m_btnPrint.EnableWindow(FALSE);
 
@@ -35,27 +35,27 @@ UINT ThreadProcPrint1(LPVOID pParam)
 		goto End;
 	}
 
-	while(fPrintHeight<=pPrintDlg->m_fHeight)
+	while (fPrintHeight <= pPrintDlg->m_fHeight)
 	{
-		nThousandth = fPrintHeight/pPrintDlg->m_fHeight*1000;
+		nThousandth = fPrintHeight / pPrintDlg->m_fHeight * 1000;
 		pPrintDlg->m_pgsPrint.SetPos(nThousandth);
-		str.Format("%d%%",nThousandth/10);
+		str.Format("%d%%", nThousandth / 10);
 		pPrintDlg->m_staticPrint.SetWindowText(str);
 
-		if (pPrintDlg->m_isStopPrint==TRUE)
+		if (pPrintDlg->m_isStopPrint == TRUE)
 		{
-			if (!pPrintDlg->m_pComPort->ras_print_stop(5000,FALSE))
+			if (!pPrintDlg->m_pComPort->ras_print_stop(5000, FALSE))
 			{
 				AfxMessageBox("打印终止失败");
 			}
 			goto End;
 		}
 
-		if (pPrintDlg->m_isPausePrint==TRUE)
+		if (pPrintDlg->m_isPausePrint == TRUE)
 		{
-			do 
+			do
 			{
-				if (pPrintDlg->m_isPausePrint==FALSE)
+				if (pPrintDlg->m_isPausePrint == FALSE)
 				{
 					break;
 				}
@@ -64,11 +64,11 @@ UINT ThreadProcPrint1(LPVOID pParam)
 
 		bFlag = !bFlag;
 
-		if (!pPrintDlg->MBPrintLine(nThousandth,fPrintHeight,bFlag))
+		if (!pPrintDlg->MBPrintLine(nThousandth, fPrintHeight, bFlag))
 		{
 			goto End;
 		}
-		fPrintHeight+=abs(pPrintDlg->m_fYDist);
+		fPrintHeight += abs(pPrintDlg->m_fYDist);
 		nPass++;
 
 		//if (nPass%pPrintDlg->m_nPurgeFreq==0)
@@ -96,7 +96,7 @@ End:
 IMPLEMENT_DYNAMIC(CRasBoardDlg, CDialog)
 
 CRasBoardDlg::CRasBoardDlg(CWnd* pParent /*=NULL*/)
-: CDialog(CRasBoardDlg::IDD, pParent)
+	: CDialog(CRasBoardDlg::IDD, pParent)
 {
 	m_fIOSpace = 50;	//IO间距
 	m_fIOBaseGridNum = 25000;	//IO间刻度数
@@ -188,7 +188,7 @@ BOOL CRasBoardDlg::OnInitDialog()
 	m_cbEndPositionY.AddString("待机位");
 	m_cbEndPositionY.AddString("上次位置");
 	m_cbEndPositionY.SetCurSel(0);
-	
+
 	((CWnd*)GetDlgItem(IDC_EDIT_RAS_MOVE2POSITION_X))->SetWindowText("500.00");
 	((CWnd*)GetDlgItem(IDC_EDIT_RAS_MOVE2POSITION_Y))->SetWindowText("500.00");
 
@@ -198,10 +198,10 @@ BOOL CRasBoardDlg::OnInitDialog()
 	((CWnd*)GetDlgItem(IDC_EDIT_RAS_PRINT_HEIGHT))->SetWindowText("10000.00");
 
 	((CWnd*)GetDlgItem(IDC_EDIT_RAS_PRINT_FREQ_PSC))->SetWindowText("20");
-	
-	int dpi = m_fIOBaseGridNum/20/m_fIOSpace * 25.4;
+
+	int dpi = m_fIOBaseGridNum / 20 / m_fIOSpace * 25.4;
 	CString str;
-	str.Format("%d",dpi);
+	str.Format("%d", dpi);
 	((CWnd*)GetDlgItem(IDC_EDIT_RAS_PRINT_RES_X))->SetWindowText(str);
 	((CWnd*)GetDlgItem(IDC_EDIT_RAS_PRINT_RES_Y))->SetWindowText(str);
 
@@ -212,42 +212,42 @@ BOOL CRasBoardDlg::OnInitDialog()
 	m_pgsPrint.SetPos(0);
 	m_staticPrint.ShowWindow(FALSE);
 	m_pComPort->m_pRasDlg = this;
-	
+
 	DWORD dwStyle = m_lstSpeedLevel_X.GetExtendedStyle();
 	dwStyle |= LVS_EX_FULLROWSELECT;
 	dwStyle |= LVS_EX_GRIDLINES;
 	m_lstSpeedLevel_X.SetExtendedStyle(dwStyle);
-	m_lstSpeedLevel_X.ModifyStyle(LVS_ICON | LVS_LIST,LVS_REPORT | LVS_SHOWSELALWAYS);
+	m_lstSpeedLevel_X.ModifyStyle(LVS_ICON | LVS_LIST, LVS_REPORT | LVS_SHOWSELALWAYS);
 
-	m_lstSpeedLevel_X.InsertColumn(0,_T("X"),LVCFMT_CENTER,40); 
-	m_lstSpeedLevel_X.InsertColumn(1,_T("加速距离"),LVCFMT_CENTER,80);
-	m_lstSpeedLevel_X.InsertColumn(2,_T("减速距离"),LVCFMT_CENTER,80);
-	m_lstSpeedLevel_X.InsertColumn(3,_T("速度"),LVCFMT_CENTER,80);
-	
+	m_lstSpeedLevel_X.InsertColumn(0, _T("X"), LVCFMT_CENTER, 40);
+	m_lstSpeedLevel_X.InsertColumn(1, _T("加速距离"), LVCFMT_CENTER, 80);
+	m_lstSpeedLevel_X.InsertColumn(2, _T("减速距离"), LVCFMT_CENTER, 80);
+	m_lstSpeedLevel_X.InsertColumn(3, _T("速度"), LVCFMT_CENTER, 80);
+
 	m_lstSpeedLevel_Y.SetExtendedStyle(dwStyle);
-	m_lstSpeedLevel_Y.ModifyStyle(LVS_ICON | LVS_LIST,LVS_REPORT | LVS_SHOWSELALWAYS);
+	m_lstSpeedLevel_Y.ModifyStyle(LVS_ICON | LVS_LIST, LVS_REPORT | LVS_SHOWSELALWAYS);
 
-	m_lstSpeedLevel_Y.InsertColumn(0,_T("Y"),LVCFMT_CENTER,40); 
-	m_lstSpeedLevel_Y.InsertColumn(1,_T("加速距离"),LVCFMT_CENTER,80);
-	m_lstSpeedLevel_Y.InsertColumn(2,_T("减速距离"),LVCFMT_CENTER,80);
-	m_lstSpeedLevel_Y.InsertColumn(3,_T("速度"),LVCFMT_CENTER,80);
+	m_lstSpeedLevel_Y.InsertColumn(0, _T("Y"), LVCFMT_CENTER, 40);
+	m_lstSpeedLevel_Y.InsertColumn(1, _T("加速距离"), LVCFMT_CENTER, 80);
+	m_lstSpeedLevel_Y.InsertColumn(2, _T("减速距离"), LVCFMT_CENTER, 80);
+	m_lstSpeedLevel_Y.InsertColumn(3, _T("速度"), LVCFMT_CENTER, 80);
 
 	m_lstPositionPara.SetExtendedStyle(dwStyle);
-	m_lstPositionPara.ModifyStyle(LVS_ICON | LVS_LIST,LVS_REPORT | LVS_SHOWSELALWAYS);
-	m_lstPositionPara.InsertColumn(0,_T("位置"),LVCFMT_CENTER,80);
-	m_lstPositionPara.InsertColumn(1,_T("脉冲"),LVCFMT_CENTER,80);
-	m_lstPositionPara.InsertColumn(2,_T("毫米"),LVCFMT_CENTER,80);
-	
+	m_lstPositionPara.ModifyStyle(LVS_ICON | LVS_LIST, LVS_REPORT | LVS_SHOWSELALWAYS);
+	m_lstPositionPara.InsertColumn(0, _T("位置"), LVCFMT_CENTER, 80);
+	m_lstPositionPara.InsertColumn(1, _T("脉冲"), LVCFMT_CENTER, 80);
+	m_lstPositionPara.InsertColumn(2, _T("毫米"), LVCFMT_CENTER, 80);
+
 	m_cbSpeedLevelX.EnableWindow(FALSE);
 	m_cbSpeedLevelY.EnableWindow(FALSE);
 	m_pgsPrint.ShowWindow(FALSE);
 	((CWnd*)GetDlgItem(IDC_EDIT_RAS_PRINT_RES_X))->EnableWindow(FALSE);
 	((CWnd*)GetDlgItem(IDC_EDIT_RAS_PRINT_RES_Y))->EnableWindow(FALSE);
-	
+
 	m_nProtocolMode = debug_mode;
 	m_pComPort->m_nProtocolMode = m_nProtocolMode;
 
-	if (!m_pComPort->ras_select(0x01,5000,FALSE))
+	if (!m_pComPort->ras_select(0x01, 5000, FALSE))
 	{
 		AfxMessageBox("切换至调试模式失败");
 	}
@@ -276,21 +276,21 @@ int CRasBoardDlg::MM2GridNum(float fMM)
 
 int CRasBoardDlg::MM2Pulse_X(float fMM)
 {
-	int nPulse = fMM * (*m_pfReducer_x)/(*m_pfDollyPerimeter)*(*m_pfPulsesPerRevolution_x);
+	int nPulse = fMM * (*m_pfReducer_x) / (*m_pfDollyPerimeter)*(*m_pfPulsesPerRevolution_x);
 	return nPulse;
 }
 
 int CRasBoardDlg::MM2Pulse_Y(float fMM)
 {
-	int nPulse,nSel = m_cbYDir.GetCurSel();
+	int nPulse, nSel = m_cbYDir.GetCurSel();
 
-	switch(nSel)
+	switch (nSel)
 	{
 	case 0:
-		nPulse = fMM * (*m_pfReducer_y)/(*m_pfDeferentPerimeter)*(*m_pfPulsesPerRevolution_y);
+		nPulse = fMM * (*m_pfReducer_y) / (*m_pfDeferentPerimeter)*(*m_pfPulsesPerRevolution_y);
 		break;
 	case 1:
-		nPulse = fMM * (*m_pfReducer_y)/(*m_pfDeferentPitch)*(*m_pfPulsesPerRevolution_y);
+		nPulse = fMM * (*m_pfReducer_y) / (*m_pfDeferentPitch)*(*m_pfPulsesPerRevolution_y);
 		break;
 	}
 
@@ -299,7 +299,7 @@ int CRasBoardDlg::MM2Pulse_Y(float fMM)
 
 float CRasBoardDlg::Pulse2MM_X(int nPulse)
 {
-	float fMM = ((float)nPulse)/(*m_pfPulsesPerRevolution_x)*(*m_pfDollyPerimeter)/(*m_pfReducer_x);
+	float fMM = ((float)nPulse) / (*m_pfPulsesPerRevolution_x)*(*m_pfDollyPerimeter) / (*m_pfReducer_x);
 	return fMM;
 }
 
@@ -308,13 +308,13 @@ float CRasBoardDlg::Pulse2MM_Y(int nPulse)
 	float fMM;
 	int nSel = m_cbYDir.GetCurSel();
 
-	switch(nSel)
+	switch (nSel)
 	{
 	case 0:
-		fMM = ((float)nPulse)/(*m_pfPulsesPerRevolution_y)*(*m_pfDeferentPerimeter)/(*m_pfReducer_y);
+		fMM = ((float)nPulse) / (*m_pfPulsesPerRevolution_y)*(*m_pfDeferentPerimeter) / (*m_pfReducer_y);
 		break;
 	case 1:
-		fMM = ((float)nPulse)/(*m_pfPulsesPerRevolution_y)*(*m_pfDeferentPitch)/(*m_pfReducer_y);
+		fMM = ((float)nPulse) / (*m_pfPulsesPerRevolution_y)*(*m_pfDeferentPitch) / (*m_pfReducer_y);
 		break;
 	}
 
@@ -325,39 +325,39 @@ BOOL CRasBoardDlg::GetPrintParameter()
 {
 	int nSel;
 	CString str;
-	
+
 	m_nSpeedLevelX = m_cbSpeedLevelX.GetCurSel();
 	m_nSpeedLevelY = m_cbSpeedLevelY.GetCurSel();
-	
-	if (m_nSpeedLevelX<0 || m_nSpeedLevelY<0)
+
+	if (m_nSpeedLevelX < 0 || m_nSpeedLevelY < 0)
 	{
 		AfxMessageBox("请先获取速度档位");
 		return FALSE;
 	}
 
-	if (m_positionPara.pos_x_min==0xFFFFFFFF
-		||m_positionPara.pos_x_max==0xFFFFFFFF
-		||m_positionPara.pos_x_clean==0xFFFFFFFF)
+	if (m_positionPara.pos_x_min == 0xFFFFFFFF
+		|| m_positionPara.pos_x_max == 0xFFFFFFFF
+		|| m_positionPara.pos_x_clean == 0xFFFFFFFF)
 	{
 		AfxMessageBox("X方向最小或最大或清洗位置为无效值,请先设置");
 		return FALSE;
 	}
 	nSel = m_cbYDir.GetCurSel();
-	if (nSel==0)
+	if (nSel == 0)
 		m_nYDir = 0;
 	else
 		m_nYDir = 1;
 
 	nSel = m_cbPrintWay.GetCurSel();
-	if (nSel==0)
+	if (nSel == 0)
 		m_nPrintWay = 0;
 	else
 		m_nPrintWay = 1;
 
 	nSel = m_cbAction.GetCurSel();
-	if (nSel==0)
+	if (nSel == 0)
 		m_nAction = 0;
-	else if (nSel==1)
+	else if (nSel == 1)
 		m_nAction = 1;
 	else
 		m_nAction = 2;
@@ -367,30 +367,30 @@ BOOL CRasBoardDlg::GetPrintParameter()
 	else
 		m_isUserGrid = FALSE;
 
-	BYTE bEndPositionX,bEndPositionY;
+	BYTE bEndPositionX, bEndPositionY;
 
 	nSel = m_cbEndPositionX.GetCurSel();
-	switch(nSel)
+	switch (nSel)
 	{
-	case 0:bEndPositionX = 0x01;break;
-	case 1:bEndPositionX = 0x02;break;
-	case 2:bEndPositionX = 0x03;break;
-	case 3:bEndPositionX = 0x04;break;
-	case 4:bEndPositionX = 0x05;break;
-	case 5:bEndPositionX = 0x06;break;
-	case 6:bEndPositionX = 0x07;break;
-	case 7:bEndPositionX = 0x08;break;
+	case 0:bEndPositionX = 0x01; break;
+	case 1:bEndPositionX = 0x02; break;
+	case 2:bEndPositionX = 0x03; break;
+	case 3:bEndPositionX = 0x04; break;
+	case 4:bEndPositionX = 0x05; break;
+	case 5:bEndPositionX = 0x06; break;
+	case 6:bEndPositionX = 0x07; break;
+	case 7:bEndPositionX = 0x08; break;
 	}
 	nSel = m_cbEndPositionY.GetCurSel();
-	switch(nSel)
+	switch (nSel)
 	{
-	case 0:bEndPositionY = 0x10;break;
-	case 1:bEndPositionY = 0x20;break;
-	case 2:bEndPositionY = 0x30;break;
-	case 3:bEndPositionY = 0x40;break;
-	case 4:bEndPositionY = 0x50;break;
+	case 0:bEndPositionY = 0x10; break;
+	case 1:bEndPositionY = 0x20; break;
+	case 2:bEndPositionY = 0x30; break;
+	case 3:bEndPositionY = 0x40; break;
+	case 4:bEndPositionY = 0x50; break;
 	}
-	m_bEndPosition = bEndPositionX|bEndPositionY;
+	m_bEndPosition = bEndPositionX | bEndPositionY;
 
 	((CWnd*)GetDlgItem(IDC_EDIT_RAS_PRINT_POSITION_X))->GetWindowText(str);
 	m_fPositionX = atof(str);
@@ -410,7 +410,7 @@ BOOL CRasBoardDlg::GetPrintParameter()
 	m_nFreqPsc = atoi(str);
 	((CWnd*)GetDlgItem(IDC_EDIT_RAS_PRINT_Y_DIST))->GetWindowText(str);
 	m_fYDist = atof(str);
-	
+
 	((CWnd*)GetDlgItem(IDC_EDIT_RAS_PURGE_FREQ))->GetWindowText(str);
 	m_nPurgeFreq = atoi(str);
 
@@ -431,7 +431,7 @@ BOOL CRasBoardDlg::MBPrintStart()
 	print_start_parameter.m_wResY = m_fResY;
 	print_start_parameter.m_bPrintWay = m_nPrintWay;
 
-	if (!m_pComPort->ras_print_start(print_start_parameter,60000,FALSE))
+	if (!m_pComPort->ras_print_start(print_start_parameter, 60000, FALSE))
 	{
 		AfxMessageBox("打印准备--失败");
 		return FALSE;
@@ -439,14 +439,14 @@ BOOL CRasBoardDlg::MBPrintStart()
 	return TRUE;
 }
 
-BOOL CRasBoardDlg::MBPrintLine(int nThousandth,int nPrintHeight,BOOL bFlag)
+BOOL CRasBoardDlg::MBPrintLine(int nThousandth, int nPrintHeight, BOOL bFlag)
 {
 	RAS_PRINT_LINE_PARAMETER print_line_parameter;
 	DWORD dwPulse = 0;
 
-	if (m_isUserGrid==TRUE)
+	if (m_isUserGrid == TRUE)
 	{
-		print_line_parameter.m_dwStartPos = MM2GridNum(2*m_fIOSpace);	//2个IO
+		print_line_parameter.m_dwStartPos = MM2GridNum(2 * m_fIOSpace);	//2个IO
 		print_line_parameter.m_dwWidth = MM2GridNum(m_fWidth);
 	}
 	else
@@ -455,37 +455,37 @@ BOOL CRasBoardDlg::MBPrintLine(int nThousandth,int nPrintHeight,BOOL bFlag)
 		print_line_parameter.m_dwWidth = 0;
 	}
 
-	if (m_nPrintWay==0)	//双向
+	if (m_nPrintWay == 0)	//双向
 	{
-		print_line_parameter.m_dwPulse = MM2Pulse_X(4*m_fIOSpace+m_fWidth);	//小车所走长度
-		if (print_line_parameter.m_dwPulse%50!=0)	//50倍数
+		print_line_parameter.m_dwPulse = MM2Pulse_X(4 * m_fIOSpace + m_fWidth);	//小车所走长度
+		if (print_line_parameter.m_dwPulse % 50 != 0)	//50倍数
 		{
-			print_line_parameter.m_dwPulse = (print_line_parameter.m_dwPulse/50+1)*50;
+			print_line_parameter.m_dwPulse = (print_line_parameter.m_dwPulse / 50 + 1) * 50;
 		}
 
-		if (bFlag==TRUE)
+		if (bFlag == TRUE)
 		{
-			print_line_parameter.m_dwPulse|=(0x00000001<<31);
+			print_line_parameter.m_dwPulse |= (0x00000001 << 31);
 		}
 		print_line_parameter.m_dwRePulse = 0;
 	}
 	else	//单向
 	{
-		print_line_parameter.m_dwPulse = MM2Pulse_X(4*m_fIOSpace+m_fWidth);	//小车所走长度
-		if (print_line_parameter.m_dwPulse%50!=0)	//50倍数
+		print_line_parameter.m_dwPulse = MM2Pulse_X(4 * m_fIOSpace + m_fWidth);	//小车所走长度
+		if (print_line_parameter.m_dwPulse % 50 != 0)	//50倍数
 		{
-			print_line_parameter.m_dwPulse = (print_line_parameter.m_dwPulse/50+1)*50;
+			print_line_parameter.m_dwPulse = (print_line_parameter.m_dwPulse / 50 + 1) * 50;
 		}
 		print_line_parameter.m_dwRePulse = print_line_parameter.m_dwPulse;
 	}
 
-	if (m_fYDist>=0)
+	if (m_fYDist >= 0)
 	{
 		print_line_parameter.m_dwYDist = MM2Pulse_Y(m_fYDist);
 	}
 	else
 	{
-		print_line_parameter.m_dwYDist = (MM2Pulse_Y(0-m_fYDist)|(0x01<<31));
+		print_line_parameter.m_dwYDist = (MM2Pulse_Y(0 - m_fYDist) | (0x01 << 31));
 	}
 
 	print_line_parameter.m_wFreq = m_nFreqPsc;
@@ -493,7 +493,7 @@ BOOL CRasBoardDlg::MBPrintLine(int nThousandth,int nPrintHeight,BOOL bFlag)
 	print_line_parameter.m_wThousandth = nThousandth;
 	print_line_parameter.m_dwPrintHeight = nPrintHeight;
 
-	if (!m_pComPort->ras_print_line(print_line_parameter,60000,bFlag))
+	if (!m_pComPort->ras_print_line(print_line_parameter, 60000, bFlag))
 	{
 		AfxMessageBox("打印一行--错误");
 		return FALSE;
@@ -502,7 +502,7 @@ BOOL CRasBoardDlg::MBPrintLine(int nThousandth,int nPrintHeight,BOOL bFlag)
 }
 BOOL CRasBoardDlg::MBPrintEnd()
 {
-	if (!m_pComPort->ras_print_end(m_bEndPosition,60000,FALSE))
+	if (!m_pComPort->ras_print_end(m_bEndPosition, 60000, FALSE))
 	{
 		AfxMessageBox("打印结束--失败");
 		return FALSE;
@@ -526,7 +526,7 @@ void CRasBoardDlg::OnBnClickedButtonRasPrintLine()
 	{
 		return;
 	}
-	MBPrintLine(0,0,FALSE);
+	MBPrintLine(0, 0, FALSE);
 }
 
 void CRasBoardDlg::OnBnClickedButtonRasPrintEnd()
@@ -566,11 +566,11 @@ void CRasBoardDlg::OnBnClickedButtonRasPrintStop()
 void CRasBoardDlg::OnBnClickedButtonRasSelect()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	if (m_nProtocolMode==debug_mode)
+	if (m_nProtocolMode == debug_mode)
 	{
 		m_nProtocolMode = print_mode;
 		m_pComPort->m_nProtocolMode = m_nProtocolMode;
-		if (m_pComPort->ras_select(0x00,5000,FALSE))
+		if (m_pComPort->ras_select(0x00, 5000, FALSE))
 		{
 			((CWnd*)GetDlgItem(IDC_BUTTON_RAS_SELECT))->SetWindowText("切换至调试模式");
 		}
@@ -585,7 +585,7 @@ void CRasBoardDlg::OnBnClickedButtonRasSelect()
 	{
 		m_nProtocolMode = debug_mode;
 		m_pComPort->m_nProtocolMode = m_nProtocolMode;
-		if (m_pComPort->ras_select(0x01,5000,FALSE))
+		if (m_pComPort->ras_select(0x01, 5000, FALSE))
 		{
 			((CWnd*)GetDlgItem(IDC_BUTTON_RAS_SELECT))->SetWindowText("切换至打印模式");
 		}
@@ -622,7 +622,7 @@ LONG CRasBoardDlg::OnRasStateConfirm(WPARAM wPALAM, LPARAM lPALAM)
 void CRasBoardDlg::OnBnClickedButtonRasGetPositionPara()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	if (m_pComPort->ras_get_position(5000,FALSE))
+	if (m_pComPort->ras_get_position(5000, FALSE))
 	{
 		DWORD dwPara;
 		float fPara;
@@ -631,107 +631,107 @@ void CRasBoardDlg::OnBnClickedButtonRasGetPositionPara()
 		m_lstPositionPara.DeleteAllItems();
 
 		dwPara = m_pComPort->m_protocolstatus.positionPara.pos_x_min;
-		m_lstPositionPara.InsertItem(0,"");
-		m_lstPositionPara.SetItemText(0,0,"pos_x_min");
-		if (dwPara==0xFFFFFFFF)
+		m_lstPositionPara.InsertItem(0, "");
+		m_lstPositionPara.SetItemText(0, 0, "pos_x_min");
+		if (dwPara == 0xFFFFFFFF)
 		{
-			m_lstPositionPara.SetItemText(0,1,"无效值");
-			m_lstPositionPara.SetItemText(0,2,"无效值");
+			m_lstPositionPara.SetItemText(0, 1, "无效值");
+			m_lstPositionPara.SetItemText(0, 2, "无效值");
 		}
 		else
 		{
-			str.Format("%d",dwPara);
-			m_lstPositionPara.SetItemText(0,1,str);
+			str.Format("%d", dwPara);
+			m_lstPositionPara.SetItemText(0, 1, str);
 			fPara = Pulse2MM_X(dwPara);
-			str.Format("%.2f",fPara);
-			m_lstPositionPara.SetItemText(0,2,str);
+			str.Format("%.2f", fPara);
+			m_lstPositionPara.SetItemText(0, 2, str);
 		}
 
 		dwPara = m_pComPort->m_protocolstatus.positionPara.pos_x_max;
-		m_lstPositionPara.InsertItem(1,"");
-		m_lstPositionPara.SetItemText(1,0,"pos_x_max");
-		if (dwPara==0xFFFFFFFF)
+		m_lstPositionPara.InsertItem(1, "");
+		m_lstPositionPara.SetItemText(1, 0, "pos_x_max");
+		if (dwPara == 0xFFFFFFFF)
 		{
-			m_lstPositionPara.SetItemText(1,1,"无效值");
-			m_lstPositionPara.SetItemText(1,2,"无效值");
+			m_lstPositionPara.SetItemText(1, 1, "无效值");
+			m_lstPositionPara.SetItemText(1, 2, "无效值");
 		}
 		else
 		{
-			str.Format("%d",dwPara);
-			m_lstPositionPara.SetItemText(1,1,str);
+			str.Format("%d", dwPara);
+			m_lstPositionPara.SetItemText(1, 1, str);
 			fPara = Pulse2MM_X(dwPara);
-			str.Format("%.2f",fPara);
-			m_lstPositionPara.SetItemText(1,2,str);
+			str.Format("%.2f", fPara);
+			m_lstPositionPara.SetItemText(1, 2, str);
 		}
 
 		dwPara = m_pComPort->m_protocolstatus.positionPara.pos_x_clean;
-		m_lstPositionPara.InsertItem(2,"");
-		m_lstPositionPara.SetItemText(2,0,"pos_x_clean");
-		if (dwPara==0xFFFFFFFF)
+		m_lstPositionPara.InsertItem(2, "");
+		m_lstPositionPara.SetItemText(2, 0, "pos_x_clean");
+		if (dwPara == 0xFFFFFFFF)
 		{
-			m_lstPositionPara.SetItemText(2,1,"无效值");
-			m_lstPositionPara.SetItemText(2,2,"无效值");
+			m_lstPositionPara.SetItemText(2, 1, "无效值");
+			m_lstPositionPara.SetItemText(2, 2, "无效值");
 		}
 		else
 		{
-			str.Format("%d",dwPara);
-			m_lstPositionPara.SetItemText(2,1,str);
+			str.Format("%d", dwPara);
+			m_lstPositionPara.SetItemText(2, 1, str);
 			fPara = Pulse2MM_X(dwPara);
-			str.Format("%.2f",fPara);
-			m_lstPositionPara.SetItemText(2,2,str);
+			str.Format("%.2f", fPara);
+			m_lstPositionPara.SetItemText(2, 2, str);
 		}
 
 		dwPara = m_pComPort->m_protocolstatus.positionPara.pos_x_moisture;
-		m_lstPositionPara.InsertItem(3,"");
-		m_lstPositionPara.SetItemText(3,0,"pos_x_moisture");
-		if (dwPara==0xFFFFFFFF)
+		m_lstPositionPara.InsertItem(3, "");
+		m_lstPositionPara.SetItemText(3, 0, "pos_x_moisture");
+		if (dwPara == 0xFFFFFFFF)
 		{
-			m_lstPositionPara.SetItemText(3,1,"无效值");
-			m_lstPositionPara.SetItemText(3,2,"无效值");
+			m_lstPositionPara.SetItemText(3, 1, "无效值");
+			m_lstPositionPara.SetItemText(3, 2, "无效值");
 		}
 		else
 		{
-			str.Format("%d",dwPara);
-			m_lstPositionPara.SetItemText(3,1,str);
+			str.Format("%d", dwPara);
+			m_lstPositionPara.SetItemText(3, 1, str);
 			fPara = Pulse2MM_X(dwPara);
-			str.Format("%.2f",fPara);
-			m_lstPositionPara.SetItemText(3,2,str);
+			str.Format("%.2f", fPara);
+			m_lstPositionPara.SetItemText(3, 2, str);
 		}
 
 		dwPara = m_pComPort->m_protocolstatus.positionPara.pos_y_min;
-		m_lstPositionPara.InsertItem(4,"");
-		m_lstPositionPara.SetItemText(4,0,"pos_y_min");
-		if (dwPara==0xFFFFFFFF)
+		m_lstPositionPara.InsertItem(4, "");
+		m_lstPositionPara.SetItemText(4, 0, "pos_y_min");
+		if (dwPara == 0xFFFFFFFF)
 		{
-			m_lstPositionPara.SetItemText(4,1,"无效值");
-			m_lstPositionPara.SetItemText(4,2,"无效值");
+			m_lstPositionPara.SetItemText(4, 1, "无效值");
+			m_lstPositionPara.SetItemText(4, 2, "无效值");
 		}
 		else
 		{
-			str.Format("%d",dwPara);
-			m_lstPositionPara.SetItemText(4,1,str);
+			str.Format("%d", dwPara);
+			m_lstPositionPara.SetItemText(4, 1, str);
 			fPara = Pulse2MM_Y(dwPara);
-			str.Format("%.2f",fPara);
-			m_lstPositionPara.SetItemText(4,2,str);
+			str.Format("%.2f", fPara);
+			m_lstPositionPara.SetItemText(4, 2, str);
 		}
 
 		dwPara = m_pComPort->m_protocolstatus.positionPara.pos_y_max;
-		m_lstPositionPara.InsertItem(5,"");
-		m_lstPositionPara.SetItemText(5,0,"pos_y_max");
-		if (dwPara==0xFFFFFFFF)
+		m_lstPositionPara.InsertItem(5, "");
+		m_lstPositionPara.SetItemText(5, 0, "pos_y_max");
+		if (dwPara == 0xFFFFFFFF)
 		{
-			m_lstPositionPara.SetItemText(5,1,"无效值");
-			m_lstPositionPara.SetItemText(5,2,"无效值");
+			m_lstPositionPara.SetItemText(5, 1, "无效值");
+			m_lstPositionPara.SetItemText(5, 2, "无效值");
 		}
 		else
 		{
-			str.Format("%d",dwPara);
-			m_lstPositionPara.SetItemText(5,1,str);
+			str.Format("%d", dwPara);
+			m_lstPositionPara.SetItemText(5, 1, str);
 			fPara = Pulse2MM_Y(dwPara);
-			str.Format("%.2f",fPara);
-			m_lstPositionPara.SetItemText(5,2,str);
+			str.Format("%.2f", fPara);
+			m_lstPositionPara.SetItemText(5, 2, str);
 		}
-		memcpy(&m_positionPara,&m_pComPort->m_protocolstatus.positionPara,sizeof(PositionPara));
+		memcpy(&m_positionPara, &m_pComPort->m_protocolstatus.positionPara, sizeof(PositionPara));
 	}
 	else
 	{
@@ -751,9 +751,9 @@ void CRasBoardDlg::OnEnChangeEditRasPrintFreqPsc()
 
 	((CWnd*)GetDlgItem(IDC_EDIT_RAS_PRINT_FREQ_PSC))->GetWindowText(str);
 	int n = atoi(str);
-	int dpi = m_fIOBaseGridNum/n/m_fIOSpace * 25.4;
+	int dpi = m_fIOBaseGridNum / n / m_fIOSpace * 25.4;
 
-	str.Format("%d",dpi);
+	str.Format("%d", dpi);
 	((CWnd*)GetDlgItem(IDC_EDIT_RAS_PRINT_RES_X))->SetWindowText(str);
 	((CWnd*)GetDlgItem(IDC_EDIT_RAS_PRINT_RES_Y))->SetWindowText(str);
 }
@@ -768,16 +768,16 @@ void CRasBoardDlg::OnBnClickedButtonRasGetSpeedLevel()
 	m_cbSpeedLevelX.EnableWindow(FALSE);
 	m_cbSpeedLevelY.EnableWindow(FALSE);
 
-	if (m_pComPort->ras_get_speed(0x00,5000,FALSE))
+	if (m_pComPort->ras_get_speed(0x00, 5000, FALSE))
 	{
 		int nSpeedNum = m_pComPort->m_protocolstatus.nSpeedLevelNum;
 		CString str;
 
-		if (nSpeedNum>0)
+		if (nSpeedNum > 0)
 		{
-			for (int i=0;i<nSpeedNum;i++)
+			for (int i = 0; i < nSpeedNum; i++)
 			{
-				str.Format("%d",i+1);
+				str.Format("%d", i + 1);
 				m_cbSpeedLevelX.AddString(str);
 
 				int nAec = m_pComPort->m_protocolstatus.onlinePara[i].dist_acce;
@@ -786,17 +786,17 @@ void CRasBoardDlg::OnBnClickedButtonRasGetSpeedLevel()
 
 				float fAecS = Pulse2MM_X(nAec);
 				float fDecS = Pulse2MM_X(nDec);
-				float fEvenV = Pulse2MM_X((float)TIME_CONVERT_VALUE/(float)nSpeed);
-				
-				m_lstSpeedLevel_X.InsertItem(i,"");
-				m_lstSpeedLevel_X.SetItemText(i,0,str);
+				float fEvenV = Pulse2MM_X((float)TIME_CONVERT_VALUE / (float)nSpeed);
 
-				str.Format("%.2f",fAecS);
-				m_lstSpeedLevel_X.SetItemText(i,1,str);
-				str.Format("%.2f",fDecS);
-				m_lstSpeedLevel_X.SetItemText(i,2,str);
-				str.Format("%.2f",fEvenV);
-				m_lstSpeedLevel_X.SetItemText(i,3,str);
+				m_lstSpeedLevel_X.InsertItem(i, "");
+				m_lstSpeedLevel_X.SetItemText(i, 0, str);
+
+				str.Format("%.2f", fAecS);
+				m_lstSpeedLevel_X.SetItemText(i, 1, str);
+				str.Format("%.2f", fDecS);
+				m_lstSpeedLevel_X.SetItemText(i, 2, str);
+				str.Format("%.2f", fEvenV);
+				m_lstSpeedLevel_X.SetItemText(i, 3, str);
 			}
 			m_cbSpeedLevelX.EnableWindow(TRUE);
 			m_cbSpeedLevelX.SetCurSel(0);
@@ -806,18 +806,18 @@ void CRasBoardDlg::OnBnClickedButtonRasGetSpeedLevel()
 	{
 		AfxMessageBox("得X方向速度档位失败");
 	}
-	
-	if (m_pComPort->ras_get_speed(0x01,5000,FALSE))
+
+	if (m_pComPort->ras_get_speed(0x01, 5000, FALSE))
 	{
 		int nSpeedNum = m_pComPort->m_protocolstatus.nSpeedLevelNum;
 		CString str;
 
-		if (nSpeedNum>0)
+		if (nSpeedNum > 0)
 		{
-			for (int i=0;i<nSpeedNum;i++)
+			for (int i = 0; i < nSpeedNum; i++)
 			{
-				str.Format("%d",i+1);
-					m_cbSpeedLevelY.AddString(str);
+				str.Format("%d", i + 1);
+				m_cbSpeedLevelY.AddString(str);
 
 				int nAec = m_pComPort->m_protocolstatus.onlinePara[i].dist_acce;
 				int nDec = m_pComPort->m_protocolstatus.onlinePara[i].dist_dece;
@@ -825,17 +825,17 @@ void CRasBoardDlg::OnBnClickedButtonRasGetSpeedLevel()
 
 				float fAecS = Pulse2MM_Y(nAec);
 				float fDecS = Pulse2MM_Y(nDec);
-				float fEvenV = Pulse2MM_Y((float)TIME_CONVERT_VALUE/(float)nSpeed);
+				float fEvenV = Pulse2MM_Y((float)TIME_CONVERT_VALUE / (float)nSpeed);
 
-				m_lstSpeedLevel_Y.InsertItem(i,"");
-				m_lstSpeedLevel_Y.SetItemText(i,0,str);
+				m_lstSpeedLevel_Y.InsertItem(i, "");
+				m_lstSpeedLevel_Y.SetItemText(i, 0, str);
 
-				str.Format("%.2f",fAecS);
-				m_lstSpeedLevel_Y.SetItemText(i,1,str);
-				str.Format("%.2f",fDecS);
-				m_lstSpeedLevel_Y.SetItemText(i,2,str);
-				str.Format("%.2f",fEvenV);
-				m_lstSpeedLevel_Y.SetItemText(i,3,str);
+				str.Format("%.2f", fAecS);
+				m_lstSpeedLevel_Y.SetItemText(i, 1, str);
+				str.Format("%.2f", fDecS);
+				m_lstSpeedLevel_Y.SetItemText(i, 2, str);
+				str.Format("%.2f", fEvenV);
+				m_lstSpeedLevel_Y.SetItemText(i, 3, str);
 			}
 			m_cbSpeedLevelY.EnableWindow(TRUE);
 			m_cbSpeedLevelY.SetCurSel(0);
@@ -851,7 +851,7 @@ void CRasBoardDlg::OnBnClickedButtonRasMove2Position()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	CString str;
-	
+
 	((CWnd*)GetDlgItem(IDC_EDIT_RAS_MOVE2POSITION_X))->GetWindowText(str);
 	float fx = atof(str);
 
@@ -861,7 +861,7 @@ void CRasBoardDlg::OnBnClickedButtonRasMove2Position()
 	DWORD dwX = MM2Pulse_X(fx);
 	DWORD dwY = MM2Pulse_Y(fy);
 
-	if (!m_pComPort->ras_move2_position(dwX,dwY,20000,FALSE))
+	if (!m_pComPort->ras_move2_position(dwX, dwY, 20000, FALSE))
 	{
 		AfxMessageBox("移动失败");
 	}
@@ -870,12 +870,12 @@ void CRasBoardDlg::OnCancel()
 {
 	// TODO: 在此添加专用代码和/或调用基类
 	DestroyWindow();
-//	CDialog::OnCancel();
+	//	CDialog::OnCancel();
 }
 
 void CRasBoardDlg::OnOK()
 {
 	// TODO: 在此添加专用代码和/或调用基类
 	DestroyWindow();
-//	CDialog::OnOK();
+	//	CDialog::OnOK();
 }

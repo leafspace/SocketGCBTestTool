@@ -11,7 +11,7 @@ public:
 	CLDSetPower(CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~CLDSetPower();
 
-// 对话框数据
+	// 对话框数据
 	enum { IDD = IDD_LD_SET_POWER };
 
 protected:

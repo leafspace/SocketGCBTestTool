@@ -13,19 +13,19 @@
 #include "afxdialogex.h"
 
 #ifdef RP_EXT_CLASS
-	#undef RP_EXT_CLASS
-	#undef RP_EXT_API
-	#undef RP_EXT_DATA
+#undef RP_EXT_CLASS
+#undef RP_EXT_API
+#undef RP_EXT_DATA
 #endif
 
 #ifdef APP_RPBASE
-	#define RP_EXT_CLASS       AFX_CLASS_EXPORT
-	#define RP_EXT_API         AFX_API_EXPORT
-	#define RP_EXT_DATA        AFX_DATA_EXPORT
+#define RP_EXT_CLASS       AFX_CLASS_EXPORT
+#define RP_EXT_API         AFX_API_EXPORT
+#define RP_EXT_DATA        AFX_DATA_EXPORT
 #else
-	#define RP_EXT_CLASS       AFX_CLASS_IMPORT
-	#define RP_EXT_API         AFX_API_IMPORT
-	#define RP_EXT_DATA        AFX_DATA_IMPORT
+#define RP_EXT_CLASS       AFX_CLASS_IMPORT
+#define RP_EXT_API         AFX_API_IMPORT
+#define RP_EXT_DATA        AFX_DATA_IMPORT
 #endif
 
 //预定义数据类型
@@ -39,8 +39,8 @@ typedef DDWORD*			LPDDWORD;
 
 typedef CArray<RGBQUAD, RGBQUAD>	CRGBArray;
 typedef CArray<POINT, POINT>		CPOINTArray;
-typedef CArray<BOOL,BOOL>			CBOOLArray;
-typedef CArray<RECT,RECT>			CRECTArray;
+typedef CArray<BOOL, BOOL>			CBOOLArray;
+typedef CArray<RECT, RECT>			CRECTArray;
 typedef CArray<int, int>			CintArray;
 typedef CArray<double, double>		CDoubleArray;
 typedef CArray<LONGLONG, LONGLONG>		CLONGLONGArray;
@@ -48,108 +48,108 @@ typedef CArray<ULONGLONG, ULONGLONG>	CULONGLONGArray;
 typedef CDWordArray					CDWORDArray;
 typedef CDWordArray					CClrArray;
 
-const DWORD		MAXCHAIN		= 0xFFFF;				//点串最大个数
-const Float64	PI				= 3.14159265358979323846;
+const DWORD		MAXCHAIN = 0xFFFF;				//点串最大个数
+const Float64	PI = 3.14159265358979323846;
 const Float64	DOUBLEPRECISION = 0.0000000001;			//浮点小数位精度，一般仅用于比较
-const Float64	DOUBLEZERO		= 0.0000000001;			//浮点0的最大值，一般仅用于比较
-const Float32	ANGLEPRECISION	= 0.005f;				//角度值精度，弧度单位
+const Float64	DOUBLEZERO = 0.0000000001;			//浮点0的最大值，一般仅用于比较
+const Float32	ANGLEPRECISION = 0.005f;				//角度值精度，弧度单位
 
-const Float64	TWOPI			= 2*PI;
-const Float64	HALFPI			= 0.5*PI;
-const Float64	HALF3PI			= 1.5*PI;
+const Float64	TWOPI = 2 * PI;
+const Float64	HALFPI = 0.5*PI;
+const Float64	HALF3PI = 1.5*PI;
 
-const COLORREF	NULLCOLOR		= CLR_INVALID;			//无效颜色值
-const int		NULLINDEX		= 0x7FFFFFFF;			//无效索引值（相对于索引稿，<= 8Bits）
+const COLORREF	NULLCOLOR = CLR_INVALID;			//无效颜色值
+const int		NULLINDEX = 0x7FFFFFFF;			//无效索引值（相对于索引稿，<= 8Bits）
 
-const int 		MAXSCROLLSIZE	= INT_MAX/2;			//最大滚动条计数值
+const int 		MAXSCROLLSIZE = INT_MAX / 2;			//最大滚动条计数值
 
 //图像精度相关
-const FLOAT		MINRESOLUTION	= 0.005f; 				//最小精度值，dpmm
-const FLOAT		MAXRESOLUTION	= 1000.0f; 				//最大精度值，dpmm
-const int 		MINDPI			= 1;					//最小精度值，dpi
-const int 		MAXDPI			= 20000;				//最大精度值，dpi
+const FLOAT		MINRESOLUTION = 0.005f; 				//最小精度值，dpmm
+const FLOAT		MAXRESOLUTION = 1000.0f; 				//最大精度值，dpmm
+const int 		MINDPI = 1;					//最小精度值，dpi
+const int 		MAXDPI = 20000;				//最大精度值，dpi
 
 
 //文件格式标识符
 //{RainBow 支持的文件格式
-const WORD AN_VERSION		= 0x400;
-const WORD WN_BITMAP		= 0x4D42; // Must be 'BM'
-const WORD AN_BMPVER		= 0x40;
-const WORD AN_APF			= 0x4D52; // 'RM'
-const WORD AN_BITMAP		= 0x4D41; // 'AM'
-const WORD AN_MACTIFF		= 0x4D4D; // 'MM'
-const WORD AN_TIFF			= 0x4949; // 'II'
-const WORD AN_JPEG			= 0x4A50; // 'JP'
-const WORD AN_TIFFVER		= 0x40;
-const WORD AN_PCX			= 0x0A;
-const WORD AN_AIF			= 0x4941; // 'AI'
-const WORD AN_LAYER			= 0x4C41; // 'AL'
-const WORD AN_FLOWER		= 0x4641; // 'AF'
-const WORD AN_IMAGE         = 0x4D49; // 'IM'
-const WORD AN_GRAPH			= 0x4741; // 'AG'
-const WORD AN_GRFVER		= 0x40;
-const WORD AN_GRFNORMAL		= 0x4E47; // 'GN'
-const WORD AN_GRFGDELINE	= 0x4C47; // 'GL'
-const WORD AN_COMPOUND		= 0x4443; // 'CD'
-const WORD AN_CPDVER		= 0x40;
-const WORD AN_STANDARD		= 0x4E00; // added by Cdq : all other standard picture: JPG,GIF,PNG ...
-const WORD AN_PRIVATE		= 0x5250; // 'PR'
-const WORD AN_UNKNOWNFILE	= 0x5858; // 'XX'
+const WORD AN_VERSION = 0x400;
+const WORD WN_BITMAP = 0x4D42; // Must be 'BM'
+const WORD AN_BMPVER = 0x40;
+const WORD AN_APF = 0x4D52; // 'RM'
+const WORD AN_BITMAP = 0x4D41; // 'AM'
+const WORD AN_MACTIFF = 0x4D4D; // 'MM'
+const WORD AN_TIFF = 0x4949; // 'II'
+const WORD AN_JPEG = 0x4A50; // 'JP'
+const WORD AN_TIFFVER = 0x40;
+const WORD AN_PCX = 0x0A;
+const WORD AN_AIF = 0x4941; // 'AI'
+const WORD AN_LAYER = 0x4C41; // 'AL'
+const WORD AN_FLOWER = 0x4641; // 'AF'
+const WORD AN_IMAGE = 0x4D49; // 'IM'
+const WORD AN_GRAPH = 0x4741; // 'AG'
+const WORD AN_GRFVER = 0x40;
+const WORD AN_GRFNORMAL = 0x4E47; // 'GN'
+const WORD AN_GRFGDELINE = 0x4C47; // 'GL'
+const WORD AN_COMPOUND = 0x4443; // 'CD'
+const WORD AN_CPDVER = 0x40;
+const WORD AN_STANDARD = 0x4E00; // added by Cdq : all other standard picture: JPG,GIF,PNG ...
+const WORD AN_PRIVATE = 0x5250; // 'PR'
+const WORD AN_UNKNOWNFILE = 0x5858; // 'XX'
 
-const WORD AN_RPF			= 0x5052; // 'RP'，RainBow RIP 软件输出文件格式
-const WORD RPF_IMAGE		= 0x4952; // 'RI'，RainBow RIP RPF文件中的Image图像数据
-const WORD RPF_LAYER		= 0x4C52; // 'RL'，RainBow RIP RPF文件中的Layer图像数据
-const WORD RPF_FLOWER		= 0x4652; // 'RF'，RainBow RIP RPF文件中的Flower图像数据
-const WORD RPF_TEMPLET      = 0x4752; // 'RT', RainBow RIP RPF文件中的Templet图像数据
-const WORD RPF_LAYOUT		= 0x4F52; // 'RO'，RainBow RIP RPF文件中的Layout图像数据
+const WORD AN_RPF = 0x5052; // 'RP'，RainBow RIP 软件输出文件格式
+const WORD RPF_IMAGE = 0x4952; // 'RI'，RainBow RIP RPF文件中的Image图像数据
+const WORD RPF_LAYER = 0x4C52; // 'RL'，RainBow RIP RPF文件中的Layer图像数据
+const WORD RPF_FLOWER = 0x4652; // 'RF'，RainBow RIP RPF文件中的Flower图像数据
+const WORD RPF_TEMPLET = 0x4752; // 'RT', RainBow RIP RPF文件中的Templet图像数据
+const WORD RPF_LAYOUT = 0x4F52; // 'RO'，RainBow RIP RPF文件中的Layout图像数据
 
-const WORD CM_BITMAP		= 0x4D43; // 'CM'，RainBow RIP 输出的BMP/TIF文件私有信息标识
+const WORD CM_BITMAP = 0x4D43; // 'CM'，RainBow RIP 输出的BMP/TIF文件私有信息标识
 
-const WORD AN_SEP			= 0xFFFF; //仅用于系统内部区分，并不是图像文件标识符
+const WORD AN_SEP = 0xFFFF; //仅用于系统内部区分，并不是图像文件标识符
 //}RainBow 支持的文件格式
 
 
 //离散方式{一般，好，精细}
-enum SEPWAY {swRough=0, swFine, swSmooth};
+enum SEPWAY { swRough = 0, swFine, swSmooth };
 //曲线类型{点串，贝塞尔，B样条，跟踪}
-enum CURVE {cvPolyline=0, cvBezier, cvBSpline, cvTrace};
+enum CURVE { cvPolyline = 0, cvBezier, cvBSpline, cvTrace };
 //压缩方式
 //	暂只使用了 cpsRGB, cpsPrivate, cpsLZW(TIFF), cpsPackBits(TIFF,1Bits)
-enum ACompressMode 
+enum ACompressMode
 {
-	cpsRGB		= BI_RGB,
-	cpsRLE8		= BI_RLE8,
-	cpsRLE4		= BI_RLE4,
-	cpsBITFIELDS= BI_BITFIELDS,
-	cpsJPEG		= 10,
-	cpsLZW		= 11,
-	cpsPrivate	= 12,
-	cpsPackBits	= 13,
-	cpsZIP		= 14,
+	cpsRGB = BI_RGB,
+	cpsRLE8 = BI_RLE8,
+	cpsRLE4 = BI_RLE4,
+	cpsBITFIELDS = BI_BITFIELDS,
+	cpsJPEG = 10,
+	cpsLZW = 11,
+	cpsPrivate = 12,
+	cpsPackBits = 13,
+	cpsZIP = 14,
 	cpsADOBEZIP = 15
 };
 //图像类型{彩色，灰度，色调，真彩，无效}
-enum AImageType {imgClrType=1, imgGrayType, imgClrGrayType, imgRgbType, imgStrangeType};
+enum AImageType { imgClrType = 1, imgGrayType, imgClrGrayType, imgRgbType, imgStrangeType };
 //精度单位: 像素/英寸,像素/丝米,像素/毫米,像素/厘米,像素/米
-enum AResUnit {ruDefault=0, ruDPI=1, ruDPCMM=2, ruDPMM, ruDPCM, ruDPM};
+enum AResUnit { ruDefault = 0, ruDPI = 1, ruDPCMM = 2, ruDPMM, ruDPCM, ruDPM };
 //尺寸单位 像素,丝米,毫米,厘米,米,英寸
-enum ASizeUnit {suDefault=0, suPIXEL=1, suCMM=2, suMM=3, suCM, suM, suINCH};
+enum ASizeUnit { suDefault = 0, suPIXEL = 1, suCMM = 2, suMM = 3, suCM, suM, suINCH };
 //区域填充方式（同SDK定义）
-enum AFillMode {fmAlternate=ALTERNATE, fmWinding=WINDING};	
+enum AFillMode { fmAlternate = ALTERNATE, fmWinding = WINDING };
 //花样类型{图像，图形}
 //enum APictureType {picImage=0x01, picGraph=0x10};
 //图形类型{普通，辅助线}
 //enum AGraphType {grfNormal=1, grfGdeline};
 //旋转方向{逆时针，顺时针}
-enum CLOCKWISE {counterwise=AD_COUNTERCLOCKWISE, clockwise=AD_CLOCKWISE};
+enum CLOCKWISE { counterwise = AD_COUNTERCLOCKWISE, clockwise = AD_CLOCKWISE };
 // 混合方式{普通，颜料混合，光混合}
-enum ATransferMode {tmNormal=0, tmDyeMix=1, tmPhoMix, tmDefault};
+enum ATransferMode { tmNormal = 0, tmDyeMix = 1, tmPhoMix, tmDefault };
 // 共享标识，用于设定其它同步线程/进程的操作权限（拒绝操作类型）
 //	无限制，不可删除，不可写，不可读，独占
-enum AShareFlag {sfDenyNone=0, sfDenyDelete, sfDenyWrite, sfDenyRead, sfExclusive};
+enum AShareFlag { sfDenyNone = 0, sfDenyDelete, sfDenyWrite, sfDenyRead, sfExclusive };
 
 //更改大小的基点
-enum SCALEPOSITION{posNULL=0,posTopLeft,posBottomLeft,posTopRight,posBottomRight, posLeft, posRight, posTop, posBottom};
+enum SCALEPOSITION { posNULL = 0, posTopLeft, posBottomLeft, posTopRight, posBottomRight, posLeft, posRight, posTop, posBottom };
 
 //初始化指定结构体/数组
 #ifndef BZERO
@@ -234,14 +234,14 @@ enum SCALEPOSITION{posNULL=0,posTopLeft,posBottomLeft,posTopRight,posBottomRight
 #define DWORD_TO_DECIMAL_TIMES(a,dTimes)		(((a)/double(dTimes))-INTEGER_TO_DWORD((a)/double(dTimes)))
 
 #ifndef MAKEDWORD
-	#define MAKEDWORD(a, b)			((DWORD)(((WORD)(((DWORD_PTR)(a)) & 0xffff)) | ((DWORD)((WORD)(((DWORD_PTR)(b)) & 0xffff))) << 16))
+#define MAKEDWORD(a, b)			((DWORD)(((WORD)(((DWORD_PTR)(a)) & 0xffff)) | ((DWORD)((WORD)(((DWORD_PTR)(b)) & 0xffff))) << 16))
 #endif
 #ifndef LODWORD
-	#define LODWORD(ul)				((DWORD)(((ULONGLONG)(ul)) & 0xffffffff))
-	#define HIDWORD(ul)				((DWORD)((((ULONGLONG)(ul)) >> 32) & 0xffffffff))
+#define LODWORD(ul)				((DWORD)(((ULONGLONG)(ul)) & 0xffffffff))
+#define HIDWORD(ul)				((DWORD)((((ULONGLONG)(ul)) >> 32) & 0xffffffff))
 #endif
 #ifndef MAKEULONGLONG
-	#define MAKEULONGLONG(a, b)		((ULONGLONG)(((DWORD)(((ULONGLONG)(a)) & 0xffffffff)) | ((ULONGLONG)((DWORD)(((ULONGLONG)(b)) & 0xffffffff))) << 32))
+#define MAKEULONGLONG(a, b)		((ULONGLONG)(((DWORD)(((ULONGLONG)(a)) & 0xffffffff)) | ((ULONGLONG)((DWORD)(((ULONGLONG)(b)) & 0xffffffff))) << 32))
 #endif
 
 //控件使能（必须在对话框类中使用）

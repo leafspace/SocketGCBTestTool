@@ -48,31 +48,31 @@
 // };
 enum GCB_COMM_RESULT_GCB
 {
-	gcb_comm_result_init		= 0x00,	//初始化，未设定状态
-		
-	gcb_comm_result_succeed	= 0x01,	//指令正常执行完成
-		
-	gcb_comm_result_failed	    = 0x02,	//指令操作失败
-	gcb_comm_result_repeater	= 0x03,	//下级板卡配置指令转发（中继）失败
-	gcb_comm_result_invalid	    = 0x04,	//无效指令
-	
-	gcb_comm_result_other		= 0xFF	//其它错误
+	gcb_comm_result_init = 0x00,	//初始化，未设定状态
+
+	gcb_comm_result_succeed = 0x01,	//指令正常执行完成
+
+	gcb_comm_result_failed = 0x02,	//指令操作失败
+	gcb_comm_result_repeater = 0x03,	//下级板卡配置指令转发（中继）失败
+	gcb_comm_result_invalid = 0x04,	//无效指令
+
+	gcb_comm_result_other = 0xFF	//其它错误
 };
 //上位机反馈信息定义（PC-->GCB）
 enum GCB_COMM_RESULT_PC
 {
-	gcb_pc_comm_result_succeed	= 0x00,	//指令正常执行完成
-		
-	gcb_pc_comm_result_failed	    = 0x01,	//指令操作失败
-	gcb_pc_comm_result_invalid	    = 0x02,	//无效指令
-	
-	gcb_pc_comm_result_other		= 0xFF	//其它错误
+	gcb_pc_comm_result_succeed = 0x00,	//指令正常执行完成
+
+	gcb_pc_comm_result_failed = 0x01,	//指令操作失败
+	gcb_pc_comm_result_invalid = 0x02,	//无效指令
+
+	gcb_pc_comm_result_other = 0xFF	//其它错误
 };
 
 //主动发送方式下指令状态
 enum GCB_PROTOCOL_SEND_STATE
 {
-	gcb_protocol_send_state_failed	= 0,	//失败
+	gcb_protocol_send_state_failed = 0,	//失败
 	gcb_protocol_send_state_checking,		//发送中
 	gcb_protocol_send_state_ok,				//发送成功
 
@@ -88,19 +88,19 @@ struct GCB_COMMAND_STATE
 
 enum GCB_TCP_DEFAULT_PORT
 {
-	tcp_default_port_control	= 10000,	//GCB配置及打印控制指令
-	tcp_default_port_data		= 10001,	//打印数据指令
+	tcp_default_port_control = 10000,	//GCB配置及打印控制指令
+	tcp_default_port_data = 10001,	//打印数据指令
 
-	tcp_default_port_unknown	= 0xFFFF
+	tcp_default_port_unknown = 0xFFFF
 };
 
 enum GCB_PROTOCOL_VERSION_INFO
 {
-	gcb_protocol_version_none		= 0,			//初始化
+	gcb_protocol_version_none = 0,			//初始化
 
-	gcb_protocol_version_1000		= 1000,			// V1.0.00
+	gcb_protocol_version_1000 = 1000,			// V1.0.00
 
-	gcb_protocol_version_unknown	= 0xFFFF		//无效版本信息
+	gcb_protocol_version_unknown = 0xFFFF		//无效版本信息
 };
 
 struct RP_EXT_CLASS GCB_Protocol_Control_Statue
@@ -108,10 +108,10 @@ struct RP_EXT_CLASS GCB_Protocol_Control_Statue
 	// PC --> GCB --> PC
 	GCB_COMMAND_STATE	gcb_getversion;				//版本
 	WORD				gcb_getversion_val;
-	
+
 	GCB_COMMAND_STATE	gcb_getbuffersize;			//得缓冲区大小
 	DWORD				gcb_getbuffersize_val;
-	
+
 	GCB_COMMAND_STATE	gcb_init;					//板卡初始化
 
 	GCB_COMMAND_STATE	gcb_print_ready;			//打印准备
@@ -174,7 +174,7 @@ enum SENDMSG_HANDSHAKE_RESULT
 //	pData				:[in]外部调用函数传入的参数信息，PC_Repeater_Config_SetProc(...)
 //	pDataList,dataSize	:[in]中继数据帧数据缓冲区及数据长度
 //返回：中继数据中当前处理的数据长度，<= dataSize
-typedef DWORD (*PC_REPEATER_CONFIG_PROC)(void *pData, const void *pDataList, int dataSize);
+typedef DWORD(*PC_REPEATER_CONFIG_PROC)(void *pData, const void *pDataList, int dataSize);
 class RP_EXT_CLASS CCBSocketPort_Control : public CSocketBase
 {
 
@@ -210,7 +210,7 @@ public:
 	//发送操作指令
 	virtual int Commu_SendMsg_Direct(const void* snd_msg, int msg_len);
 	virtual int Commu_SendMsg(const void* snd_msg, int msg_len);
-	
+
 	//发送操作指令（在指定时间段内检测指令返回信息）
 	//返回值 ：SENDMSG_HANDSHAKE_RESULT
 	int Commu_SendMsg_handshake(GCB_COMMAND_STATE *pCmdState, const void *snd_msg, int msg_len, int time_check);

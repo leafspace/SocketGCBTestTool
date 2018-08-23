@@ -37,7 +37,7 @@ BOOL CSFBoardThread::InitInstance()
 	pDlg = *m_ppDlg;
 	if (pDlg == NULL)
 		pDlg = new CSFBoardDlg();
-	if (pDlg==NULL)
+	if (pDlg == NULL)
 	{
 		AfxMessageBox("out of memory!");
 		return FALSE;
@@ -46,27 +46,27 @@ BOOL CSFBoardThread::InitInstance()
 
 	pDlg->m_pParentThread = this;
 
-	pDlg->m_pfReducer_x				= m_pfReducer_x;
-	pDlg->m_pfPulsesPerRevolution_x	= m_pfPulsesPerRevolution_x;
-	pDlg->m_pfDollyPerimeter		= m_pfDollyPerimeter;
+	pDlg->m_pfReducer_x = m_pfReducer_x;
+	pDlg->m_pfPulsesPerRevolution_x = m_pfPulsesPerRevolution_x;
+	pDlg->m_pfDollyPerimeter = m_pfDollyPerimeter;
 
-	pDlg->m_pfReducer_y				= m_pfReducer_y;
-	pDlg->m_pfPulsesPerRevolution_y	= m_pfPulsesPerRevolution_y;
-	pDlg->m_pfDeferentPerimeter		= m_pfDeferentPerimeter;
-	pDlg->m_pfDeferentPitch			= m_pfDeferentPitch;
+	pDlg->m_pfReducer_y = m_pfReducer_y;
+	pDlg->m_pfPulsesPerRevolution_y = m_pfPulsesPerRevolution_y;
+	pDlg->m_pfDeferentPerimeter = m_pfDeferentPerimeter;
+	pDlg->m_pfDeferentPitch = m_pfDeferentPitch;
 
-	pDlg->m_pfReducer_z				= m_pfReducer_z;
-	pDlg->m_pfPulsesPerRevolution_z	= m_pfPulsesPerRevolution_z;
-	pDlg->m_pfDeferentPerimeter_z	= m_pfDeferentPerimeter_z;
-	pDlg->m_pfDeferentPitch_z		= m_pfDeferentPitch_z;
+	pDlg->m_pfReducer_z = m_pfReducer_z;
+	pDlg->m_pfPulsesPerRevolution_z = m_pfPulsesPerRevolution_z;
+	pDlg->m_pfDeferentPerimeter_z = m_pfDeferentPerimeter_z;
+	pDlg->m_pfDeferentPitch_z = m_pfDeferentPitch_z;
 
-	pDlg->m_pComPort				= m_pComPort;
+	pDlg->m_pComPort = m_pComPort;
 
-	pDlg->m_bThreeAxisServo			= m_bThreeAxisServo;
-	pDlg->bIsNewCurve				= bIsNewCurve;
+	pDlg->m_bThreeAxisServo = m_bThreeAxisServo;
+	pDlg->bIsNewCurve = bIsNewCurve;
 
- 	pDlg->Create(IDD_DIALOG_SFBOARD);
- 	pDlg->ShowWindow(SW_SHOW);
+	pDlg->Create(IDD_DIALOG_SFBOARD);
+	pDlg->ShowWindow(SW_SHOW);
 
 	//m_pDlg->DoModal();
 	return TRUE;

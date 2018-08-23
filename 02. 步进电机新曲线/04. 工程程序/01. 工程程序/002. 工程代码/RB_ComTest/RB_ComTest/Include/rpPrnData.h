@@ -39,16 +39,16 @@
 #define _MAX_YPASS_LEVEL_			20			//系统最大支持的Y向Pass类型数
 
 #ifndef PPDWORD
-	typedef LPDWORD			*PPDWORD;			//DWORD data[m][n][k]
-	typedef LPINT			*PPINT;				//int	data[m][n][k]
-	typedef PUINT			*PPUINT;			//UINT	data[m][n][k]
+typedef LPDWORD			*PPDWORD;			//DWORD data[m][n][k]
+typedef LPINT			*PPINT;				//int	data[m][n][k]
+typedef PUINT			*PPUINT;			//UINT	data[m][n][k]
 #endif
 
 #ifndef PZPSTR
 #ifndef PSTR
-	typedef __nullterminated CHAR *NPSTR, *LPSTR, *PSTR;
+typedef __nullterminated CHAR *NPSTR, *LPSTR, *PSTR;
 #endif
-	typedef __nullterminated PSTR *PZPSTR;		//char	data[m][n][k]
+typedef __nullterminated PSTR *PZPSTR;		//char	data[m][n][k]
 #endif
 
 #pragma pack(push)
@@ -62,15 +62,15 @@ struct /*RP_EXT_CLASS*/ PRINTHEAD
 	//喷头类型
 	enum PRINTHEADTYPE
 	{
-		printhead_none						= 0x0000,		//初始化状态（无效喷头类型）
-		printhead_spectra_galxy_80			= 0x0001,		//Spectra Galxy 80
-		printhead_spectra_galxy_30			= 0x0002,		//Spectra Galxy 30, default
+		printhead_none = 0x0000,		//初始化状态（无效喷头类型）
+		printhead_spectra_galxy_80 = 0x0001,		//Spectra Galxy 80
+		printhead_spectra_galxy_30 = 0x0002,		//Spectra Galxy 30, default
 
-		printhead_spectra_polaris_pq512		= 0x0003,		//Polaris PQ-512 Printhead
+		printhead_spectra_polaris_pq512 = 0x0003,		//Polaris PQ-512 Printhead
 
-		printhead_spectra_StarFire_sg1024	= 0x0004,		//StarFire SG-1024/M-C printhead
+		printhead_spectra_StarFire_sg1024 = 0x0004,		//StarFire SG-1024/M-C printhead
 
-		printhead_Unknown					= 0xFFFF		//未知喷头类型
+		printhead_Unknown = 0xFFFF		//未知喷头类型
 	};
 
 	WORD	nType;					//喷头类型			: PRINTHEADTYPE
@@ -88,14 +88,14 @@ struct /*RP_EXT_CLASS*/ PRINTHEAD
 	UINT	nColorLevel;			//灰度级别，相应值表示灰度级数，例 0x08 表示支持 8 级灰度打印
 									//		其中 0,1,2 均表示不支持灰度打印，仅支持单色打印
 	UINT	nNozzleDropSizeMin;		//最小墨滴			: 80pl，……（注：最大墨滴为最小墨滴 * （灰度级数-1））
-	
+
 public:
 	//读入参数
 	bool GetFromProfile(const char *pszSection, const char *pszProfile);
 	//写入参数
 	bool SetToProfile(const char *pszSection, const char *pszProfile) const;
-    //参数是否有效
-    bool IsValid() const;
+	//参数是否有效
+	bool IsValid() const;
 	//初始化
 	void Initialize();
 };
@@ -106,30 +106,30 @@ struct /*RP_EXT_CLASS*/ PRINTHEADGROUP
 	PRINTHEAD	printhead;									//喷头参数
 
 	UINT		nHeadNumber;								//最大喷头数，<= KY_MAX_COLORS
-	
+
 	UINT		nGroupCount;								//喷头组数，1, 2, 3, ...，<= KY_MAX_GROUP
 															//每组喷头可使用颜色数 nColor = nHeadNumber/nGroupCount (<=KY_MAX_CHANNELS)
 															//本参数约束后续参数中颜色数(KY_MAX_COLORS)相关数组
 	//当有多组喷头（相同色）时，定义同色喷头的组合方式
 	enum COMBINEWAY
 	{
-		combineway_normal							= 0,		//仅1组喷头(nGroupCount==1)
+		combineway_normal = 0,		//仅1组喷头(nGroupCount==1)
 
 		//串行连接，组合后实际输出的喷嘴间距不变：dNozzleDistance
-		combineway_series_connection_normal			= 0x01,		//串行连接-无重叠喷嘴，相同色喷头Y向间距=(nNozzleSize*dNozzleDistance) * N（倍）
-		combineway_series_connection_overlapping_1	= 0x02,		//串行连接-重叠1个喷嘴，相同色喷头Y向间距=((nNozzleSize-1)*dNozzleDistance) * N（倍），实际有效喷嘴数=nGroupCount*(nZozzleSize-1)+1
-		combineway_series_connection_overlapping_2	= 0x03,		//串行连接-重叠2个喷嘴，相同色喷头Y向间距=((nNozzleSize-2)*dNozzleDistance) * N（倍），实际有效喷嘴数=nGroupCount*(nZozzleSize-2)+2
+		combineway_series_connection_normal = 0x01,		//串行连接-无重叠喷嘴，相同色喷头Y向间距=(nNozzleSize*dNozzleDistance) * N（倍）
+		combineway_series_connection_overlapping_1 = 0x02,		//串行连接-重叠1个喷嘴，相同色喷头Y向间距=((nNozzleSize-1)*dNozzleDistance) * N（倍），实际有效喷嘴数=nGroupCount*(nZozzleSize-1)+1
+		combineway_series_connection_overlapping_2 = 0x03,		//串行连接-重叠2个喷嘴，相同色喷头Y向间距=((nNozzleSize-2)*dNozzleDistance) * N（倍），实际有效喷嘴数=nGroupCount*(nZozzleSize-2)+2
 
 		//并行连接，组合后实际输出的喷嘴间距插值：dNozzleDistance / nGroupCount
 		//并行连接-同色喷头插值提升一次输出精度，相同色喷头Y向间距=(m+1/nGroupCount)*dNozzleDistance（m为喷嘴个数，适当提高此值可改善喷头多Pass时的误差）
-		combineway_parallel_connection_normal		= 0x10,		//并行连接-普通模式(m==0)
+		combineway_parallel_connection_normal = 0x10,		//并行连接-普通模式(m==0)
 
 	};
 	BYTE	bCombineWay;										//同色喷头组合方式，注：仅在 nGroupCount > 1 时有效
 
 	//对于同一款设备（确定机型），以下参数可通过应用程序进行更改（需配合机械）
- 	UINT	nFilterIndex[KY_MAX_COLORS];					//喷头组归类，指定每组中的喷头序号，不得有重复
- 															//	nHeadIndex = nFilterIndex[nGroupIndex*nColor+nIndex]，其中表示第nGroupIndex组中的第nIndex上喷头，nColor为一组的喷头个数（颜色通道）
+	UINT	nFilterIndex[KY_MAX_COLORS];					//喷头组归类，指定每组中的喷头序号，不得有重复
+															//	nHeadIndex = nFilterIndex[nGroupIndex*nColor+nIndex]，其中表示第nGroupIndex组中的第nIndex上喷头，nColor为一组的喷头个数（颜色通道）
 
 	DWORD	nColorTable[KY_MAX_CHANNELS];					//指定每组喷头(nColor)的颜料，ky_printer_color（单色）
 	UINT	nDataFilter[KY_MAX_CHANNELS];					//指定喷头对应的喷头板通道序号(nColor)
@@ -140,20 +140,20 @@ public:
 	//写入参数
 	bool SetToProfile(const char *pszSection, const char *pszProfile) const;
 
-    //喷头组归类信息是否有效
-    //  pFilterIndex:[in]喷头组归类信息，同 nFilterIndex 定义
-    //  nHead		:[in]总的喷头数
-    //注：pFilterIndex 中的每个值不能相同
+	//喷头组归类信息是否有效
+	//  pFilterIndex:[in]喷头组归类信息，同 nFilterIndex 定义
+	//  nHead		:[in]总的喷头数
+	//注：pFilterIndex 中的每个值不能相同
 	static bool IsValidFilter(const UINT *pFilterIndex, int nHead);
-    //每组喷头的颜料信息是否有效
-    //  pColorTable :[in]喷头颜料信息
-    //  nColor      :[in]颜色数
-    //注：喷头颜料信息值不能相同
-    static bool IsValidColorTable(const DWORD *pColorTable, int nColor);
+	//每组喷头的颜料信息是否有效
+	//  pColorTable :[in]喷头颜料信息
+	//  nColor      :[in]颜色数
+	//注：喷头颜料信息值不能相同
+	static bool IsValidColorTable(const DWORD *pColorTable, int nColor);
 	//喷头对应喷头板通道信息是否有效
 	//	pDataFilter	:[in]喷头对应的喷头板通道信息，同 nDataFilter 定义
 	//	nChannels	:[in]有效通道总数
-    //注：通道序号值不能相同
+	//注：通道序号值不能相同
 	static bool IsValidDataFilter(const UINT *pDataFilter, int nChannels);
 
 	//得喷嘴叠加个数
@@ -167,8 +167,8 @@ public:
 	//	bCombineWay	:[in]喷头拼接方式
 	static int GetTotalNozzles(int nNozzles, int nGroupCount, BYTE bCombineWay);
 
-    //喷头组参数是否有效
-    bool IsValid() const;
+	//喷头组参数是否有效
+	bool IsValid() const;
 	//初始化
 	void Initialize();
 };
@@ -194,14 +194,14 @@ struct /*RP_EXT_CLASS*/ SPRAYPARAM
 
 	WORD wSprayFrequencyForIdel;	//空闲时散喷频率，Hz
 	WORD wSprayPassForPrint;		//指定打印中散喷参数：间隔多少个 Pass 后进行散喷
-	
+
 public:
 	//读入参数
 	bool GetFromProfile(const char *pszSection, const char *pszProfile);
 	//写入参数
 	bool SetToProfile(const char *pszSection, const char *pszProfile) const;
-    //参数是否有效
-    bool IsValid() const;
+	//参数是否有效
+	bool IsValid() const;
 	//初始化
 	void Initialize();
 };
@@ -214,14 +214,14 @@ struct /*RP_EXT_CLASS*/ CLEANHEADPARAM
 	WORD	wPurgeTime;				//指定自动喷头清洗时的压墨时长，毫秒
 	WORD	wPurgeDelay;			//指定压墨结束后的延迟，毫秒
 	BYTE	bCleanTime;				//指定自动喷头清洗时清洗（刮刀）次数
-	
+
 public:
 	//读入参数
 	bool GetFromProfile(const char *pszSection, const char *pszProfile);
 	//写入参数
 	bool SetToProfile(const char *pszSection, const char *pszProfile) const;
-    //参数是否有效
-    bool IsValid() const;
+	//参数是否有效
+	bool IsValid() const;
 	//初始化
 	void Initialize();
 };
@@ -311,23 +311,23 @@ struct /*RP_EXT_CLASS*/ PRINTER
 	//打印机类型
 	enum PRINTERTYPE
 	{
-		printer_none				= 0x0000,		//初始化状态（无效打印机类型）
+		printer_none = 0x0000,		//初始化状态（无效打印机类型）
 
-		printer_RainBow_08SG		= 0x0001,		//8喷头，1*n单组，Spectra Galxy 喷头，PCI9052，Com
+		printer_RainBow_08SG = 0x0001,		//8喷头，1*n单组，Spectra Galxy 喷头，PCI9052，Com
 
-		printer_RainBow_64MG		= 0x0002,		//m*8 组模式(m=1,2,4,8)，最大8*8，Spectra Galxy喷头，PCI9052， Com
+		printer_RainBow_64MG = 0x0002,		//m*8 组模式(m=1,2,4,8)，最大8*8，Spectra Galxy喷头，PCI9052， Com
 
-		printer_RainBow_08SS		= 0x0003,		//8喷头，1*n单组，Spectra SG-1024/M-C 喷头，PCI9052，Com
+		printer_RainBow_08SS = 0x0003,		//8喷头，1*n单组，Spectra SG-1024/M-C 喷头，PCI9052，Com
 
-		printer_RainBow_Virtual		= 0xFFFD,		//虚拟打印机，仅用于软件模拟调试用
+		printer_RainBow_Virtual = 0xFFFD,		//虚拟打印机，仅用于软件模拟调试用
 
-		printer_RainBow_NewDebug	= 0xFFFE,		//新增的调试用打印机类型（未确定标准类型）
+		printer_RainBow_NewDebug = 0xFFFE,		//新增的调试用打印机类型（未确定标准类型）
 
-		printer_Unknown				= 0xFFFF		//未知打印机类型
+		printer_Unknown = 0xFFFF		//未知打印机类型
 	};
-	
+
 	WORD			nType;							//打印机类型: PRINTERTYPE
-	char			szName[_MAX_PRINTER_NAME_+1];	//打印机名称，如“RainBow_1816DG”
+	char			szName[_MAX_PRINTER_NAME_ + 1];	//打印机名称，如“RainBow_1816DG”
 
 	double			dMinStartX;						//设备可打印的最小起始位置（mm，X向）
 	double			dMinStartY;						//设备可打印的最小起始位置（mm，Y向），仅平板机使用，导带机固定为0
@@ -337,26 +337,26 @@ struct /*RP_EXT_CLASS*/ PRINTER
 	PRINTHEADGROUP	printgroup;						//喷头组参数
 
 	//颜色模式
-	UINT	nInkModeLevel[INKMODE_MAX+1];		//指定当前喷头组支持的颜色模式列表，以 INK_NONE 结束
+	UINT	nInkModeLevel[INKMODE_MAX + 1];		//指定当前喷头组支持的颜色模式列表，以 INK_NONE 结束
 	int		nInkModeCount;						//有效的颜色模式数
 
-	char	szSpeedLevel[_MAX_SPEED_LEVEL_+1][_MAX_SPEED_INFO_];	//支持的打印速度级数对应的速度命名，以空字符串标识结束
-	BYTE	bSpeedValue[_MAX_SPEED_LEVEL_+1];						//实际的打印速度级数值，(0, _MAX_SPEED_LIMIT_]
+	char	szSpeedLevel[_MAX_SPEED_LEVEL_ + 1][_MAX_SPEED_INFO_];	//支持的打印速度级数对应的速度命名，以空字符串标识结束
+	BYTE	bSpeedValue[_MAX_SPEED_LEVEL_ + 1];						//实际的打印速度级数值，(0, _MAX_SPEED_LIMIT_]
 	int		nSpeedCount;						//有效的打印速度级数
 
-	UINT	nXResLevel[_MAX_XRES_LEVEL_+1];		//支持的X方向精度值，dpi，300，400，600，...，以 0 标识结束
+	UINT	nXResLevel[_MAX_XRES_LEVEL_ + 1];		//支持的X方向精度值，dpi，300，400，600，...，以 0 标识结束
 	int		nXResCount;							//有效的X方向精度级数
 
-	UINT	nYPassLevel[_MAX_YPASS_LEVEL_+1];	//支持的Y方向Pass数，1，2，3，4，...，以 0 标识结束
+	UINT	nYPassLevel[_MAX_YPASS_LEVEL_ + 1];	//支持的Y方向Pass数，1，2，3，4，...，以 0 标识结束
 	enum PASSWAY
 	{
 		passway_normal = 0,		//普通模式
 		passway_plus,				//Pass+ 模式
 		passway_count
 	};
-	BYTE	bYPassWay[_MAX_YPASS_LEVEL_+1];		//支持的Y方向Pass数类别
+	BYTE	bYPassWay[_MAX_YPASS_LEVEL_ + 1];		//支持的Y方向Pass数类别
 	int		nYPassCount;						//有效的Y方向Pass数级数
-	
+
 	BYTE	bSprayEnable;						//是否支持散喷操作（硬件决定，不得更改）
 	BYTE	bCleanHeadEnable;					//是否支持自动喷头清洗操作
 
@@ -372,14 +372,14 @@ struct /*RP_EXT_CLASS*/ PRINTER
 
 	int		nAdjust_bi_directional_compensation[_MAX_SPEED_LEVEL_][_MAX_XRES_LEVEL_];	//双向补偿值，打印速度或精度不同，补偿值也不同，Pixel（脉冲）
 	double	dAdjust_step_compensation[_MAX_YPASS_LEVEL_];								//步进补偿值（1/pixel，每个像素偏差值），Y向Pass数不同，补偿值也不同
-	
+
 	int		fade_nLevel[_MAX_YPASS_LEVEL_];				//淡入淡出处理-效果定义，Y向Pass数不同，参数值也不同
 
 	enum TRACELESSPRINT_WAY
 	{
-		tracelessprint_way_none		= 0,				//不使用无痕处理（直线型）
-		
-		tracelessprint_way_micro	= 1,				//微波浪
+		tracelessprint_way_none = 0,				//不使用无痕处理（直线型）
+
+		tracelessprint_way_micro = 1,				//微波浪
 		tracelessprint_way_small,						//小波浪
 		tracelessprint_way_standard,					//标准型（普通型），与最小单元尺寸对应
 		tracelessprint_way_middle,						//中波浪
@@ -398,22 +398,22 @@ struct /*RP_EXT_CLASS*/ PRINTER
 
 	CLEANHEADPARAM	cleanheadparam;						//打印中自动喷头清洗参数
 
-    //打印方式
+	//打印方式
 	enum PRINTWAY
 	{
-		printway_unidirection	= 0,		//单向打印
-		printway_bidirection	= 1,		//双向打印
+		printway_unidirection = 0,		//单向打印
+		printway_bidirection = 1,		//双向打印
 
-        printway_count                      //有效的打印方式数
+		printway_count                      //有效的打印方式数
 	};
 	BYTE	bPrintway;				//打印方式：PRINTWAY
 
 	enum JUMPWAY
 	{
-		jumpway_normal	= 0x00,		//无快进（跳白）功能
-		jumpway_x		= 0x01,		//X向（小车）允许快进
-		jumpway_y		= 0x02,		//Y向（导带/丝杆）允许快进
-		jumpway_all		= jumpway_x | jumpway_y,	//允许全部快进
+		jumpway_normal = 0x00,		//无快进（跳白）功能
+		jumpway_x = 0x01,		//X向（小车）允许快进
+		jumpway_y = 0x02,		//Y向（导带/丝杆）允许快进
+		jumpway_all = jumpway_x | jumpway_y,	//允许全部快进
 
 	};
 	BYTE	bJumpWay;			//快进（跳白）处理方式
@@ -427,29 +427,29 @@ struct /*RP_EXT_CLASS*/ PRINTER
 	//原点位置定义
 	enum ORIGIN_POSITION
 	{
-		origin_pos_unknown		= 0x00,		//未知
+		origin_pos_unknown = 0x00,		//未知
 
-		origin_pos_x_zero		= 0x01,		//X向打印原点
-		origin_pos_x_max		= 0x02,		//X向清洗槽位置（X向结束位置）
-		origin_pos_x_current	= 0x03,		//X向当前位置
+		origin_pos_x_zero = 0x01,		//X向打印原点
+		origin_pos_x_max = 0x02,		//X向清洗槽位置（X向结束位置）
+		origin_pos_x_current = 0x03,		//X向当前位置
 
-		origin_pos_y_zero		= 0x10,		//Y向打印原点
-		origin_pos_y_max		= 0x20,		//Y向结束位置
-		origin_pos_y_current	= 0x30,		//Y向当前位置
+		origin_pos_y_zero = 0x10,		//Y向打印原点
+		origin_pos_y_max = 0x20,		//Y向结束位置
+		origin_pos_y_current = 0x30,		//Y向当前位置
 
-		origin_pos_zero_xy		= origin_pos_x_zero | origin_pos_y_zero,				//打印原点
-		origin_pos_max_xy		= origin_pos_x_max | origin_pos_y_max,					//平板机待机位
-		origin_pos_zero_x_max_y	= origin_pos_x_zero | origin_pos_y_max,
-		origin_pos_max_x_zero_y	= origin_pos_x_max | origin_pos_y_zero,
+		origin_pos_zero_xy = origin_pos_x_zero | origin_pos_y_zero,				//打印原点
+		origin_pos_max_xy = origin_pos_x_max | origin_pos_y_max,					//平板机待机位
+		origin_pos_zero_x_max_y = origin_pos_x_zero | origin_pos_y_max,
+		origin_pos_max_x_zero_y = origin_pos_x_max | origin_pos_y_zero,
 
-		origin_pos_current_xy		= origin_pos_x_current | origin_pos_y_current,		//当前位置
-		origin_pos_current_x_zero_y	= origin_pos_x_current | origin_pos_y_zero,			//丝杆方向打印原点（小车不动）
+		origin_pos_current_xy = origin_pos_x_current | origin_pos_y_current,		//当前位置
+		origin_pos_current_x_zero_y = origin_pos_x_current | origin_pos_y_zero,			//丝杆方向打印原点（小车不动）
 		origin_pos_zero_x_current_y = origin_pos_x_zero | origin_pos_y_current,			//小车方向打印原点（丝杆不动）
 
-		origin_pos_max_x_current_y	= origin_pos_x_max | origin_pos_y_current,			//散喷位，也即导带机待机位
+		origin_pos_max_x_current_y = origin_pos_x_max | origin_pos_y_current,			//散喷位，也即导带机待机位
 
-		origin_pos_mask_x		= 0x0F,		//X向位置参数掩码
-		origin_pos_mask_y		= 0xF0		//Y向位置参数掩码
+		origin_pos_mask_x = 0x0F,		//X向位置参数掩码
+		origin_pos_mask_y = 0xF0		//Y向位置参数掩码
 	};
 	BYTE	bOriginPosition_start;			//打印起始前小车位置，PRINTER::ORIGIN_POSITION
 	BYTE	bOriginPosition_end;			//打印结束时小车位置，PRINTER::ORIGIN_POSITION
@@ -469,8 +469,8 @@ public:
 	bool GetFromProfile(const char *pszProfile);
 	//写入参数
 	bool SetToProfile(const char *pszProfile) const;
-    //参数是否有效
-    bool IsValid() const;
+	//参数是否有效
+	bool IsValid() const;
 	//初始化
 	void Initialize();
 
@@ -509,18 +509,18 @@ public:
 //外部命令状态，应用程序需对此进行相应操作
 enum ky_printer_command_status
 {
-	kypcs_mb_none		= 0x00000000,	//正常，无外部命令
+	kypcs_mb_none = 0x00000000,	//正常，无外部命令
 
-	kypcs_mb_reset		= 0x00000001,	//复位
-	
-	kypcs_mb_pause		= 0x00000002,	//暂停打印（与 kypcs_mb_resume 不同时使用）
-	kypcs_mb_resume		= 0x00000004,	//恢复打印（与 kypcs_mb_pause 不同时使用）
+	kypcs_mb_reset = 0x00000001,	//复位
 
-	kypcs_mb_syserror	= 0x00000008,	//系统错误
+	kypcs_mb_pause = 0x00000002,	//暂停打印（与 kypcs_mb_resume 不同时使用）
+	kypcs_mb_resume = 0x00000004,	//恢复打印（与 kypcs_mb_pause 不同时使用）
 
-	kypcs_mb_sysstatus	= 0x00000010,	//系统异常状态
+	kypcs_mb_syserror = 0x00000008,	//系统错误
 
-	kypcs_mb_cleanhead	= 0x00000020,	//喷头清洗
+	kypcs_mb_sysstatus = 0x00000010,	//系统异常状态
+
+	kypcs_mb_cleanhead = 0x00000020,	//喷头清洗
 
 	kypcs_mb_count
 };
@@ -530,22 +530,22 @@ enum ky_printer_command_status
 //
 ////扩展接口（界面相关）使能状态
 enum ky_ui_type
-{ 
-	kyuit_offline					= 0x80, //在非打印状态（脱机，未调用 print_start_print 或者调用过 print_end 之后）下有效 
-		
-	kyuit_online_inside_printdata	= 0x01, //在数据打印状态（调用 print_data_print）下有效，一般仅是返回当前设备状态，此时底层可能以创建无模式对话框形式处理，创建成功后立即返回； 
-	
-	kyuit_online_outside_printdata	= 0x02, //在非数据打印状态（已联机，但在 print_data_print 调用的前后）下有效，但它们在应用程序中的调用时机很难把握（★）； 
-	
-	kyuit_online_pause				= 0x06, //在暂停状态下有效（包括 kyuit_online_outside_printdata 相关命令） 
-	
-	kyuit_online					= 0x7F, //在联机状态（以成功调用 print_start_print 到 调用 print_end 为限）下有效(所有 kyuit_online_xxxx形式的状态的集合) 
-	
-	kyuit_all						= 0xFF	//所有状态下均有效 
-}; 
+{
+	kyuit_offline = 0x80, //在非打印状态（脱机，未调用 print_start_print 或者调用过 print_end 之后）下有效 
+
+	kyuit_online_inside_printdata = 0x01, //在数据打印状态（调用 print_data_print）下有效，一般仅是返回当前设备状态，此时底层可能以创建无模式对话框形式处理，创建成功后立即返回； 
+
+	kyuit_online_outside_printdata = 0x02, //在非数据打印状态（已联机，但在 print_data_print 调用的前后）下有效，但它们在应用程序中的调用时机很难把握（★）； 
+
+	kyuit_online_pause = 0x06, //在暂停状态下有效（包括 kyuit_online_outside_printdata 相关命令） 
+
+	kyuit_online = 0x7F, //在联机状态（以成功调用 print_start_print 到 调用 print_end 为限）下有效(所有 kyuit_online_xxxx形式的状态的集合) 
+
+	kyuit_all = 0xFF	//所有状态下均有效 
+};
 // hparent :[in]调用窗口
 //	wParam, lParam :[in]直接使用 ky_ui_command_info 的两个参数
-typedef void (_stdcall *ui_command_proc)(HWND hparent, WPARAM wParam, LPARAM lParam);
+typedef void(_stdcall *ui_command_proc)(HWND hparent, WPARAM wParam, LPARAM lParam);
 struct ky_ui_command_info
 {
 	const char			*ptext;		//命令的描述，将用于菜单的显示
@@ -567,8 +567,8 @@ struct ky_print_info
 	UINT	nHeadNumber;	//最大喷头数，<= KY_MAX_COLORS
 	UINT	nGroupCount;	//喷头组数，1, 2, 3, ...，<= KY_MAX_GROUP
 	DWORD	nColorTable[KY_MAX_CHANNELS];				//指定每组喷头的颜料，ky_printer_color（单色）
-	
-    UINT    color_level;    //灰度打印方式
+
+	UINT    color_level;    //灰度打印方式
 	UINT	xres;			//X方向的精度,DPI
 	UINT	pass;			//Y方向的Pass值
 

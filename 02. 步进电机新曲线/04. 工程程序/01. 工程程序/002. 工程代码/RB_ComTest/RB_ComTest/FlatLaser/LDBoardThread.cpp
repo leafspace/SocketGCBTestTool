@@ -39,7 +39,7 @@ BOOL CLDBoardThread::InitInstance()
 	pDlg = *m_ppDlg;
 	if (pDlg == NULL)
 		pDlg = new CLDBoardDlg();
-	if (pDlg==NULL)
+	if (pDlg == NULL)
 	{
 		AfxMessageBox("out of memory!");
 		return FALSE;
@@ -48,7 +48,7 @@ BOOL CLDBoardThread::InitInstance()
 
 	pDlg->m_pParentThread = this;
 
-	pDlg->m_pComPort	= m_pComPort;
+	pDlg->m_pComPort = m_pComPort;
 
 	pDlg->Create(IDD_LD_BOARD);
 	pDlg->ShowWindow(SW_SHOW);
